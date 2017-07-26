@@ -1,3 +1,38 @@
 <resources>
     <string name="app_name">Moop</string>
+    <string name="facebook_app_id">1924520374457307</string>
+
+    <!-- TODO: Remove or change this placeholder text -->
+    <string name="hello_blank_fragment">Hello blank fragment</string>
+    <string name="hint_email">Email</string>
+    <string name="hint_senha">Senha</string>
+    <string name="entrar">Entrar</string>
+    <string name="ou">ou</string>
+    <string name="entrar_com_facebook">Entrar com Facebook</string>
+    <string name="criar_uma_conta">Ou criar uma conta</string>
+    <string name="texto_cadastro">Faça o seu cadastro e comece a usar o MOOP agora mesmo</string>
+    <string name="hint_nome">Nome</string>
+    <string name="hint_confirmar_senha">Confirmar senha</string>
+    <string name="cadastrar">Cadastrar</string>
+    <string name="selecione_acao">Selecione uma ação</string>
+    <array name="foto_options">
+        <item>Usar a câmera</item>
+        <item>Carregar da galeria</item>
+    </array>
+    <string name="app_nao_conseguiu_criar_diretorio">O aplicativo não conseguiu criar um diretória para a imagem. Verifique as permissões do App</string>
+    <string name="cortar">Cortar</string>
+    <string name="campo_obrigatorio">Campo obrigatório</string>
+    <string name="senhas_diferentes">Senhas diferentes</string>
+    <string name="email_ja_cadastrado">Email já cadastrado</string>
+    <string name="dados_invalidos">Dados inválidos</string>
+    <string name="algo_errado_ocorreu">Algo errado ocorreu</string>
+    <string name="email_invalido">Email inválido</string>
+    <string name="aguarde">Aguarde</string>
+    <string name="efetuando_login">Efetuando Login</string>
+    <string name="title_activity_moop">MoopActivity</string>
+
+    <string name="navigation_drawer_open">Open navigation drawer</string>
+    <string name="navigation_drawer_close">Close navigation drawer</string>
+
+    <string name="action_settings">Settings</string>
 </resources>
