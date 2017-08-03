@@ -45,18 +45,22 @@ public class RotaLoginImpl {
 
     }
 
-    public void registrar(final Context context, String nome, String email, String passsword, String loginType, String deviceToken, String deviceType, File imgAvatar, final RotaUsuario.RegistroHandler handler) {
+    public void registrar(final Context context, String nome, String email, String passsword, String avatarUrl, String loginType, String deviceToken, String deviceType, File imgAvatar, final RotaUsuario.RegistroHandler handler) {
         RequestBody nomeBody = RequestBody.create(MediaType.parse("multipart/form-data"), nome);
         RequestBody emailBody = RequestBody.create(MediaType.parse("multipart/form-data"), email);
         RequestBody passwordBody = RequestBody.create(MediaType.parse("multipart/form-data"), passsword);
         RequestBody loginTypeBody = RequestBody.create(MediaType.parse("multipart/form-data"), loginType);
         RequestBody deviceTokenBody = RequestBody.create(MediaType.parse("multipart/form-data"), deviceToken);
         RequestBody deviceTypeBody = RequestBody.create(MediaType.parse("multipart/form-data"), deviceType);
+        RequestBody avatarUrlBody = null;
+        if (avatarUrl != null) {
+            avatarUrlBody = RequestBody.create(MediaType.parse("multipart/form-data"), avatarUrl);
+        }
         MultipartBody.Part body = null;
         if (imgAvatar != null) {
             body = MultipartBody.Part.createFormData("avatar", imgAvatar.getName(), RequestBody.create(MediaType.parse("image/*"), imgAvatar));
         }
-        Call<Usuario> call = RetrofitSingleton.INSTANCE.getRetrofiInstance().create(RotaUsuario.class).registrar(nomeBody, emailBody, passwordBody, deviceTokenBody, deviceTypeBody, loginTypeBody, body);
+        Call<Usuario> call = RetrofitSingleton.INSTANCE.getRetrofiInstance().create(RotaUsuario.class).registrar(nomeBody, emailBody, passwordBody, deviceTokenBody, deviceTypeBody, loginTypeBody, avatarUrlBody, body);
         call.enqueue(new Callback<Usuario>() {
             @Override
             public void onResponse(Call<Usuario> call, Response<Usuario> response) {

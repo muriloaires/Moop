@@ -34,7 +34,7 @@ public interface RotaUsuario {
     @Headers("appToken:" + RetrofitSingleton.APP_TOKEN)
     @POST(RetrofitSingleton.BASE_URL + RetrofitSingleton.API_V1 + "users/register.json")
     @Multipart
-    Call<Usuario> registrar(@Part("nome") RequestBody nome, @Part("email") RequestBody email, @Part("plainPassword") RequestBody password, @Part("deviceToken") RequestBody deviceToken, @Part("deviceType") RequestBody deviceType, @Part("loginType") RequestBody loginType, @Part MultipartBody.Part body);
+    Call<Usuario> registrar(@Part("nome") RequestBody nome, @Part("email") RequestBody email, @Part("plainPassword") RequestBody password, @Part("deviceToken") RequestBody deviceToken, @Part("deviceType") RequestBody deviceType, @Part("loginType") RequestBody loginType,@Part("avatarUrl") RequestBody avatarUrl,@Part MultipartBody.Part body);
 
     @Headers("appToken:" + RetrofitSingleton.APP_TOKEN)
     @GET(RetrofitSingleton.BASE_URL + RetrofitSingleton.API_V1 + "users/retrieve.json")

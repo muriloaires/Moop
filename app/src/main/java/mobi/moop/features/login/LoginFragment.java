@@ -238,13 +238,13 @@ public class LoginFragment extends Fragment implements Validator.ValidationListe
         switch (logadoCom) {
             case LoginActivity.LOGIN_FACEBOOK:
                 try {
-                    login.registrar(loginActivity, facebookJson.getString("name"), facebookJson.getString("email"), "", logadoCom, FirebaseInstanceId.getInstance().getToken(), "android", null, this);
+                    login.registrar(loginActivity, facebookJson.getString("name"), facebookJson.getString("email"), "", new JSONObject(facebookJson.getString("picture")).getJSONObject("data").getString("url"), logadoCom, FirebaseInstanceId.getInstance().getToken(), "android", null, this);
                 } catch (JSONException e) {
                     Log.e("JSONError", e.getMessage());
                 }
                 break;
             case LoginActivity.LOGIN_GOOGLE:
-                login.registrar(loginActivity, acct.getDisplayName(), acct.getEmail(), "", logadoCom, FirebaseInstanceId.getInstance().getToken(), "android", null, this);
+                login.registrar(loginActivity, acct.getDisplayName(), acct.getEmail(), "", acct.getPhotoUrl() == null ? null : acct.getPhotoUrl().toString(), logadoCom, FirebaseInstanceId.getInstance().getToken(), "android", null, this);
                 break;
             default:
                 loginDialog.dismiss();
@@ -269,6 +269,7 @@ public class LoginFragment extends Fragment implements Validator.ValidationListe
     @Override
     public void onUserRegistred() {
         loginDialog.dismiss();
+        startActivity(new Intent(loginActivity, MoopActivity.class));
     }
 
     @Override

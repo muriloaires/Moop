@@ -24,6 +24,8 @@ public class Usuario {
 
     private String apiToken;
 
+    private String avatar;
+
     @ToOne(joinProperty = "userId")
     private User user;
 
@@ -41,11 +43,12 @@ public class Usuario {
     @Generated(hash = 1305250862)
     private transient UsuarioDao myDao;
 
-    @Generated(hash = 1404073393)
-    public Usuario(Long id, String nome, String apiToken, Long userId) {
+    @Generated(hash = 1020182777)
+    public Usuario(Long id, String nome, String apiToken, String avatar, Long userId) {
         this.id = id;
         this.nome = nome;
         this.apiToken = apiToken;
+        this.avatar = avatar;
         this.userId = userId;
     }
 
@@ -168,5 +171,13 @@ public class Usuario {
 
     public void restructureData() {
         setUser(user);
+    }
+
+    public String getAvatar() {
+        return this.avatar;
+    }
+
+    public void setAvatar(String avatar) {
+        this.avatar = avatar;
     }
 }

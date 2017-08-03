@@ -3,9 +3,12 @@ package mobi.moop.model.rotas;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 
+import org.json.JSONObject;
+
 import java.util.concurrent.TimeUnit;
 
 import okhttp3.OkHttpClient;
+import retrofit2.Response;
 import retrofit2.Retrofit;
 import retrofit2.converter.gson.GsonConverterFactory;
 
@@ -33,7 +36,11 @@ public enum RetrofitSingleton {
                 .addConverterFactory(GsonConverterFactory.create(gson)).client(builder.build()).build();
     }
 
-    public String getErrorBody(String string) {
-        return string;
+    public String getErrorBody(Response response) {
+        try {
+            return new JSONObject(response.errorBody().string()).getString("message");
+        } catch (Exception e) {
+            return "Algo errado ocorreu";
+        }
     }
 }
