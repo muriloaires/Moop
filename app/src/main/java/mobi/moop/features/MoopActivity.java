@@ -1,5 +1,6 @@
 package mobi.moop.features;
 
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.PorterDuff;
 import android.os.Bundle;
@@ -9,6 +10,7 @@ import android.support.v4.view.GravityCompat;
 import android.support.v4.view.ViewPager;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.Menu;
@@ -16,6 +18,7 @@ import android.view.MenuItem;
 import android.view.SubMenu;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.squareup.picasso.Picasso;
 
@@ -26,7 +29,9 @@ import butterknife.ButterKnife;
 import mobi.moop.R;
 import mobi.moop.features.condominio.AddCondominioActivity;
 import mobi.moop.features.condominio.CondominioPreferences;
+import mobi.moop.features.login.LoginActivity;
 import mobi.moop.model.entities.Condominio;
+import mobi.moop.model.repository.UsuarioRepository;
 import mobi.moop.model.rotas.RotaCondominio;
 import mobi.moop.model.rotas.impl.RotaCondominioImpl;
 import mobi.moop.model.singleton.UsuarioSingleton;
@@ -60,7 +65,6 @@ public class MoopActivity extends AppCompatActivity implements NavigationView.On
         ButterKnife.bind(this);
         setSupportActionBar(toolbar);
         configureNavigationDrawer();
-        configureTabs();
         loadCondominios();
     }
 
@@ -117,28 +121,6 @@ public class MoopActivity extends AppCompatActivity implements NavigationView.On
         }
     }
 
-    @Override
-    public boolean onCreateOptionsMenu(Menu menu) {
-        // Inflate the menu; this adds items to the action bar if it is present.
-        getMenuInflater().inflate(R.menu.moop, menu);
-        return true;
-    }
-
-    @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
-        // Handle action bar item clicks here. The action bar will
-        // automatically handle clicks on the Home/Up button, so long
-        // as you specify a parent activity in AndroidManifest.xml.
-        int id = item.getItemId();
-
-        //noinspection SimplifiableIfStatement
-        if (id == R.id.action_settings) {
-            return true;
-        }
-
-        return super.onOptionsItemSelected(item);
-    }
-
     @SuppressWarnings("StatementWithEmptyBody")
     @Override
     public boolean onNavigationItemSelected(MenuItem item) {
@@ -147,10 +129,20 @@ public class MoopActivity extends AppCompatActivity implements NavigationView.On
             case -1:
                 addCondominio();
                 break;
+            case R.id.logout:
+                logout();
+                break;
         }
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
         drawer.closeDrawer(GravityCompat.START);
         return true;
+    }
+
+    private void logout() {
+        UsuarioRepository.I.removeUsuarioLogado(this);
+        CondominioPreferences.I.deletePreferences(this);
+        startActivity(new Intent(this, LoginActivity.class));
+        finish();
     }
 
     private void addCondominio() {
@@ -178,11 +170,41 @@ public class MoopActivity extends AppCompatActivity implements NavigationView.On
 
     @Override
     public void onCondominiosRecebidos(List<Condominio> condominios) {
-        configureMenuCondominios(condominios);
+        if (condominios.size() == 0) {
+            AlertDialog.Builder builder = new AlertDialog.Builder(this)
+                    .setTitle(getString(R.string.atencao))
+                    .setMessage(R.string.nenhum_condominio)
+                    .setPositiveButton(R.string.entendi, new DialogInterface.OnClickListener() {
+                        @Override
+                        public void onClick(DialogInterface dialog, int which) {
+                        }
+                    })
+                    .setOnDismissListener(new DialogInterface.OnDismissListener() {
+                        @Override
+                        public void onDismiss(DialogInterface dialog) {
+                            addCondominio();
+                        }
+                    });
+            builder.show();
+        } else {
+            configureMenuCondominios(condominios);
+            configureTabs();
+        }
+
     }
 
     @Override
     public void onGetCondominiosFail(String error) {
+        Toast.makeText(this, error, Toast.LENGTH_SHORT).show();
+    }
 
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        switch (requestCode) {
+            case ADD_CONDOMINIO:
+                loadCondominios();
+                break;
+        }
     }
 }

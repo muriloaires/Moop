@@ -225,6 +225,7 @@ public class LoginFragment extends Fragment implements Validator.ValidationListe
     public void onLogin() {
         loginDialog.dismiss();
         startActivity(new Intent(loginActivity, MoopActivity.class));
+        getActivity().finish();
     }
 
     @Override
@@ -270,6 +271,7 @@ public class LoginFragment extends Fragment implements Validator.ValidationListe
     public void onUserRegistred() {
         loginDialog.dismiss();
         startActivity(new Intent(loginActivity, MoopActivity.class));
+        getActivity().finish();
     }
 
     @Override

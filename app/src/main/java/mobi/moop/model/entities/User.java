@@ -3,6 +3,7 @@ package mobi.moop.model.entities;
 import org.greenrobot.greendao.annotation.Entity;
 import org.greenrobot.greendao.annotation.Id;
 
+import java.io.Serializable;
 import java.util.Date;
 import org.greenrobot.greendao.annotation.Generated;
 
@@ -11,7 +12,8 @@ import org.greenrobot.greendao.annotation.Generated;
  */
 
 @Entity
-public class User {
+public class User implements Serializable{
+    private static final long serialVersionUID = 29022897;
     @Id
     private Long id;
 

@@ -49,4 +49,12 @@
     <string name="sair">Sair</string>
     <string name="timeline">Timeline</string>
     <string name="reservas">Reservas</string>
+    <string name="publicacao_hint">O que você está pensando?</string>
+    <string name="escrever_publicacao">Escrever publicação</string>
+    <string name="publicar">Publicar</string>
+    <string name="criando_publicacao">Criando publicação</string>
+    <string name="registrando">Registrando</string>
+    <string name="atencao">Atenção</string>
+    <string name="nenhum_condominio">Você não está cadastrado a nenhum condomínio e será redirecionado para tela de cadastro.</string>
+    <string name="entendi">Entendi</string>
 </resources>

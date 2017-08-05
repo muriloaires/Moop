@@ -1,12 +1,13 @@
 package mobi.moop.model.entities;
 
+import java.io.Serializable;
 import java.util.Date;
 
 /**
  * Created by murilo aires on 27/07/2017.
  */
 
-public class FeedItem {
+public class FeedItem  implements Serializable{
     private Long id;
 
     private String titulo;

@@ -33,7 +33,8 @@ public class UsuarioDao extends AbstractDao<Usuario, Long> {
         public final static Property Nome = new Property(1, String.class, "nome", false, "NOME");
         public final static Property ApiToken = new Property(2, String.class, "apiToken", false, "API_TOKEN");
         public final static Property Avatar = new Property(3, String.class, "avatar", false, "AVATAR");
-        public final static Property UserId = new Property(4, Long.class, "userId", false, "USER_ID");
+        public final static Property LoginType = new Property(4, String.class, "loginType", false, "LOGIN_TYPE");
+        public final static Property UserId = new Property(5, Long.class, "userId", false, "USER_ID");
     }
 
     private DaoSession daoSession;
@@ -56,7 +57,8 @@ public class UsuarioDao extends AbstractDao<Usuario, Long> {
                 "\"NOME\" TEXT," + // 1: nome
                 "\"API_TOKEN\" TEXT," + // 2: apiToken
                 "\"AVATAR\" TEXT," + // 3: avatar
-                "\"USER_ID\" INTEGER);"); // 4: userId
+                "\"LOGIN_TYPE\" TEXT," + // 4: loginType
+                "\"USER_ID\" INTEGER);"); // 5: userId
     }
 
     /** Drops the underlying database table. */
@@ -89,9 +91,14 @@ public class UsuarioDao extends AbstractDao<Usuario, Long> {
             stmt.bindString(4, avatar);
         }
  
+        String loginType = entity.getLoginType();
+        if (loginType != null) {
+            stmt.bindString(5, loginType);
+        }
+ 
         Long userId = entity.getUserId();
         if (userId != null) {
-            stmt.bindLong(5, userId);
+            stmt.bindLong(6, userId);
         }
     }
 
@@ -119,9 +126,14 @@ public class UsuarioDao extends AbstractDao<Usuario, Long> {
             stmt.bindString(4, avatar);
         }
  
+        String loginType = entity.getLoginType();
+        if (loginType != null) {
+            stmt.bindString(5, loginType);
+        }
+ 
         Long userId = entity.getUserId();
         if (userId != null) {
-            stmt.bindLong(5, userId);
+            stmt.bindLong(6, userId);
         }
     }
 
@@ -143,7 +155,8 @@ public class UsuarioDao extends AbstractDao<Usuario, Long> {
             cursor.isNull(offset + 1) ? null : cursor.getString(offset + 1), // nome
             cursor.isNull(offset + 2) ? null : cursor.getString(offset + 2), // apiToken
             cursor.isNull(offset + 3) ? null : cursor.getString(offset + 3), // avatar
-            cursor.isNull(offset + 4) ? null : cursor.getLong(offset + 4) // userId
+            cursor.isNull(offset + 4) ? null : cursor.getString(offset + 4), // loginType
+            cursor.isNull(offset + 5) ? null : cursor.getLong(offset + 5) // userId
         );
         return entity;
     }
@@ -154,7 +167,8 @@ public class UsuarioDao extends AbstractDao<Usuario, Long> {
         entity.setNome(cursor.isNull(offset + 1) ? null : cursor.getString(offset + 1));
         entity.setApiToken(cursor.isNull(offset + 2) ? null : cursor.getString(offset + 2));
         entity.setAvatar(cursor.isNull(offset + 3) ? null : cursor.getString(offset + 3));
-        entity.setUserId(cursor.isNull(offset + 4) ? null : cursor.getLong(offset + 4));
+        entity.setLoginType(cursor.isNull(offset + 4) ? null : cursor.getString(offset + 4));
+        entity.setUserId(cursor.isNull(offset + 5) ? null : cursor.getLong(offset + 5));
      }
     
     @Override

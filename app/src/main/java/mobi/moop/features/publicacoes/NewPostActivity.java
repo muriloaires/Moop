@@ -1,5 +1,4 @@
-package mobi.moop.features.login;
-
+package mobi.moop.features.publicacoes;
 
 import android.Manifest;
 import android.app.Activity;
@@ -10,88 +9,132 @@ import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.net.Uri;
 import android.os.Build;
-import android.os.Bundle;
 import android.provider.MediaStore;
 import android.support.annotation.NonNull;
-import android.support.v4.app.Fragment;
+import android.support.design.widget.FloatingActionButton;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AlertDialog;
-import android.view.LayoutInflater;
+import android.support.v7.app.AppCompatActivity;
+import android.os.Bundle;
+import android.support.v7.widget.Toolbar;
+import android.view.Menu;
+import android.view.MenuItem;
 import android.view.View;
-import android.view.ViewGroup;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.Toast;
 
-import com.google.firebase.iid.FirebaseInstanceId;
-import com.mobsandgeeks.saripaar.ValidationError;
-import com.mobsandgeeks.saripaar.Validator;
-import com.mobsandgeeks.saripaar.annotation.ConfirmPassword;
-import com.mobsandgeeks.saripaar.annotation.Email;
-import com.mobsandgeeks.saripaar.annotation.NotEmpty;
-import com.mobsandgeeks.saripaar.annotation.Password;
 import com.squareup.picasso.Picasso;
 import com.yalantis.ucrop.UCrop;
 
 import java.io.File;
-import java.util.List;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
 import mobi.moop.R;
-import mobi.moop.features.MoopActivity;
-import mobi.moop.model.rotas.RotaUsuario;
-import mobi.moop.model.rotas.impl.RotaLoginImpl;
+import mobi.moop.features.condominio.CondominioPreferences;
+import mobi.moop.model.entities.FeedItem;
+import mobi.moop.model.rotas.RotaFeed;
+import mobi.moop.model.rotas.impl.RotaFeedImpl;
+import mobi.moop.model.singleton.UsuarioSingleton;
 import mobi.moop.utils.FotoUtils;
 
-/**
- * A simple {@link Fragment} subclass.
- */
-public class RegistroFragment extends Fragment implements Validator.ValidationListener, RotaUsuario.RegistroHandler {
+public class NewPostActivity extends AppCompatActivity implements RotaFeed.FeedPublishHandler {
+
 
     private static final int CAMERA = 1;
     private static final int GALERIA = 2;
 
-    @NotEmpty(messageResId = R.string.campo_obrigatorio)
-    @BindView(R.id.editNome)
-    EditText editNome;
+    @BindView(R.id.imgPost)
+    ImageView imgPost;
 
-    @Email
-    @NotEmpty(messageResId = R.string.campo_obrigatorio)
-    @BindView(R.id.editEmal)
-    EditText editEmail;
+    @BindView(R.id.icRemoveImage)
+    ImageView imgRemoveImage;
 
-    @Password
-    @BindView(R.id.editSenha)
-    EditText editSenha;
+    @BindView(R.id.toolbarPublicacao)
+    Toolbar toolbar;
 
-    @ConfirmPassword(messageResId = R.string.senhas_diferentes)
-    @BindView(R.id.editConfirmarSenha)
-    EditText editConfirmarSenha;
+    @BindView(R.id.fabEscolherFoto)
+    FloatingActionButton fabEscolherFoto;
 
-    @BindView(R.id.imgAvatar)
-    ImageView imgAvatar;
+    @BindView(R.id.editText)
+    EditText editText;
 
     private String mCurrentPhotoPath;
-    private Validator validator;
-    private RotaLoginImpl rotaLogin = new RotaLoginImpl();
-    private File avatar;
-    private ProgressDialog loginDialog;
 
-    @OnClick(R.id.imgAvatar)
-    public void imgAvatarAction(View view) {
+    private File avatar;
+
+    private RotaFeedImpl rotaFeed = new RotaFeedImpl();
+
+    private Long condominioId;
+    private ProgressDialog progressDialog;
+
+    @OnClick(R.id.fabEscolherFoto)
+    public void fabEscolherFotoAction(View view) {
         createDialogAddFoto();
     }
 
-    @OnClick(R.id.btnCadastrar)
-    public void btnCadastrarAction(View view) {
-        validator.validate();
+
+    @OnClick(R.id.icRemoveImage)
+    public void apagarImagem(View view) {
+        mCurrentPhotoPath = null;
+        avatar = null;
+        imgPost.setVisibility(View.GONE);
+        imgRemoveImage.setVisibility(View.GONE);
+        fabEscolherFoto.setVisibility(View.VISIBLE);
     }
 
 
+    @Override
+    protected void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        setContentView(R.layout.activity_new_post);
+        ButterKnife.bind(this);
+        setSupportActionBar(toolbar);
+        setupProgressDialog();
+        toolbar.setNavigationIcon(R.drawable.ic_back);
+        toolbar.setNavigationOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                onBackPressed();
+            }
+        });
+        condominioId = CondominioPreferences.I.getLastSelectedCondominio(this);
+    }
+
+    private void setupProgressDialog() {
+        progressDialog = new ProgressDialog(this);
+        progressDialog.setIndeterminate(true);
+        progressDialog.setCancelable(false);
+        progressDialog.setTitle(getString(R.string.aguarde));
+        progressDialog.setMessage(getString(R.string.criando_publicacao));
+    }
+
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        getMenuInflater().inflate(R.menu.menu_publicacao, menu);
+        MenuItem menuItem = menu.findItem(R.id.publicar);
+        menuItem.getActionView().setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                publicar();
+            }
+        });
+        return true;
+    }
+
+    private void publicar() {
+        progressDialog.show();
+        String text = null;
+        if (!editText.getText().toString().equals("")) {
+            text = editText.getText().toString();
+        }
+        rotaFeed.publish(this, UsuarioSingleton.I.getUsuarioLogado(this), condominioId, text, avatar, this);
+    }
+
     private void createDialogAddFoto() {
-        AlertDialog.Builder builder = new AlertDialog.Builder(getContext());
+        AlertDialog.Builder builder = new AlertDialog.Builder(this);
         builder.setTitle(R.string.selecione_acao)
                 .setItems(R.array.foto_options, new DialogInterface.OnClickListener() {
                     public void onClick(DialogInterface dialog, int which) {
@@ -110,53 +153,11 @@ public class RegistroFragment extends Fragment implements Validator.ValidationLi
         builder.show();
     }
 
-    private void selectPicture() {
-    }
-
-
-    private LoginActivity loginActivity;
-
-    public RegistroFragment() {
-        // Required empty public constructor
-    }
-
-
-    @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container,
-                             Bundle savedInstanceState) {
-        View view = inflater.inflate(R.layout.fragment_registro, container, false);
-        ButterKnife.bind(this, view);
-        validator = new Validator(this);
-        validator.setValidationListener(this);
-        createLoginDialog();
-        return view;
-    }
-
-    private void createLoginDialog() {
-        loginDialog = new ProgressDialog(loginActivity);
-        loginDialog.setIndeterminate(true);
-        loginDialog.setCancelable(false);
-        loginDialog.setTitle(getString(R.string.aguarde));
-        loginDialog.setMessage(getString(R.string.registrando));
-    }
-
-    @Override
-    public void onAttach(Context context) {
-        super.onAttach(context);
-        this.loginActivity = (LoginActivity) context;
-    }
-
-    @Override
-    public void onResume() {
-        super.onResume();
-        loginActivity.showToolbar();
-    }
-
     private void requestCameraPermission(int from) {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
-            if (ContextCompat.checkSelfPermission(getContext(), Manifest.permission.CAMERA) != PackageManager.PERMISSION_GRANTED ||
-                    ContextCompat.checkSelfPermission(getContext(), Manifest.permission.READ_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED ||
-                    ContextCompat.checkSelfPermission(getContext(), Manifest.permission.WRITE_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED) {
+            if (ContextCompat.checkSelfPermission(this, Manifest.permission.CAMERA) != PackageManager.PERMISSION_GRANTED ||
+                    ContextCompat.checkSelfPermission(this, Manifest.permission.READ_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED ||
+                    ContextCompat.checkSelfPermission(this, Manifest.permission.WRITE_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED) {
                 requestPermissions(new String[]{Manifest.permission.CAMERA,
                         Manifest.permission.READ_EXTERNAL_STORAGE,
                         Manifest.permission.WRITE_EXTERNAL_STORAGE}, from);
@@ -170,10 +171,10 @@ public class RegistroFragment extends Fragment implements Validator.ValidationLi
 
     private void openCamera(int from) {
         Intent cameraIntent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
-        if (cameraIntent.resolveActivity(getContext().getPackageManager()) != null) {
+        if (cameraIntent.resolveActivity(getPackageManager()) != null) {
             File photoFile = FotoUtils.getOutputMediaFile();
             if (photoFile == null) {
-                Toast.makeText(getContext(), getString(R.string.app_nao_conseguiu_criar_diretorio), Toast.LENGTH_LONG).show();
+                Toast.makeText(this, getString(R.string.app_nao_conseguiu_criar_diretorio), Toast.LENGTH_LONG).show();
                 return;
             }
             cameraIntent.putExtra(MediaStore.EXTRA_OUTPUT, Uri.fromFile(photoFile));
@@ -184,8 +185,8 @@ public class RegistroFragment extends Fragment implements Validator.ValidationLi
 
     private void requestReadAndWritePermission(int from) {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
-            if (ContextCompat.checkSelfPermission(getContext(), Manifest.permission.READ_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED ||
-                    ContextCompat.checkSelfPermission(getContext(), Manifest.permission.WRITE_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED) {
+            if (ContextCompat.checkSelfPermission(this, Manifest.permission.READ_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED ||
+                    ContextCompat.checkSelfPermission(this, Manifest.permission.WRITE_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED) {
                 requestPermissions(new String[]{
                         Manifest.permission.READ_EXTERNAL_STORAGE,
                         Manifest.permission.WRITE_EXTERNAL_STORAGE}, from);
@@ -220,7 +221,7 @@ public class RegistroFragment extends Fragment implements Validator.ValidationLi
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         if (resultCode == Activity.RESULT_OK) {
             if (requestCode == CAMERA) {
-                ajdustPicture(getContext(), mCurrentPhotoPath);
+                ajdustPicture(this, mCurrentPhotoPath);
             } else if (requestCode == GALERIA) {
                 Uri uri = data.getData();
                 openCropActivity(uri);
@@ -247,20 +248,20 @@ public class RegistroFragment extends Fragment implements Validator.ValidationLi
     private void openCropActivity(UCrop.Options options, Uri destination) {
         UCrop.of(destination, destination)
                 .withOptions(options)
-                .start(getActivity(), this);
+                .start(this);
     }
 
     public void openCropActivity(UCrop.Options options, Uri source, Uri destination) {
-        UCrop.of(source, destination).withOptions(options).start(getActivity(), this);
+        UCrop.of(source, destination).withOptions(options).start(this);
     }
 
     public void openCropActivity(Uri source) {
         UCrop.Options options = new UCrop.Options();
         options.setFreeStyleCropEnabled(true);
         options.setHideBottomControls(true);
-        options.setToolbarColor(getContext().getResources().getColor(R.color.colorPrimary));
-        options.setStatusBarColor(getContext().getResources().getColor(R.color.colorPrimaryDark));
-        options.setToolbarTitle(getContext().getString(R.string.cortar));
+        options.setToolbarColor(getResources().getColor(R.color.colorPrimary));
+        options.setStatusBarColor(getResources().getColor(R.color.colorPrimaryDark));
+        options.setToolbarTitle(getString(R.string.cortar));
         options.setMaxBitmapSize(1920);
         options.withMaxResultSize(1920, 1920);
         Uri destination = Uri.fromFile(FotoUtils.getOutputMediaFile());
@@ -269,44 +270,28 @@ public class RegistroFragment extends Fragment implements Validator.ValidationLi
     }
 
     public void onPhotoCropped(Uri output) {
-        String croppedPath = FotoUtils.getPath(getContext(), output);
-        FotoUtils.sendPictureBroadcast(croppedPath, getContext());
+        imgPost.setVisibility(View.VISIBLE);
+        imgRemoveImage.setVisibility(View.VISIBLE);
+        fabEscolherFoto.setVisibility(View.GONE);
+        String croppedPath = FotoUtils.getPath(this, output);
+        FotoUtils.sendPictureBroadcast(croppedPath, this);
         avatar = new File(croppedPath);
-        Picasso.with(getContext()).load(avatar).into(imgAvatar);
+        Picasso.with(this).load(avatar).into(imgPost);
 
     }
 
     @Override
-    public void onValidationSucceeded() {
-        loginDialog.show();
-        rotaLogin.registrar(getContext(), editNome.getText().toString(), editEmail.getText().toString(), editSenha.getText().toString(), null, LoginActivity.LOGIN_MOOP, FirebaseInstanceId.getInstance().getToken(), "android", avatar, this);
+    public void onFeedPublised(FeedItem feedItem) {
+        progressDialog.dismiss();
+        Intent data = new Intent();
+        data.putExtra("feedItem", feedItem);
+        setResult(Activity.RESULT_OK, data);
+        finish();
+
     }
 
     @Override
-    public void onValidationFailed(List<ValidationError> errors) {
-        for (ValidationError error : errors) {
-            View view = error.getView();
-            String message = error.getCollatedErrorMessage(getContext());
-
-            // Display error messages ;)
-            if (view instanceof EditText) {
-                ((EditText) view).setError(message);
-            } else {
-                Toast.makeText(getContext(), message, Toast.LENGTH_LONG).show();
-            }
-        }
-    }
-
-    @Override
-    public void onUserRegistred() {
-        loginDialog.dismiss();
-        startActivity(new Intent(loginActivity, MoopActivity.class));
-        getActivity().finish();
-    }
-
-    @Override
-    public void onRegistrationFail(String error) {
-        loginDialog.dismiss();
-        Toast.makeText(loginActivity, error, Toast.LENGTH_SHORT).show();
+    public void onFeedPublishFail(String error) {
+        progressDialog.dismiss();
     }
 }

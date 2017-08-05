@@ -25,4 +25,10 @@ public enum CondominioPreferences {
         editor.putLong(PREFERENCE_LAST_SELECTED_CONDOMINIO, condominioId);
         editor.apply();
     }
+
+    public void deletePreferences(Context context) {
+        SharedPreferences preferences = context.getSharedPreferences(context.getString(R.string.app_configs), Context.MODE_PRIVATE);
+        SharedPreferences.Editor editor = preferences.edit();
+        editor.clear().clear();
+    }
 }

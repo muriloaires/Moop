@@ -6,6 +6,8 @@ import org.greenrobot.greendao.annotation.Generated;
 import org.greenrobot.greendao.annotation.Id;
 import org.greenrobot.greendao.annotation.ToOne;
 
+import java.io.Serializable;
+
 import mobi.moop.model.repository.dao.DaoSession;
 import mobi.moop.model.repository.dao.UserDao;
 import mobi.moop.model.repository.dao.UsuarioDao;
@@ -15,7 +17,8 @@ import mobi.moop.model.repository.dao.UsuarioDao;
  */
 
 @Entity
-public class Usuario {
+public class Usuario implements Serializable{
+    private static final long serialVersionUID = 29022899;
 
     @Id
     private Long id;
@@ -25,6 +28,8 @@ public class Usuario {
     private String apiToken;
 
     private String avatar;
+
+    private String loginType;
 
     @ToOne(joinProperty = "userId")
     private User user;
@@ -43,12 +48,14 @@ public class Usuario {
     @Generated(hash = 1305250862)
     private transient UsuarioDao myDao;
 
-    @Generated(hash = 1020182777)
-    public Usuario(Long id, String nome, String apiToken, String avatar, Long userId) {
+    @Generated(hash = 204163058)
+    public Usuario(Long id, String nome, String apiToken, String avatar, String loginType,
+            Long userId) {
         this.id = id;
         this.nome = nome;
         this.apiToken = apiToken;
         this.avatar = avatar;
+        this.loginType = loginType;
         this.userId = userId;
     }
 
@@ -179,5 +186,13 @@ public class Usuario {
 
     public void setAvatar(String avatar) {
         this.avatar = avatar;
+    }
+
+    public String getLoginType() {
+        return this.loginType;
+    }
+
+    public void setLoginType(String loginType) {
+        this.loginType = loginType;
     }
 }

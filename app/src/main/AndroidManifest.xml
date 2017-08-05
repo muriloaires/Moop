@@ -23,14 +23,18 @@
             android:name="com.facebook.FacebookActivity"
             android:configChanges="keyboard|keyboardHidden|screenLayout|screenSize|orientation"
             android:label="@string/app_name" />
-        <activity android:name=".features.SplashScreen">
+        <activity
+            android:name=".features.SplashScreen"
+            android:screenOrientation="portrait">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity android:name=".features.login.LoginActivity" />
+        <activity
+            android:name=".features.login.LoginActivity"
+            android:screenOrientation="portrait" />
         <activity
             android:name="com.yalantis.ucrop.UCropActivity"
             android:screenOrientation="portrait"
@@ -45,8 +49,14 @@
         <activity
             android:name=".features.MoopActivity"
             android:label="@string/title_activity_moop"
+            android:screenOrientation="portrait"
             android:theme="@style/AppTheme.NoActionBar" />
-        <activity android:name=".features.condominio.AddCondominioActivity"></activity>
+        <activity
+            android:name=".features.condominio.AddCondominioActivity"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".features.publicacoes.NewPostActivity"
+            android:screenOrientation="portrait" />
     </application>
 
 </manifest>

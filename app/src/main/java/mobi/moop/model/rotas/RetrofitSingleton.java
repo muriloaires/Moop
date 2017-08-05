@@ -22,7 +22,7 @@ public enum RetrofitSingleton {
     private static RetrofitSingleton instance;
 
     public static final String DATE_FORMAT = "yyyy-MM-dd'T'HH:mm:ssZ";
-    public static final String BASE_URL = "http://ec2-34-227-60-18.compute-1.amazonaws.com/";
+    public static final String BASE_URL = "http://app.moop.mobi/";
     public static final String API_V1 = "app_dev.php/api/v1/";
 
 
