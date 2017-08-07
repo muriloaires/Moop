@@ -49,17 +49,22 @@ public class FeedViewHolder extends RecyclerView.ViewHolder {
     public void bindView(FeedItem feedItem) {
         this.feedItem = feedItem;
         textNome.setText(feedItem.getPerfil().getNome());
-        Picasso.with(context).load(feedItem.getPerfil().getAvatar()).placeholder(R.drawable.placeholder_avatar).into(imgAvatar, new Callback() {
-            @Override
-            public void onSuccess() {
+        if(!feedItem.getPerfil().getAvatar().equals("")){
+            Picasso.with(context).load(feedItem.getPerfil().getAvatar()).placeholder(R.drawable.placeholder_avatar).into(imgAvatar, new Callback() {
+                @Override
+                public void onSuccess() {
 
-            }
+                }
 
-            @Override
-            public void onError() {
-                Picasso.with(context).load(RetrofitSingleton.BASE_URL +FeedViewHolder.this.feedItem.getPerfil().getAvatar()).placeholder(R.drawable.placeholder_avatar).into(imgAvatar);
-            }
-        });
+                @Override
+                public void onError() {
+                    Picasso.with(context).load(RetrofitSingleton.BASE_URL +FeedViewHolder.this.feedItem.getPerfil().getAvatar()).placeholder(R.drawable.placeholder_avatar).into(imgAvatar);
+                }
+            });
+        }else{
+            Picasso.with(context).load(R.drawable.placeholder_avatar).into(imgAvatar);
+        }
+
         if (feedItem.getTexto() == null || feedItem.getTexto().equals("")) {
             textConteudo.setVisibility(View.GONE);
         } else {
@@ -75,6 +80,7 @@ public class FeedViewHolder extends RecyclerView.ViewHolder {
             Picasso.with(context).load(RetrofitSingleton.BASE_URL + feedItem.getImagem())
                     .noFade()
                     .networkPolicy(NetworkPolicy.OFFLINE)
+                    .placeholder(R.drawable.feedplaceholder)
                     .into(imgPost, new Callback() {
                         @Override
                         public void onSuccess() {
@@ -89,6 +95,7 @@ public class FeedViewHolder extends RecyclerView.ViewHolder {
                         public void onError() {
                             Picasso.with(context).load(RetrofitSingleton.BASE_URL + FeedViewHolder.this.feedItem.getImagem())
                                     .noFade()
+                                    .placeholder(R.drawable.feedplaceholder)
                                     .into(imgPost, new Callback() {
                                         @Override
                                         public void onSuccess() {

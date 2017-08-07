@@ -115,6 +115,13 @@ public class LoginFragment extends Fragment implements Validator.ValidationListe
     }
 
     @Override
+    public void onPause() {
+        super.onPause();
+        mGoogleApiClient.stopAutoManage(getActivity());
+        mGoogleApiClient.disconnect();
+    }
+
+    @Override
     public void onResume() {
         super.onResume();
         loginActivity.hideToolbar();
@@ -157,12 +164,16 @@ public class LoginFragment extends Fragment implements Validator.ValidationListe
                                 new GraphRequest.GraphJSONObjectCallback() {
                                     @Override
                                     public void onCompleted(JSONObject object, GraphResponse response) {
-                                        try {
-                                            facebookJson = object;
-                                            performLogin(object.getString("email"), null, LoginActivity.LOGIN_FACEBOOK);
-                                        } catch (JSONException e) {
 
+                                        facebookJson = object;
+                                        try {
+                                            String email = object.getString("email");
+                                            performLogin(email, null, LoginActivity.LOGIN_FACEBOOK);
+                                        } catch (JSONException e) {
+                                            Toast.makeText(loginActivity, getString(R.string.email_nao_encontrado), Toast.LENGTH_SHORT).show();
                                         }
+
+
                                     }
                                 });
 

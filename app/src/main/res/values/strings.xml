@@ -57,4 +57,5 @@
     <string name="atencao">Atenção</string>
     <string name="nenhum_condominio">Você não está cadastrado a nenhum condomínio e será redirecionado para tela de cadastro.</string>
     <string name="entendi">Entendi</string>
+    <string name="email_nao_encontrado">Endereço de email não fornecido pela rede social</string>
 </resources>

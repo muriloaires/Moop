@@ -104,7 +104,11 @@ public class MoopActivity extends AppCompatActivity implements NavigationView.On
         toggle.syncState();
         navigationView.setNavigationItemSelectedListener(this);
         ImageView imgAvatar = (ImageView) navigationView.getHeaderView(0).findViewById(R.id.imgAvatar);
-        Picasso.with(this).load(UsuarioSingleton.I.getUsuarioLogado(this).getAvatar()).placeholder(R.drawable.placeholder_avatar).into(imgAvatar);
+        if (!UsuarioRepository.I.getUsuarioLogado(this).getAvatar().equals("")) {
+            Picasso.with(this).load(UsuarioSingleton.I.getUsuarioLogado(this).getAvatar()).placeholder(R.drawable.placeholder_avatar).into(imgAvatar);
+        } else {
+            Picasso.with(this).load(R.drawable.placeholder_avatar).into(imgAvatar);
+        }
         TextView textNome = (TextView) navigationView.getHeaderView(0).findViewById(R.id.textNome);
         TextView textEmail = (TextView) navigationView.getHeaderView(0).findViewById(R.id.textEmail);
         textNome.setText(UsuarioSingleton.I.getUsuarioLogado(this).getNome());
