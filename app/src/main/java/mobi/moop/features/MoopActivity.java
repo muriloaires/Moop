@@ -16,6 +16,7 @@ import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.SubMenu;
+import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -69,8 +70,8 @@ public class MoopActivity extends AppCompatActivity implements NavigationView.On
     }
 
     private void configureTabs() {
-        tabLayout.addTab(tabLayout.newTab().setText(R.string.timeline).setIcon(R.drawable.ic_feed));
-        tabLayout.addTab(tabLayout.newTab().setText(R.string.reservas).setIcon(R.drawable.ic_calendar));
+        tabLayout.addTab(tabLayout.newTab().setCustomView(R.layout.tab_feed));
+        tabLayout.addTab(tabLayout.newTab().setCustomView(R.layout.tab_reservas));
         PagerAdapter adapter = new PagerAdapter(getSupportFragmentManager(), tabLayout.getTabCount());
         pager.setAdapter(adapter);
         pager.addOnPageChangeListener(new TabLayout.TabLayoutOnPageChangeListener(tabLayout));
@@ -78,12 +79,31 @@ public class MoopActivity extends AppCompatActivity implements NavigationView.On
             @Override
             public void onTabSelected(TabLayout.Tab tab) {
                 pager.setCurrentItem(tab.getPosition());
-                tab.getIcon().setColorFilter(getResources().getColor(R.color.colorPrimary), PorterDuff.Mode.MULTIPLY);
+                View view = tab.getCustomView();
+                switch (tab.getPosition()) {
+                    case 0:
+                        ImageView imgView = (ImageView) view.findViewById(R.id.iconFeed);
+                        imgView.getDrawable().setColorFilter(getResources().getColor(R.color.colorPrimary), PorterDuff.Mode.MULTIPLY);
+                        break;
+                    default:
+                        ImageView imgView2 = (ImageView) view.findViewById(R.id.iconReservas);
+                        imgView2.getDrawable().setColorFilter(getResources().getColor(R.color.colorPrimary), PorterDuff.Mode.MULTIPLY);
+                }
             }
 
             @Override
             public void onTabUnselected(TabLayout.Tab tab) {
-                tab.getIcon().setColorFilter(getResources().getColor(R.color.colorTabUnselected), PorterDuff.Mode.MULTIPLY);
+                View view = tab.getCustomView();
+                switch (tab.getPosition()) {
+                    case 0:
+                        ImageView imgView = (ImageView) view.findViewById(R.id.iconFeed);
+                        imgView.getDrawable().setColorFilter(getResources().getColor(R.color.colorTabUnselected), PorterDuff.Mode.MULTIPLY);
+                        break;
+                    default:
+                        ImageView imgView2 = (ImageView) view.findViewById(R.id.iconReservas);
+                        imgView2.getDrawable().setColorFilter(getResources().getColor(R.color.colorTabUnselected), PorterDuff.Mode.MULTIPLY);
+                }
+
             }
 
             @Override

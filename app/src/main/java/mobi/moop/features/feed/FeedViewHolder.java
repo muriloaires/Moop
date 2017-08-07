@@ -3,6 +3,7 @@ package mobi.moop.features.feed;
 import android.content.Context;
 import android.support.v7.widget.RecyclerView;
 import android.view.View;
+import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
 
@@ -12,6 +13,7 @@ import com.squareup.picasso.Picasso;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
+import mobi.moop.MoopApplication;
 import mobi.moop.R;
 import mobi.moop.model.entities.FeedItem;
 import mobi.moop.model.rotas.RetrofitSingleton;
@@ -49,7 +51,7 @@ public class FeedViewHolder extends RecyclerView.ViewHolder {
     public void bindView(FeedItem feedItem) {
         this.feedItem = feedItem;
         textNome.setText(feedItem.getPerfil().getNome());
-        if(!feedItem.getPerfil().getAvatar().equals("")){
+        if (!feedItem.getPerfil().getAvatar().equals("")) {
             Picasso.with(context).load(feedItem.getPerfil().getAvatar()).placeholder(R.drawable.placeholder_avatar).into(imgAvatar, new Callback() {
                 @Override
                 public void onSuccess() {
@@ -58,10 +60,10 @@ public class FeedViewHolder extends RecyclerView.ViewHolder {
 
                 @Override
                 public void onError() {
-                    Picasso.with(context).load(RetrofitSingleton.BASE_URL +FeedViewHolder.this.feedItem.getPerfil().getAvatar()).placeholder(R.drawable.placeholder_avatar).into(imgAvatar);
+                    Picasso.with(context).load(RetrofitSingleton.BASE_URL + FeedViewHolder.this.feedItem.getPerfil().getAvatar()).placeholder(R.drawable.placeholder_avatar).into(imgAvatar);
                 }
             });
-        }else{
+        } else {
             Picasso.with(context).load(R.drawable.placeholder_avatar).into(imgAvatar);
         }
 
@@ -76,43 +78,17 @@ public class FeedViewHolder extends RecyclerView.ViewHolder {
             imgPost.setVisibility(View.GONE);
         } else {
             imgPost.setVisibility(View.VISIBLE);
-
+            float constante = (float) MoopApplication.screenWidth / feedItem.getwImage();
+            int imgViewWidth = (int) (constante * feedItem.getwImage());
+            int imgViewHeight = (int) (constante * feedItem.gethImage());
+            ViewGroup.LayoutParams params = imgPost.getLayoutParams();
+            params.width = imgViewWidth;
+            params.height = imgViewHeight;
+            imgPost.setLayoutParams(params);
             Picasso.with(context).load(RetrofitSingleton.BASE_URL + feedItem.getImagem())
                     .noFade()
-                    .networkPolicy(NetworkPolicy.OFFLINE)
                     .placeholder(R.drawable.feedplaceholder)
-                    .into(imgPost, new Callback() {
-                        @Override
-                        public void onSuccess() {
-                            try {
-                                adapter.notifyDataSetChanged();
-                            } catch (Exception e) {
-
-                            }
-                        }
-
-                        @Override
-                        public void onError() {
-                            Picasso.with(context).load(RetrofitSingleton.BASE_URL + FeedViewHolder.this.feedItem.getImagem())
-                                    .noFade()
-                                    .placeholder(R.drawable.feedplaceholder)
-                                    .into(imgPost, new Callback() {
-                                        @Override
-                                        public void onSuccess() {
-                                            try {
-                                                adapter.notifyDataSetChanged();
-                                            } catch (Exception e) {
-
-                                            }
-                                        }
-
-                                        @Override
-                                        public void onError() {
-
-                                        }
-                                    });
-                        }
-                    });
+                    .into(imgPost);
         }
     }
 }

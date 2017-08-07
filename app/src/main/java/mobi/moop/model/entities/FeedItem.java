@@ -7,7 +7,7 @@ import java.util.Date;
  * Created by murilo aires on 27/07/2017.
  */
 
-public class FeedItem  implements Serializable{
+public class FeedItem implements Serializable {
     private Long id;
 
     private String titulo;
@@ -21,6 +21,18 @@ public class FeedItem  implements Serializable{
     private Date createdAt;
 
     private Date updatedAt;
+
+    private int wImage;
+
+    private int hImage;
+
+    public int getwImage() {
+        return wImage;
+    }
+
+    public int gethImage() {
+        return hImage;
+    }
 
     private Condominio condominio;
 

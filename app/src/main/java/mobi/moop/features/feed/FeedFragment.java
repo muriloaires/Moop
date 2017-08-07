@@ -6,6 +6,7 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.Fragment;
+import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
@@ -39,6 +40,9 @@ public class FeedFragment extends Fragment implements RotaFeed.FeedHandler {
     @BindView(R.id.fab_createevent)
     FloatingActionButton fab;
 
+    @BindView(R.id.refresh)
+    SwipeRefreshLayout referesh;
+
     @OnClick(R.id.fab_createevent)
     public void fabAction(View view) {
         writeNewPost();
@@ -61,8 +65,25 @@ public class FeedFragment extends Fragment implements RotaFeed.FeedHandler {
         View view = inflater.inflate(R.layout.fragment_feed, container, false);
         ButterKnife.bind(this, view);
         setupRecyclerView();
+        referesh.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
+            @Override
+            public void onRefresh() {
+                loadFeed(0);
+            }
+        });
+        referesh.setColorSchemeResources(R.color.colorPrimary);
         loadFeed(items.size() - 1);
         return view;
+    }
+
+    @Override
+    public void onPause() {
+        super.onPause();
+        if (referesh != null) {
+            referesh.setRefreshing(false);
+            referesh.destroyDrawingCache();
+            referesh.clearAnimation();
+        }
     }
 
     private void loadFeed(int offset) {
@@ -105,6 +126,9 @@ public class FeedFragment extends Fragment implements RotaFeed.FeedHandler {
 
     @Override
     public void onFeedReceived(List<FeedItem> items, int offset) {
+        if (referesh.isRefreshing()) {
+            referesh.setRefreshing(false);
+        }
         scrollListener.resetPreviousTotal();
         if (offset == 0) {
             this.items.clear();
@@ -114,7 +138,7 @@ public class FeedFragment extends Fragment implements RotaFeed.FeedHandler {
         if (items.size() < 10) {
             this.items.remove(this.items.size() - 1);
             feedAdapter.notifyDataSetChanged();
-        }else{
+        } else {
             feedAdapter.notifyDataSetChanged();
             recyclerView.addOnScrollListener(scrollListener);
 
@@ -123,6 +147,9 @@ public class FeedFragment extends Fragment implements RotaFeed.FeedHandler {
 
     @Override
     public void onFeedReceiveFail(String error) {
+        if (referesh.isRefreshing()) {
+            referesh.setRefreshing(false);
+        }
         scrollListener.resetPreviousTotal();
         recyclerView.addOnScrollListener(scrollListener);
         Toast.makeText(getContext(), error, Toast.LENGTH_SHORT).show();
