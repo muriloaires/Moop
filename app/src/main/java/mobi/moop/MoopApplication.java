@@ -6,6 +6,7 @@ import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
 import android.content.pm.Signature;
 import android.graphics.Point;
+import android.os.StrictMode;
 import android.util.Base64;
 import android.util.Log;
 import android.view.Display;
@@ -51,6 +52,9 @@ public class MoopApplication extends Application {
         } catch (NoSuchAlgorithmException e) {
 
         }
+        StrictMode.VmPolicy.Builder builder = new StrictMode.VmPolicy.Builder();
+        StrictMode.setVmPolicy(builder.build());
+        builder.detectFileUriExposure();
     }
 
     private void setUpDatabase() {

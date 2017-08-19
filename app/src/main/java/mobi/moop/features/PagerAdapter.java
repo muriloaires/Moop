@@ -20,8 +20,7 @@ public class PagerAdapter extends FragmentStatePagerAdapter {
 
         switch (position) {
             case 0:
-                FeedFragment tab1 = new FeedFragment();
-                return tab1;
+                return new FeedFragment();
             case 1:
                 ReservasFragment tab5 = new ReservasFragment();
                 return tab5;

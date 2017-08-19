@@ -6,4 +6,7 @@
     <color name="tab_background_selected">#f5f0f0</color>
     <color name="tab_background_unselected">#FFF</color>
     <color name="colorTabUnselected">#9f9f9f</color>
+    <color name="cinza">#dedede</color>
+    <color name="verde">#04af1b</color>
+    <color name="selected_condominio">#d2d2d2</color>
 </resources>

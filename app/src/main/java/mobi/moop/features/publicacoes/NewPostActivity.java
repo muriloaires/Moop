@@ -9,13 +9,13 @@ import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.net.Uri;
 import android.os.Build;
+import android.os.Bundle;
 import android.provider.MediaStore;
 import android.support.annotation.NonNull;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
-import android.os.Bundle;
 import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -283,9 +283,7 @@ public class NewPostActivity extends AppCompatActivity implements RotaFeed.FeedP
     @Override
     public void onFeedPublised(FeedItem feedItem) {
         progressDialog.dismiss();
-        Intent data = new Intent();
-        data.putExtra("feedItem", feedItem);
-        setResult(Activity.RESULT_OK, data);
+        setResult(Activity.RESULT_OK);
         finish();
 
     }

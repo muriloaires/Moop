@@ -15,6 +15,7 @@ import android.provider.MediaStore;
 import android.support.annotation.NonNull;
 import android.support.v4.app.Fragment;
 import android.support.v4.content.ContextCompat;
+import android.support.v4.content.FileProvider;
 import android.support.v7.app.AlertDialog;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -176,7 +177,13 @@ public class RegistroFragment extends Fragment implements Validator.ValidationLi
                 Toast.makeText(getContext(), getString(R.string.app_nao_conseguiu_criar_diretorio), Toast.LENGTH_LONG).show();
                 return;
             }
-            cameraIntent.putExtra(MediaStore.EXTRA_OUTPUT, Uri.fromFile(photoFile));
+            Uri photoUri = null;
+            if (Build.VERSION.SDK_INT > Build.VERSION_CODES.M) {
+                photoUri = FileProvider.getUriForFile(getContext(), getContext().getApplicationContext().getPackageName() + ".my.package.name.provider", photoFile);
+            } else {
+                photoUri = Uri.fromFile(photoFile);
+            }
+            cameraIntent.putExtra(MediaStore.EXTRA_OUTPUT, photoUri);
             mCurrentPhotoPath = photoFile.getAbsolutePath();
             startActivityForResult(cameraIntent, from);
         }

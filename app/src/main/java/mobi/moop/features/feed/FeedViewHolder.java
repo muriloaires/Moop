@@ -1,6 +1,7 @@
 package mobi.moop.features.feed;
 
 import android.content.Context;
+import android.content.Intent;
 import android.support.v7.widget.RecyclerView;
 import android.view.View;
 import android.view.ViewGroup;
@@ -8,13 +9,15 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.squareup.picasso.Callback;
-import com.squareup.picasso.NetworkPolicy;
 import com.squareup.picasso.Picasso;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
+import butterknife.OnClick;
 import mobi.moop.MoopApplication;
 import mobi.moop.R;
+import mobi.moop.features.comentarios.ComentariosActivity;
+import mobi.moop.features.publicacoes.ImageActivity;
 import mobi.moop.model.entities.FeedItem;
 import mobi.moop.model.rotas.RetrofitSingleton;
 
@@ -37,6 +40,23 @@ public class FeedViewHolder extends RecyclerView.ViewHolder {
 
     @BindView(R.id.imgPost)
     ImageView imgPost;
+
+    @BindView(R.id.textNumeroComments)
+    TextView textNumeroComments;
+
+    @OnClick(R.id.imgPost)
+    public void imgPostAction(View view) {
+        Intent intent = new Intent(context, ImageActivity.class);
+        intent.putExtra("bitmap", feedItem.getImagem());
+        context.startActivity(intent);
+    }
+
+    @OnClick(R.id.textNumeroComments)
+    public void textNumeroCommentsAction(View view) {
+        Intent intent = new Intent(context, ComentariosActivity.class);
+        intent.putExtra("feedId", feedItem.getId());
+        context.startActivity(intent);
+    }
 
     private FeedItem feedItem;
     private FeedAdapter adapter;

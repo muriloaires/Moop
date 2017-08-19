@@ -3,7 +3,6 @@ package mobi.moop.model.repository;
 import android.content.Context;
 
 import mobi.moop.MoopApplication;
-import mobi.moop.features.MoopActivity;
 import mobi.moop.model.entities.Usuario;
 import mobi.moop.model.repository.dao.UserDao;
 import mobi.moop.model.repository.dao.UsuarioDao;
@@ -38,6 +37,11 @@ public enum UsuarioRepository {
     }
 
     public void removeUsuarioLogado(Context context) {
+        getUsuarioDao(context).deleteAll();
         getUserDao(context).deleteAll();
+    }
+
+    public void updateUsuario(Context context, Usuario usuarioLogado) {
+        getUsuarioDao(context).insertOrReplace(usuarioLogado);
     }
 }

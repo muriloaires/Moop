@@ -1,4 +1,4 @@
-package mobi.moop.features;
+package mobi.moop.features.splash;
 
 import android.content.Intent;
 import android.os.Bundle;
@@ -6,6 +6,7 @@ import android.os.Handler;
 import android.support.v7.app.AppCompatActivity;
 
 import mobi.moop.R;
+import mobi.moop.features.MoopActivity;
 import mobi.moop.features.login.LoginActivity;
 import mobi.moop.model.singleton.UsuarioSingleton;
 

@@ -8,10 +8,6 @@
                 android:icon="@drawable/ic_edit"
                 android:title="@string/editar_perfil" />
             <item
-                android:id="@+id/trocarSenha"
-                android:icon="@drawable/ic_lock"
-                android:title="@string/trocar_senha" />
-            <item
                 android:id="@+id/logout"
                 android:icon="@drawable/ic_logout"
                 android:title="@string/sair" />

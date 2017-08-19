@@ -24,7 +24,7 @@
             android:configChanges="keyboard|keyboardHidden|screenLayout|screenSize|orientation"
             android:label="@string/app_name" />
         <activity
-            android:name=".features.SplashScreen"
+            android:name=".features.splash.SplashScreen"
             android:screenOrientation="portrait">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
@@ -57,6 +57,20 @@
         <activity
             android:name=".features.publicacoes.NewPostActivity"
             android:screenOrientation="portrait" />
+        <activity android:name=".features.comentarios.ComentariosActivity" />
+        <activity android:name=".features.publicacoes.ImageActivity" />
+        <activity android:name=".features.reserva.DisponibilidadesActivity" />
+        <activity android:name=".features.perfil.EditarPerfilActivity" />
+
+        <provider
+            android:name=".features.utils.GenericFileProvider"
+            android:authorities="${applicationId}.my.package.name.provider"
+            android:exported="false"
+            android:grantUriPermissions="true">
+            <meta-data
+                android:name="android.support.FILE_PROVIDER_PATHS"
+                android:resource="@xml/provider_paths" />
+        </provider>
     </application>
 
 </manifest>

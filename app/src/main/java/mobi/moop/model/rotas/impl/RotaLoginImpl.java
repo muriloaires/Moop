@@ -9,6 +9,7 @@ import mobi.moop.model.entities.Usuario;
 import mobi.moop.model.repository.UsuarioRepository;
 import mobi.moop.model.rotas.RetrofitSingleton;
 import mobi.moop.model.rotas.RotaUsuario;
+import mobi.moop.model.singleton.UsuarioSingleton;
 import okhttp3.MediaType;
 import okhttp3.MultipartBody;
 import okhttp3.RequestBody;
@@ -77,6 +78,36 @@ public class RotaLoginImpl {
             @Override
             public void onFailure(Call<Usuario> call, Throwable t) {
                 handler.onRegistrationFail(context.getString(R.string.algo_errado_ocorreu));
+            }
+        });
+    }
+
+    public void atualizar(final Context context, String nome, File imgAvatar, final RotaUsuario.UpdateHandler handler) {
+        RequestBody nomeBody = RequestBody.create(MediaType.parse("multipart/form-data"), nome);
+        MultipartBody.Part body = null;
+        if (imgAvatar != null) {
+            body = MultipartBody.Part.createFormData("avatar", imgAvatar.getName(), RequestBody.create(MediaType.parse("image/*"), imgAvatar));
+        }
+        Call<Usuario> call = RetrofitSingleton.INSTANCE.getRetrofiInstance().create(RotaUsuario.class).update(UsuarioSingleton.I.getUsuarioLogado(context).getApiToken(), nomeBody, body);
+        call.enqueue(new Callback<Usuario>() {
+            @Override
+            public void onResponse(Call<Usuario> call, Response<Usuario> response) {
+                if (response.isSuccessful()) {
+                    Usuario usuarioLogado = UsuarioSingleton.I.getUsuarioLogado(context);
+                    usuarioLogado.setNome(response.body().getNome());
+                    if (!response.body().getAvatar().equals("")) {
+                        usuarioLogado.setAvatar(response.body().getAvatar());
+                    }
+                    UsuarioRepository.I.updateUsuario(context, usuarioLogado);
+                    handler.onUserUpdated();
+                } else {
+                    handler.onUpdateFail(RetrofitSingleton.INSTANCE.getErrorBody(response));
+                }
+            }
+
+            @Override
+            public void onFailure(Call<Usuario> call, Throwable t) {
+                handler.onUpdateFail(context.getString(R.string.algo_errado_ocorreu));
             }
         });
     }

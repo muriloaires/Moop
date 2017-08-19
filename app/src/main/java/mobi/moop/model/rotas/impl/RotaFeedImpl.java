@@ -47,7 +47,7 @@ public class RotaFeedImpl {
     public void publish(final Context context, Usuario usuario, Long condominioId, String texto, File imgPost, final RotaFeed.FeedPublishHandler handler) {
         RequestBody titleBody = RequestBody.create(MediaType.parse("multipart/form-data"), "d");
         RequestBody textBody = null;
-        if (!texto.equals("")) {
+        if (texto != null && !texto.equals("")) {
             textBody = RequestBody.create(MediaType.parse("multipart/form-data"), texto);
         }
         MultipartBody.Part body = null;

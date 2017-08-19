@@ -6,8 +6,6 @@ import org.greenrobot.greendao.annotation.Generated;
 import org.greenrobot.greendao.annotation.Id;
 import org.greenrobot.greendao.annotation.ToOne;
 
-import java.io.Serializable;
-
 import mobi.moop.model.repository.dao.DaoSession;
 import mobi.moop.model.repository.dao.UserDao;
 import mobi.moop.model.repository.dao.UsuarioDao;
@@ -17,8 +15,7 @@ import mobi.moop.model.repository.dao.UsuarioDao;
  */
 
 @Entity
-public class Usuario implements Serializable{
-    private static final long serialVersionUID = 29022899;
+public class Usuario {
 
     @Id
     private Long id;
@@ -50,7 +47,7 @@ public class Usuario implements Serializable{
 
     @Generated(hash = 204163058)
     public Usuario(Long id, String nome, String apiToken, String avatar, String loginType,
-            Long userId) {
+                   Long userId) {
         this.id = id;
         this.nome = nome;
         this.apiToken = apiToken;
@@ -181,6 +178,9 @@ public class Usuario implements Serializable{
     }
 
     public String getAvatar() {
+        if (this.avatar == null) {
+            return "";
+        }
         return this.avatar;
     }
 

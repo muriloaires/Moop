@@ -3,6 +3,7 @@ package mobi.moop.model.entities;
 import org.greenrobot.greendao.annotation.Entity;
 import org.greenrobot.greendao.annotation.Id;
 import org.greenrobot.greendao.annotation.Generated;
+import org.greenrobot.greendao.annotation.Transient;
 
 import java.io.Serializable;
 
@@ -23,6 +24,9 @@ public class Condominio implements Serializable{
     private String Logradouro;
 
     private boolean isHorizontal;
+
+    @Transient
+    private boolean selected;
 
     @Generated(hash = 1246614547)
     public Condominio(Long id, String nome, String cep, String Logradouro,
@@ -72,6 +76,14 @@ public class Condominio implements Serializable{
 
     public boolean getIsHorizontal() {
         return this.isHorizontal;
+    }
+
+    public boolean isSelected() {
+        return selected;
+    }
+
+    public void setSelected(boolean selected) {
+        this.selected = selected;
     }
 
     public void setIsHorizontal(boolean isHorizontal) {

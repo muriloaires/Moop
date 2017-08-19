@@ -58,4 +58,17 @@
     <string name="nenhum_condominio">Você não está cadastrado a nenhum condomínio e será redirecionado para tela de cadastro.</string>
     <string name="entendi">Entendi</string>
     <string name="email_nao_encontrado">Endereço de email não fornecido pela rede social</string>
+    <string name="escreva_um_comentario">Escreva um comentário</string>
+    <string name="comentarios">Comentários</string>
+    <string name="bens_comuns_condominio">Bens comuns do condomínio</string>
+    <string name="disponibilidades">Disponibilidades</string>
+    <string name="reservar">Reservar</string>
+    <string name="suas_reservas">suas reservas</string>
+    <string name="confirmar">Confirmar</string>
+    <string name="atualizando">Atualizando</string>
+    <string name="avancar">Avançar</string>
+    <string name="nenhum_condominio_encontrado">Nenhum condomínio cadastrado neste CEP</string>
+    <string name="escolha_um_condominio">Selecione um condomínio</string>
+    <string name="add_condominio">Adicionar Condomínio</string>
+    <string name="agora_escolha_bloco">Agora escolha seu bloco</string>
 </resources>

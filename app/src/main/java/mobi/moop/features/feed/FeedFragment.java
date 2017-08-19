@@ -2,8 +2,10 @@ package mobi.moop.features.feed;
 
 
 import android.app.Activity;
+import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
+import android.support.annotation.Nullable;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.Fragment;
 import android.support.v4.widget.SwipeRefreshLayout;
@@ -42,6 +44,7 @@ public class FeedFragment extends Fragment implements RotaFeed.FeedHandler {
 
     @BindView(R.id.refresh)
     SwipeRefreshLayout referesh;
+    private Context context;
 
     @OnClick(R.id.fab_createevent)
     public void fabAction(View view) {
@@ -72,8 +75,14 @@ public class FeedFragment extends Fragment implements RotaFeed.FeedHandler {
             }
         });
         referesh.setColorSchemeResources(R.color.colorPrimary);
-        loadFeed(items.size() - 1);
+
         return view;
+    }
+
+    @Override
+    public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
+        super.onViewCreated(view, savedInstanceState);
+        loadFeed(items.size() - 1);
     }
 
     @Override
@@ -88,11 +97,11 @@ public class FeedFragment extends Fragment implements RotaFeed.FeedHandler {
 
     private void loadFeed(int offset) {
         recyclerView.removeOnScrollListener(scrollListener);
-        rotaFeed.getFeed(getContext(), CondominioPreferences.I.getLastSelectedCondominio(getContext()), 10, offset, this);
+        rotaFeed.getFeed(context, CondominioPreferences.I.getLastSelectedCondominio(context), 10, offset, this);
     }
 
     private void setupRecyclerView() {
-        LinearLayoutManager manager = new LinearLayoutManager(getContext());
+        LinearLayoutManager manager = new LinearLayoutManager(context);
         recyclerView.setLayoutManager(manager);
         items = new ArrayList<>();
         items.add(null);
@@ -125,6 +134,12 @@ public class FeedFragment extends Fragment implements RotaFeed.FeedHandler {
     }
 
     @Override
+    public void onAttach(Context context) {
+        super.onAttach(context);
+        this.context = context;
+    }
+
+    @Override
     public void onFeedReceived(List<FeedItem> items, int offset) {
         if (referesh.isRefreshing()) {
             referesh.setRefreshing(false);
@@ -152,11 +167,11 @@ public class FeedFragment extends Fragment implements RotaFeed.FeedHandler {
         }
         scrollListener.resetPreviousTotal();
         recyclerView.addOnScrollListener(scrollListener);
-        Toast.makeText(getContext(), error, Toast.LENGTH_SHORT).show();
+        Toast.makeText(context, error, Toast.LENGTH_SHORT).show();
     }
 
     private void writeNewPost() {
-        startActivityForResult(new Intent(getContext(), NewPostActivity.class), WRITE_POST);
+        startActivityForResult(new Intent(context, NewPostActivity.class), WRITE_POST);
     }
 
     @Override
@@ -164,17 +179,18 @@ public class FeedFragment extends Fragment implements RotaFeed.FeedHandler {
         switch (requestCode) {
             case WRITE_POST:
                 if (resultCode == Activity.RESULT_OK) {
-                    FeedItem newItem = (FeedItem) data.getSerializableExtra("feedItem");
-                    showNewItem(newItem);
+                    loadFeed(0);
                 }
                 break;
         }
     }
 
-    private void showNewItem(FeedItem newItem) {
-        recyclerView.scrollTo(0, 0);
-        items.add(0, newItem);
-        feedAdapter.notifyDataSetChanged();
-        loadFeed(0);
+    public void scrollToTop() {
+        try {
+            recyclerView.smoothScrollToPosition(0);
+        } catch (NullPointerException e) {
+
+        }
     }
+
 }
