@@ -55,7 +55,7 @@ public class BlocosFragment extends Fragment implements RotaCondominio.BlocosHan
 
     private void setupRecyclerView() {
         recyclerBlocos.setLayoutManager(new LinearLayoutManager(getContext()));
-        adapter = new BlocosAdapter(blocos);
+        adapter = new BlocosAdapter(blocos, getArguments().getLong("condominioId"));
         recyclerBlocos.setAdapter(adapter);
     }
 

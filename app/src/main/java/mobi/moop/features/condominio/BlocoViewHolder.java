@@ -22,16 +22,18 @@ public class BlocoViewHolder extends RecyclerView.ViewHolder {
     TextView textBloco;
 
     private Bloco bloco;
+    private Long condominioId;
 
     @OnClick(R.id.rootView)
     public void selectBloco(View view) {
-        ((AddCondominioActivity) context).showUnidadesFragment(bloco.getId());
+        ((AddCondominioActivity) context).showUnidadesFragment(bloco);
     }
 
-    public BlocoViewHolder(View itemView) {
+    public BlocoViewHolder(View itemView, Long condominioId) {
         super(itemView);
         ButterKnife.bind(this, itemView);
         this.context = itemView.getContext();
+        this.condominioId = condominioId;
     }
 
     public void bindView(Bloco bloco) {

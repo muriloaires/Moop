@@ -17,15 +17,17 @@ import mobi.moop.model.entities.Bloco;
 public class BlocosAdapter extends RecyclerView.Adapter<BlocoViewHolder> {
 
     private List<Bloco> blocos;
+    private Long condominioId;
 
-    public BlocosAdapter(List<Bloco> blocos) {
+    public BlocosAdapter(List<Bloco> blocos, Long condominioId) {
         this.blocos = blocos;
+        this.condominioId = condominioId;
     }
 
     @Override
     public BlocoViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
         View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.item_bloco, parent, false);
-        return new BlocoViewHolder(view);
+        return new BlocoViewHolder(view, condominioId);
     }
 
     @Override

@@ -42,6 +42,7 @@ public class CondominiosFragment extends Fragment implements RotaCondominio.Cond
     @BindView(R.id.btnAvancar)
     Button btnCadastrarCondominio;
 
+
     @OnClick(R.id.btnAvancar)
     public void btnAvancarAction(View view) {
         loadBlocos();
@@ -118,7 +119,7 @@ public class CondominiosFragment extends Fragment implements RotaCondominio.Cond
     @Override
     public void onResume() {
         super.onResume();
-        ((AddCondominioActivity)getContext()).setTitutlo(getString(R.string.escolha_o_condominio));
+        ((AddCondominioActivity) getContext()).setTitutlo(getString(R.string.escolha_o_condominio));
     }
 
     private void setupRecyclerView() {
@@ -172,7 +173,7 @@ public class CondominiosFragment extends Fragment implements RotaCondominio.Cond
         if (lastSelected == -1) {
             Toast.makeText(getContext(), getString(R.string.escolha_um_condominio), Toast.LENGTH_SHORT).show();
         } else {
-            ((AddCondominioActivity) getContext()).showBlocosFragment(condominios.get(lastSelected).getId());
+            ((AddCondominioActivity) getContext()).showBlocosFragment(condominios.get(lastSelected));
         }
     }
 

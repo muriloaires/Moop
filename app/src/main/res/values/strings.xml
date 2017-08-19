@@ -71,4 +71,9 @@
     <string name="escolha_um_condominio">Selecione um condomínio</string>
     <string name="add_condominio">Adicionar Condomínio</string>
     <string name="agora_escolha_bloco">Agora escolha seu bloco</string>
+    <string name="qual_sua_unidade">Qual a sua unidade?</string>
+    <string name="sim">Sim</string>
+    <string name="cancelar">Cancelar</string>
+    <string name="ok">OK</string>
+    <string name="qual_seu_perfil">Qual seu perfil?</string>
 </resources>
