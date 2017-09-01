@@ -26,6 +26,8 @@ public interface RotaFeed {
         void onFeedReceived(List<FeedItem> items, int offset);
 
         void onFeedReceiveFail(String error);
+
+        void onUsuarioNaoLiberado();
     }
 
     interface FeedPublishHandler {

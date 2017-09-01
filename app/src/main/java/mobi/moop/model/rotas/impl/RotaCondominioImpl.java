@@ -6,6 +6,7 @@ import mobi.moop.R;
 import mobi.moop.model.entities.Bloco;
 import mobi.moop.model.entities.Condominio;
 import mobi.moop.model.entities.Unidade;
+import mobi.moop.model.repository.CondominioRepository;
 import mobi.moop.model.rotas.RetrofitSingleton;
 import mobi.moop.model.rotas.RotaCondominio;
 import mobi.moop.model.rotas.reponse.GenericListResponse;
@@ -26,6 +27,7 @@ public class RotaCondominioImpl {
             @Override
             public void onResponse(Call<GenericListResponse<Condominio>> call, Response<GenericListResponse<Condominio>> response) {
                 if (response.isSuccessful()) {
+                    CondominioRepository.I.saveCondominio(context, response.body().getData());
                     handler.onCondominiosRecebidos(response.body().getData());
                 }
             }
@@ -88,8 +90,8 @@ public class RotaCondominioImpl {
         });
     }
 
-    public void registrarUnidade(final Context context, Long unidadeId, boolean isProprietario, boolean isMorador, final RotaCondominio.RegistroUnidadeHandler handler) {
-        Call<ResponseBody> call = RetrofitSingleton.INSTANCE.getRetrofiInstance().create(RotaCondominio.class).registrarEmUnidade(UsuarioSingleton.I.getUsuarioLogado(context).getApiToken(), unidadeId, isProprietario, isMorador);
+    public void registrarUnidade(final Context context, Long blocoId, boolean isProprietario, boolean isMorador, String unidade, final RotaCondominio.RegistroUnidadeHandler handler) {
+        Call<ResponseBody> call = RetrofitSingleton.INSTANCE.getRetrofiInstance().create(RotaCondominio.class).registrarEmUnidade(UsuarioSingleton.I.getUsuarioLogado(context).getApiToken(), blocoId, isProprietario, isMorador, unidade);
         call.enqueue(new Callback<ResponseBody>() {
             @Override
             public void onResponse(Call<ResponseBody> call, Response<ResponseBody> response) {

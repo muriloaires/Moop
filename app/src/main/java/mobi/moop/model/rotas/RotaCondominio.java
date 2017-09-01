@@ -62,7 +62,7 @@ public interface RotaCondominio {
     Call<GenericListResponse<Unidade>> getUnidadesBloco(@Header("apiToken") String apiToken, @Path("blocoId") Long blocoId, @Path("condominioId") Long condominioId);
 
     @Headers("appToken:" + RetrofitSingleton.APP_TOKEN)
-    @POST(RetrofitSingleton.BASE_URL + RetrofitSingleton.API_V1 + "condominio/{unidadeId}/perfil.json")
-    Call<ResponseBody> registrarEmUnidade(@Header("apiToken") String apiToken, @Path("unidadeId") Long unidadeId, @Query("isProprietario") boolean isProprietario, @Query("isMorador") boolean isMorador);
+    @POST(RetrofitSingleton.BASE_URL + RetrofitSingleton.API_V1 + "condominio/{bloco}/vincular/unidade.json")
+    Call<ResponseBody> registrarEmUnidade(@Header("apiToken") String apiToken, @Path("bloco") Long blocoId, @Query("isProprietario") boolean isProprietario, @Query("isMorador") boolean isMorador, @Query("numero") String unidade);
 
 }

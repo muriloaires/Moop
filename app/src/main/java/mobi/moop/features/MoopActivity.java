@@ -7,7 +7,6 @@ import android.graphics.PorterDuff;
 import android.os.Bundle;
 import android.support.design.widget.NavigationView;
 import android.support.design.widget.TabLayout;
-import android.support.v4.app.Fragment;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.view.ViewPager;
 import android.support.v4.widget.DrawerLayout;
@@ -35,7 +34,6 @@ import butterknife.ButterKnife;
 import mobi.moop.R;
 import mobi.moop.features.condominio.AddCondominioActivity;
 import mobi.moop.features.condominio.CondominioPreferences;
-import mobi.moop.features.feed.FeedFragment;
 import mobi.moop.features.login.LoginActivity;
 import mobi.moop.features.perfil.EditarPerfilActivity;
 import mobi.moop.features.reserva.DisponibilidadesActivity;
@@ -69,6 +67,7 @@ public class MoopActivity extends AppCompatActivity implements NavigationView.On
     RotaCondominioImpl rotaCondominio = new RotaCondominioImpl();
     private List<Condominio> condominios = new ArrayList<>();
     private int lastSelectedIndex;
+    private PagerAdapter adapter;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -85,7 +84,7 @@ public class MoopActivity extends AppCompatActivity implements NavigationView.On
         tabLayout.removeAllTabs();
         tabLayout.addTab(tabLayout.newTab().setCustomView(R.layout.tab_feed));
         tabLayout.addTab(tabLayout.newTab().setCustomView(R.layout.tab_reservas));
-        PagerAdapter adapter = new PagerAdapter(getSupportFragmentManager(), tabLayout.getTabCount());
+        adapter = new PagerAdapter(getSupportFragmentManager(), tabLayout.getTabCount());
         pager.setAdapter(adapter);
         pager.addOnPageChangeListener(new TabLayout.TabLayoutOnPageChangeListener(tabLayout));
         tabLayout.addOnTabSelectedListener(new TabLayout.OnTabSelectedListener() {
@@ -121,10 +120,16 @@ public class MoopActivity extends AppCompatActivity implements NavigationView.On
 
             @Override
             public void onTabReselected(TabLayout.Tab tab) {
-                Fragment fragment = getSupportFragmentManager().getFragments().get(tab.getPosition());
-                if (fragment instanceof FeedFragment) {
-                    ((FeedFragment) fragment).scrollToTop();
+                try {
+                    if (tab.getPosition() == 0) {
+                        adapter.getFeedFragment().scrollToTop();
+                    } else {
+                        adapter.getReservasFragment().scrollToTop();
+                    }
+                } catch (Exception e) {
+
                 }
+
             }
         });
         tabLayout.getTabAt(0).select();
@@ -197,6 +202,7 @@ public class MoopActivity extends AppCompatActivity implements NavigationView.On
         lastSelectedIndex = position;
         Condominio condominio = condominios.get(position);
         CondominioPreferences.I.saveLastSelectedCondominio(this, condominio.getId());
+        toolbar.setTitle(condominio.getNome());
         configureTabs();
     }
 

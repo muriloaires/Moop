@@ -29,6 +29,7 @@ public class CondominioDao extends AbstractDao<Condominio, Long> {
         public final static Property Cep = new Property(2, String.class, "cep", false, "CEP");
         public final static Property Logradouro = new Property(3, String.class, "Logradouro", false, "LOGRADOURO");
         public final static Property IsHorizontal = new Property(4, boolean.class, "isHorizontal", false, "IS_HORIZONTAL");
+        public final static Property IsLiberado = new Property(5, boolean.class, "isLiberado", false, "IS_LIBERADO");
     }
 
 
@@ -48,7 +49,8 @@ public class CondominioDao extends AbstractDao<Condominio, Long> {
                 "\"NOME\" TEXT," + // 1: nome
                 "\"CEP\" TEXT," + // 2: cep
                 "\"LOGRADOURO\" TEXT," + // 3: Logradouro
-                "\"IS_HORIZONTAL\" INTEGER NOT NULL );"); // 4: isHorizontal
+                "\"IS_HORIZONTAL\" INTEGER NOT NULL ," + // 4: isHorizontal
+                "\"IS_LIBERADO\" INTEGER NOT NULL );"); // 5: isLiberado
     }
 
     /** Drops the underlying database table. */
@@ -81,6 +83,7 @@ public class CondominioDao extends AbstractDao<Condominio, Long> {
             stmt.bindString(4, Logradouro);
         }
         stmt.bindLong(5, entity.getIsHorizontal() ? 1L: 0L);
+        stmt.bindLong(6, entity.getIsLiberado() ? 1L: 0L);
     }
 
     @Override
@@ -107,6 +110,7 @@ public class CondominioDao extends AbstractDao<Condominio, Long> {
             stmt.bindString(4, Logradouro);
         }
         stmt.bindLong(5, entity.getIsHorizontal() ? 1L: 0L);
+        stmt.bindLong(6, entity.getIsLiberado() ? 1L: 0L);
     }
 
     @Override
@@ -121,7 +125,8 @@ public class CondominioDao extends AbstractDao<Condominio, Long> {
             cursor.isNull(offset + 1) ? null : cursor.getString(offset + 1), // nome
             cursor.isNull(offset + 2) ? null : cursor.getString(offset + 2), // cep
             cursor.isNull(offset + 3) ? null : cursor.getString(offset + 3), // Logradouro
-            cursor.getShort(offset + 4) != 0 // isHorizontal
+            cursor.getShort(offset + 4) != 0, // isHorizontal
+            cursor.getShort(offset + 5) != 0 // isLiberado
         );
         return entity;
     }
@@ -133,6 +138,7 @@ public class CondominioDao extends AbstractDao<Condominio, Long> {
         entity.setCep(cursor.isNull(offset + 2) ? null : cursor.getString(offset + 2));
         entity.setLogradouro(cursor.isNull(offset + 3) ? null : cursor.getString(offset + 3));
         entity.setIsHorizontal(cursor.getShort(offset + 4) != 0);
+        entity.setIsLiberado(cursor.getShort(offset + 5) != 0);
      }
     
     @Override

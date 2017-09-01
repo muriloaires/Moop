@@ -1,12 +1,16 @@
-<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     tools:context="mobi.moop.features.reserva.ReservasFragment">
 
-  <android.support.v7.widget.RecyclerView
-      android:id="@+id/recyclerBensComuns"
-      android:layout_width="match_parent"
-      android:layout_height="match_parent"/>
+    <include
+        android:id="@+id/autorizacaoView"
+        layout="@layout/autorizacao" />
 
-</FrameLayout>
+    <android.support.v7.widget.RecyclerView
+        android:id="@+id/recyclerBensComuns"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent" />
+
+</RelativeLayout>

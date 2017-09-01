@@ -51,6 +51,9 @@ public class CondominiosFragment extends Fragment implements RotaCondominio.Cond
     @BindView(R.id.recyclerCondiminios)
     RecyclerView recyclerCondominios;
 
+    @BindView(R.id.viewNenhumCondominioEncontrado)
+    View viewNenhumCondominioEncontrado;
+
     private List<Condominio> condominios = new ArrayList<>();
     private CondominiosAdapter adapter;
 
@@ -147,9 +150,12 @@ public class CondominiosFragment extends Fragment implements RotaCondominio.Cond
         adapter.notifyDataSetChanged();
         if (condominios.size() == 0) {
             Toast.makeText(getContext(), getString(R.string.nenhum_condominio_encontrado), Toast.LENGTH_SHORT).show();
+            viewNenhumCondominioEncontrado.setVisibility(View.VISIBLE);
+            recyclerCondominios.setVisibility(View.GONE);
             btnCadastrarCondominio.setVisibility(View.GONE);
         } else {
-            btnCadastrarCondominio.setVisibility(View.VISIBLE);
+            viewNenhumCondominioEncontrado.setVisibility(View.GONE);
+            recyclerCondominios.setVisibility(View.VISIBLE);
         }
     }
 
@@ -161,6 +167,7 @@ public class CondominiosFragment extends Fragment implements RotaCondominio.Cond
     }
 
     public void select(int adapterPosition) {
+        btnCadastrarCondominio.setVisibility(View.VISIBLE);
         if (lastSelected != -1) {
             condominios.get(lastSelected).setSelected(false);
         }

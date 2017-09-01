@@ -25,7 +25,6 @@ public class UnidadeViewHolder extends RecyclerView.ViewHolder {
 
     @OnClick(R.id.rootView)
     public void selectUnidade(View view) {
-        ((AddCondominioActivity)context).selectUnidade(unidade);
     }
 
 

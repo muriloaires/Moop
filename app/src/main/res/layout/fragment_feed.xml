@@ -8,12 +8,15 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent">
 
+        <include
+            android:id="@+id/autorizacaoView"
+            layout="@layout/autorizacao" />
 
         <android.support.v7.widget.RecyclerView
             android:id="@+id/recyclerFeed"
-            android:background="@color/cinza"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
+            android:background="@color/cinza"
             app:layout_behavior="@string/appbar_scrolling_view_behavior" />
 
         <android.support.design.widget.FloatingActionButton

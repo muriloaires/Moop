@@ -26,6 +26,10 @@ public class FeedItem implements Serializable {
 
     private int hImage;
 
+    private Date data;
+
+    private Integer comentarios;
+
     public int getwImage() {
         return wImage;
     }
@@ -72,5 +76,13 @@ public class FeedItem implements Serializable {
 
     public Usuario getPerfil() {
         return perfil;
+    }
+
+    public Date getData() {
+        return data;
+    }
+
+    public Integer getComentarios() {
+        return comentarios;
     }
 }

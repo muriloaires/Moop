@@ -76,4 +76,6 @@
     <string name="cancelar">Cancelar</string>
     <string name="ok">OK</string>
     <string name="qual_seu_perfil">Qual seu perfil?</string>
+    <string name="voce_precisa_de_autorizacao">Você ainda precisa de autorização para ver este conteúdo</string>
+    <string name="registrando_unidade">Registrando em unidade</string>
 </resources>

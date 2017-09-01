@@ -23,9 +23,11 @@ import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
 import mobi.moop.R;
-import mobi.moop.features.condominio.CondominioPreferences;
 import mobi.moop.features.publicacoes.NewPostActivity;
+import mobi.moop.features.viewutils.Scrollable;
+import mobi.moop.model.entities.Condominio;
 import mobi.moop.model.entities.FeedItem;
+import mobi.moop.model.repository.CondominioRepository;
 import mobi.moop.model.rotas.RotaFeed;
 import mobi.moop.model.rotas.impl.RotaFeedImpl;
 import mobi.moop.utils.EndlessRecyclerOnScrollListener;
@@ -33,7 +35,7 @@ import mobi.moop.utils.EndlessRecyclerOnScrollListener;
 /**
  * A simple {@link Fragment} subclass.
  */
-public class FeedFragment extends Fragment implements RotaFeed.FeedHandler {
+public class FeedFragment extends Fragment implements RotaFeed.FeedHandler, Scrollable {
 
     private static final int WRITE_POST = 1;
     @BindView(R.id.recyclerFeed)
@@ -44,11 +46,19 @@ public class FeedFragment extends Fragment implements RotaFeed.FeedHandler {
 
     @BindView(R.id.refresh)
     SwipeRefreshLayout referesh;
+
+    @BindView(R.id.autorizacaoView)
+    View autorizacaoView;
+
     private Context context;
+
+    private Condominio condominioSelecionado;
 
     @OnClick(R.id.fab_createevent)
     public void fabAction(View view) {
-        writeNewPost();
+        if (condominioSelecionado.getIsLiberado()) {
+            writeNewPost();
+        }
     }
 
     private List<FeedItem> items;
@@ -75,8 +85,12 @@ public class FeedFragment extends Fragment implements RotaFeed.FeedHandler {
             }
         });
         referesh.setColorSchemeResources(R.color.colorPrimary);
-
+        loadCondominioSelecionado();
         return view;
+    }
+
+    private void loadCondominioSelecionado() {
+        condominioSelecionado = CondominioRepository.I.getCondominio(getContext());
     }
 
     @Override
@@ -96,8 +110,23 @@ public class FeedFragment extends Fragment implements RotaFeed.FeedHandler {
     }
 
     private void loadFeed(int offset) {
-        recyclerView.removeOnScrollListener(scrollListener);
-        rotaFeed.getFeed(context, CondominioPreferences.I.getLastSelectedCondominio(context), 10, offset, this);
+        if (condominioSelecionado.getIsLiberado()) {
+            showRecycler();
+            recyclerView.removeOnScrollListener(scrollListener);
+            rotaFeed.getFeed(context, condominioSelecionado.getId(), 10, offset, this);
+        } else {
+            showCondominioNaoLiberado();
+        }
+    }
+
+    private void showCondominioNaoLiberado() {
+        recyclerView.setVisibility(View.GONE);
+        autorizacaoView.setVisibility(View.VISIBLE);
+    }
+
+    private void showRecycler() {
+        recyclerView.setVisibility(View.VISIBLE);
+        autorizacaoView.setVisibility(View.GONE);
     }
 
     private void setupRecyclerView() {
@@ -170,6 +199,11 @@ public class FeedFragment extends Fragment implements RotaFeed.FeedHandler {
         Toast.makeText(context, error, Toast.LENGTH_SHORT).show();
     }
 
+    @Override
+    public void onUsuarioNaoLiberado() {
+
+    }
+
     private void writeNewPost() {
         startActivityForResult(new Intent(context, NewPostActivity.class), WRITE_POST);
     }
@@ -185,6 +219,7 @@ public class FeedFragment extends Fragment implements RotaFeed.FeedHandler {
         }
     }
 
+    @Override
     public void scrollToTop() {
         try {
             recyclerView.smoothScrollToPosition(0);

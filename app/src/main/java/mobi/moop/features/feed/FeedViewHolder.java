@@ -11,6 +11,8 @@ import android.widget.TextView;
 import com.squareup.picasso.Callback;
 import com.squareup.picasso.Picasso;
 
+import java.util.Date;
+
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
@@ -18,6 +20,7 @@ import mobi.moop.MoopApplication;
 import mobi.moop.R;
 import mobi.moop.features.comentarios.ComentariosActivity;
 import mobi.moop.features.publicacoes.ImageActivity;
+import mobi.moop.features.utils.DateUtils;
 import mobi.moop.model.entities.FeedItem;
 import mobi.moop.model.rotas.RetrofitSingleton;
 
@@ -43,6 +46,9 @@ public class FeedViewHolder extends RecyclerView.ViewHolder {
 
     @BindView(R.id.textNumeroComments)
     TextView textNumeroComments;
+
+    @BindView(R.id.textHoraComentario)
+    TextView textHoraComentario;
 
     @OnClick(R.id.imgPost)
     public void imgPostAction(View view) {
@@ -71,6 +77,8 @@ public class FeedViewHolder extends RecyclerView.ViewHolder {
     public void bindView(FeedItem feedItem) {
         this.feedItem = feedItem;
         textNome.setText(feedItem.getPerfil().getNome());
+        textHoraComentario.setText(DateUtils.getDifference(new Date(), feedItem.getData()));
+        textNumeroComments.setText(" " + feedItem.getComentarios().toString());
         if (!feedItem.getPerfil().getAvatar().equals("")) {
             Picasso.with(context).load(feedItem.getPerfil().getAvatar()).placeholder(R.drawable.placeholder_avatar).into(imgAvatar, new Callback() {
                 @Override

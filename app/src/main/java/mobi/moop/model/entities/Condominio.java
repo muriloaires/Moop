@@ -25,17 +25,20 @@ public class Condominio implements Serializable{
 
     private boolean isHorizontal;
 
+    private boolean isLiberado;
+
     @Transient
     private boolean selected;
 
-    @Generated(hash = 1246614547)
+    @Generated(hash = 1955232117)
     public Condominio(Long id, String nome, String cep, String Logradouro,
-            boolean isHorizontal) {
+            boolean isHorizontal, boolean isLiberado) {
         this.id = id;
         this.nome = nome;
         this.cep = cep;
         this.Logradouro = Logradouro;
         this.isHorizontal = isHorizontal;
+        this.isLiberado = isLiberado;
     }
 
     @Generated(hash = 736672542)
@@ -88,5 +91,13 @@ public class Condominio implements Serializable{
 
     public void setIsHorizontal(boolean isHorizontal) {
         this.isHorizontal = isHorizontal;
+    }
+
+    public boolean getIsLiberado() {
+        return this.isLiberado;
+    }
+
+    public void setIsLiberado(boolean isLiberado) {
+        this.isLiberado = isLiberado;
     }
 }

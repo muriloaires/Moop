@@ -32,6 +32,8 @@ public class RotaFeedImpl {
             public void onResponse(Call<GenericListResponse<FeedItem>> call, Response<GenericListResponse<FeedItem>> response) {
                 if (response.isSuccessful()) {
                     handler.onFeedReceived(response.body().getData(), offset);
+                } else if (response.code() == 403) {
+                    handler.onUsuarioNaoLiberado();
                 } else {
                     handler.onFeedReceiveFail(RetrofitSingleton.INSTANCE.getErrorBody(response));
                 }

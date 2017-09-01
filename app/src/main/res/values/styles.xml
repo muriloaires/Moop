@@ -15,6 +15,11 @@
         <item name="android:textColor">@android:color/white</item>
     </style>
 
+    <style name="BtnConfirmarTheme" parent="Theme.AppCompat.Light.DarkActionBar">
+        <item name="colorButtonNormal">@android:color/white</item>
+        <item name="android:textColor">@color/colorPrimary</item>
+    </style>
+
     <style name="BtnLogarFacebookTheme" parent="Theme.AppCompat.Light.DarkActionBar">
         <item name="colorButtonNormal">@color/com_facebook_blue</item>
         <item name="android:textColor">@android:color/white</item>

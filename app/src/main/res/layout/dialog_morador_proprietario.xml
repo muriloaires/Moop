@@ -24,5 +24,41 @@
 
     </RadioGroup>
 
+    <android.support.design.widget.TextInputLayout
+        android:id="@+id/inputLayoutUnidade"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+        <EditText
+            android:id="@+id/inputUnidade"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:hint="@string/qual_sua_unidade" />
+    </android.support.design.widget.TextInputLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:weightSum="2">
+
+        <Button
+            android:id="@+id/btnCancelar"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:text="@string/cancelar"
+            android:theme="@style/BtnConfirmarTheme" />
+
+        <Button
+            android:id="@+id/btnConfirmar"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:text="@string/confirmar"
+            android:theme="@style/BtnConfirmarTheme" />
+
+    </LinearLayout>
+
 
 </LinearLayout>

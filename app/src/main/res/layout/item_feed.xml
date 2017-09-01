@@ -38,11 +38,14 @@
             android:textSize="18sp" />
 
         <TextView
-            android:id="@+id/textResidencia"
+            android:id="@+id/textHoraComentario"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="Apartamento 402 Bloco B"
-            android:textSize="12sp" />
+            android:layout_marginTop="2dp"
+            android:text="Há 20 minutos"
+            android:textSize="10sp"
+            app:layout_constraintLeft_toLeftOf="@+id/linearLayout"
+            app:layout_constraintTop_toBottomOf="@+id/linearLayout" />
 
     </LinearLayout>
 
