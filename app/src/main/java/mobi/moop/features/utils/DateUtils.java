@@ -29,4 +29,25 @@ public class DateUtils {
             return "Há " + dur.getStandardDays() + " dias";
         }
     }
+
+    public static String getDifferenceSmall(Date start, Date end) {
+        Duration dur = new Duration(end.getTime(), start.getTime());
+        if (dur.getStandardDays() == 0) {
+            if (dur.getStandardHours() == 0) {
+                if (dur.getStandardMinutes() < 5) {
+                    return "Agora";
+                } else {
+                    return dur.getStandardMinutes() + " min";
+                }
+            } else if (dur.getStandardHours() == 1) {
+                return "Há 1 hora";
+            } else {
+                return dur.getStandardHours() + " hr";
+            }
+        } else if (dur.getStandardDays() == 1) {
+            return "1 dia";
+        } else {
+            return +dur.getStandardDays() + " dias";
+        }
+    }
 }

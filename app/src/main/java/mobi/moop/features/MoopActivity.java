@@ -1,9 +1,8 @@
 package mobi.moop.features;
 
-import android.app.DatePickerDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
-import android.graphics.PorterDuff;
+import android.graphics.Color;
 import android.os.Bundle;
 import android.support.design.widget.NavigationView;
 import android.support.design.widget.TabLayout;
@@ -18,7 +17,6 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.SubMenu;
 import android.view.View;
-import android.widget.DatePicker;
 import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -26,17 +24,19 @@ import android.widget.Toast;
 import com.squareup.picasso.Picasso;
 
 import java.util.ArrayList;
-import java.util.Calendar;
 import java.util.List;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import mobi.moop.R;
+import mobi.moop.features.chamado.ChamadoActivity;
 import mobi.moop.features.condominio.AddCondominioActivity;
 import mobi.moop.features.condominio.CondominioPreferences;
 import mobi.moop.features.login.LoginActivity;
+import mobi.moop.features.moradores.MoradoresActivity;
 import mobi.moop.features.perfil.EditarPerfilActivity;
 import mobi.moop.features.reserva.DisponibilidadesActivity;
+import mobi.moop.model.entities.BemComum;
 import mobi.moop.model.entities.Condominio;
 import mobi.moop.model.repository.UsuarioRepository;
 import mobi.moop.model.rotas.RotaCondominio;
@@ -84,7 +84,10 @@ public class MoopActivity extends AppCompatActivity implements NavigationView.On
         tabLayout.removeAllTabs();
         tabLayout.addTab(tabLayout.newTab().setCustomView(R.layout.tab_feed));
         tabLayout.addTab(tabLayout.newTab().setCustomView(R.layout.tab_reservas));
+        tabLayout.addTab(tabLayout.newTab().setCustomView(R.layout.tab_mensagens));
+        tabLayout.addTab(tabLayout.newTab().setCustomView(R.layout.tab_notificacoes));
         adapter = new PagerAdapter(getSupportFragmentManager(), tabLayout.getTabCount());
+        pager.setOffscreenPageLimit(tabLayout.getTabCount());
         pager.setAdapter(adapter);
         pager.addOnPageChangeListener(new TabLayout.TabLayoutOnPageChangeListener(tabLayout));
         tabLayout.addOnTabSelectedListener(new TabLayout.OnTabSelectedListener() {
@@ -92,39 +95,39 @@ public class MoopActivity extends AppCompatActivity implements NavigationView.On
             public void onTabSelected(TabLayout.Tab tab) {
                 pager.setCurrentItem(tab.getPosition());
                 View view = tab.getCustomView();
-                switch (tab.getPosition()) {
-                    case 0:
-                        ImageView imgView = (ImageView) view.findViewById(R.id.iconFeed);
-                        imgView.getDrawable().setColorFilter(getResources().getColor(R.color.colorPrimary), PorterDuff.Mode.MULTIPLY);
-                        break;
-                    default:
-                        ImageView imgView2 = (ImageView) view.findViewById(R.id.iconReservas);
-                        imgView2.getDrawable().setColorFilter(getResources().getColor(R.color.colorPrimary), PorterDuff.Mode.MULTIPLY);
-                }
+                View root = view.findViewById(R.id.root);
+                root.setBackgroundColor(getResources().getColor(R.color.colorTabUnselected));
+
             }
 
             @Override
             public void onTabUnselected(TabLayout.Tab tab) {
                 View view = tab.getCustomView();
-                switch (tab.getPosition()) {
-                    case 0:
-                        ImageView imgView = (ImageView) view.findViewById(R.id.iconFeed);
-                        imgView.getDrawable().setColorFilter(getResources().getColor(R.color.colorTabUnselected), PorterDuff.Mode.MULTIPLY);
-                        break;
-                    default:
-                        ImageView imgView2 = (ImageView) view.findViewById(R.id.iconReservas);
-                        imgView2.getDrawable().setColorFilter(getResources().getColor(R.color.colorTabUnselected), PorterDuff.Mode.MULTIPLY);
-                }
+                View root = view.findViewById(R.id.root);
+                root.setBackgroundColor(Color.WHITE);
 
             }
 
             @Override
             public void onTabReselected(TabLayout.Tab tab) {
                 try {
+                    switch (tab.getPosition()) {
+                        case 0:
+                            adapter.getFeedFragment().scrollToTop();
+                            break;
+                        case 1:
+                            adapter.getReservasFragment().scrollToTop();
+                            break;
+                        case 2:
+                            adapter.getMensagensFragment().scrollToTop();
+                            break;
+                        default:
+                            adapter.getNotificacoesFragment().scrollToTop();
+                    }
                     if (tab.getPosition() == 0) {
-                        adapter.getFeedFragment().scrollToTop();
+
                     } else {
-                        adapter.getReservasFragment().scrollToTop();
+
                     }
                 } catch (Exception e) {
 
@@ -178,12 +181,19 @@ public class MoopActivity extends AppCompatActivity implements NavigationView.On
             case -1:
                 addCondominio();
                 break;
-            case R.id.logout:
-                logout();
-                break;
             case R.id.editar_perfil:
                 showEditarPerfilActivity();
                 break;
+            case R.id.logout:
+                logout();
+                break;
+            case R.id.chamados:
+                showChamadosActivity();
+                break;
+            case R.id.moradores:
+                showMoradoresActivity();
+                break;
+
             default:
                 SubMenu subMenu = navigationView.getMenu().getItem(0).getSubMenu();
                 subMenu.getItem(lastSelectedIndex).setChecked(false);
@@ -192,6 +202,14 @@ public class MoopActivity extends AppCompatActivity implements NavigationView.On
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
         drawer.closeDrawer(GravityCompat.START);
         return true;
+    }
+
+    private void showChamadosActivity() {
+        startActivity(new Intent(this, ChamadoActivity.class));
+    }
+
+    private void showMoradoresActivity() {
+        startActivity(new Intent(this, MoradoresActivity.class));
     }
 
     private void showEditarPerfilActivity() {
@@ -294,33 +312,14 @@ public class MoopActivity extends AppCompatActivity implements NavigationView.On
         }
     }
 
-    public void showDatePicker(final Long bemComumId) {
-        final Calendar c = Calendar.getInstance();
-        final int mYear = c.get(Calendar.YEAR);
-        final int mMonth = c.get(Calendar.MONTH);
-        final int mDay = c.get(Calendar.DAY_OF_MONTH);
 
-        DatePickerDialog datePickerDialog = new DatePickerDialog(this,
-                new DatePickerDialog.OnDateSetListener() {
-
-                    @Override
-                    public void onDateSet(DatePicker view, int year, int monthOfYear, int dayOfMonth) {
-                        monthOfYear++;
-                        String diaDoMes = String.valueOf(dayOfMonth).length() == 1 ? "0" + String.valueOf(dayOfMonth) : String.valueOf(dayOfMonth);
-                        String mes = String.valueOf(monthOfYear).length() == 1 ? "0" + String.valueOf(monthOfYear) : String.valueOf(monthOfYear);
-                        String data = String.valueOf(year) + "-" + mes + "-" + diaDoMes;
-                        openDisponibilidadesActivity(bemComumId, data);
-
-                    }
-                }, mYear, mMonth, mDay);
-        datePickerDialog.getDatePicker().setMinDate(c.getTimeInMillis());
-        datePickerDialog.show();
-    }
-
-    private void openDisponibilidadesActivity(Long bemComumId, String data) {
+    public void openDisponibilidadesActivity(BemComum bemComum) {
         Intent intent = new Intent(this, DisponibilidadesActivity.class);
-        intent.putExtra("data", data);
-        intent.putExtra("bemId", bemComumId);
+        intent.putExtra("bemId", bemComum.getId());
+        intent.putExtra("bemComumNome", bemComum.getNome());
+        intent.putExtra("bemComumAvatar", bemComum.getAvatar());
+        intent.putExtra("bemComumTermos", bemComum.getTermosDeUso());
+
         startActivity(intent);
     }
 }

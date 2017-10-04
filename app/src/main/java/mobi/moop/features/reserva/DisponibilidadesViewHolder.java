@@ -34,8 +34,7 @@ public class DisponibilidadesViewHolder extends RecyclerView.ViewHolder {
     TextView textDiaSemana;
 
     @OnClick(R.id.textReservar)
-    public void reservar(View view){
-        ((DisponibilidadesActivity) context).efetuarReserva(getAdapterPosition());
+    public void reservar(View view) {
     }
 
     public DisponibilidadesViewHolder(View itemView) {

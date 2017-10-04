@@ -35,7 +35,6 @@ public class CondominiosFragment extends Fragment implements RotaCondominio.Cond
     @BindView(R.id.editCEP)
     EditText editCep;
 
-
     @BindView(R.id.progress)
     ProgressBar progress;
 
@@ -46,6 +45,11 @@ public class CondominiosFragment extends Fragment implements RotaCondominio.Cond
     @OnClick(R.id.btnAvancar)
     public void btnAvancarAction(View view) {
         loadBlocos();
+    }
+
+    @OnClick(R.id.btn_nao_encontrei_condominio)
+    public void btnNaoEncontreiAction(View view) {
+        showRegistroCondominio();
     }
 
     @BindView(R.id.recyclerCondiminios)
@@ -130,6 +134,10 @@ public class CondominiosFragment extends Fragment implements RotaCondominio.Cond
         adapter = new CondominiosAdapter(condominios, this);
         recyclerCondominios.setAdapter(adapter);
 
+    }
+
+    private void showRegistroCondominio() {
+        ((AddCondominioActivity) getContext()).showRegistroCondominioFragment();
     }
 
     private void configureCepMask() {

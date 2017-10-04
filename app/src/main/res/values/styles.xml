@@ -7,11 +7,15 @@
         <item name="colorPrimaryDark">@color/colorPrimaryDark</item>
         <item name="colorAccent">@color/colorAccent</item>
         <item name="windowNoTitle">true</item>
-        <item name="android:textColor">#7b7b7b</item>
     </style>
 
     <style name="BtnLogarTheme" parent="Theme.AppCompat.Light.DarkActionBar">
         <item name="colorButtonNormal">@color/colorPrimary</item>
+        <item name="android:textColor">@android:color/white</item>
+    </style>
+
+    <style name="BtnMensagemTheme" parent="Theme.AppCompat.Light.DarkActionBar">
+        <item name="colorButtonNormal">@color/darkgrey</item>
         <item name="android:textColor">@android:color/white</item>
     </style>
 
@@ -55,9 +59,10 @@
         <item name="textAllCaps">false</item>
     </style>
 
+
     <style name="AppTabLayout" parent="Widget.Design.TabLayout">
         <item name="tabIndicatorColor">?attr/colorAccent</item>
-        <item name="tabIndicatorHeight">2dp</item>
+        <item name="tabIndicatorHeight">0dp</item>
         <item name="tabPaddingStart">6dp</item>
         <item name="tabPaddingEnd">6dp</item>
         <item name="tabBackground">?attr/selectableItemBackground</item>

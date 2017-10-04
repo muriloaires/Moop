@@ -83,7 +83,7 @@ public class RotaReservasImpl {
         });
     }
 
-    public void getReservas(final Context context, Long condominioId, final RotaReservas.BemComunHandler handler) {
+    public void getReservas(final Context context, Long condominioId, final RotaReservas.ReservaHandler handler) {
         Usuario usuario = UsuarioSingleton.I.getUsuarioLogado(context);
         Call<GenericListResponse<ReservaBemComum>> call = RetrofitSingleton.INSTANCE.getRetrofiInstance().create(RotaReservas.class).getReservas(usuario.getApiToken(), condominioId);
         call.enqueue(new Callback<GenericListResponse<ReservaBemComum>>() {
@@ -98,7 +98,7 @@ public class RotaReservasImpl {
 
             @Override
             public void onFailure(Call<GenericListResponse<ReservaBemComum>> call, Throwable t) {
-                handler.onRecebimentoBensComunsErro(context.getString(R.string.algo_errado_ocorreu));
+                handler.onError(context.getString(R.string.algo_errado_ocorreu));
             }
         });
     }

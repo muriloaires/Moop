@@ -20,7 +20,6 @@ import butterknife.ButterKnife;
 import mobi.moop.R;
 import mobi.moop.model.entities.Bloco;
 import mobi.moop.model.entities.Condominio;
-import mobi.moop.model.entities.Unidade;
 import mobi.moop.model.rotas.RotaCondominio;
 import mobi.moop.model.rotas.impl.RotaCondominioImpl;
 
@@ -157,5 +156,13 @@ public class AddCondominioActivity extends AppCompatActivity implements RotaCond
     public void onRegistrationFail(String error) {
         progress.dismiss();
         Toast.makeText(this, error, Toast.LENGTH_SHORT).show();
+    }
+
+    public void showRegistroCondominioFragment() {
+        RegistroCondominioFragment fragment = new RegistroCondominioFragment();
+        FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
+        ft.replace(R.id.placeholder, fragment);
+        ft.addToBackStack("main");
+        ft.commit();
     }
 }

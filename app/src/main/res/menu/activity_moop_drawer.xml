@@ -7,6 +7,32 @@
                 android:id="@+id/editar_perfil"
                 android:icon="@drawable/ic_edit"
                 android:title="@string/editar_perfil" />
+
+            <item
+                android:id="@+id/chamados"
+                android:icon="@drawable/ic_chamado"
+                android:title="@string/chamados" />
+
+            <item
+                android:id="@+id/moradores"
+                android:icon="@drawable/ic_moradores"
+                android:title="@string/moradores" />
+
+            <item
+                android:id="@+id/convidar"
+                android:icon="@drawable/ic_person_add"
+                android:title="@string/convidar_morador" />
+
+            <item
+                android:id="@+id/meu_condominio"
+                android:icon="@drawable/ic_predio"
+                android:title="@string/meu_condominio" />
+
+            <item
+                android:id="@+id/suporte"
+                android:icon="@drawable/ic_help"
+                android:title="@string/suporte" />
+
             <item
                 android:id="@+id/logout"
                 android:icon="@drawable/ic_logout"

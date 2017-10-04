@@ -23,9 +23,9 @@ public interface RotaReservas {
 
     interface BemComunHandler {
         void onBensComunsRecebidos(List<BemComum> bensComuns);
+
         void onRecebimentoBensComunsErro(String erro);
-        void onReservasRecebidas(List<ReservaBemComum> reservas);
-        void onRecebimentoReservasError(String errorr);
+
     }
 
     interface DisponibilidadesHandler {
@@ -35,6 +35,9 @@ public interface RotaReservas {
     }
 
     interface ReservaHandler {
+        void onReservasRecebidas(List<ReservaBemComum> reservas);
+
+        void onRecebimentoReservasError(String errorr);
 
         void onReservaEfetuada(ReservaBemComum reserva);
 

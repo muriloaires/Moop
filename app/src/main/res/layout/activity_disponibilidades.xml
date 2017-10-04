@@ -8,14 +8,14 @@
     tools:context="mobi.moop.features.reserva.DisponibilidadesActivity">
 
     <android.support.v7.widget.Toolbar
+        android:id="@+id/toolbar"
         android:layout_width="match_parent"
         android:layout_height="?attr/actionBarSize"
         android:background="@color/colorPrimary"
-        app:title="@string/disponibilidades"
         app:titleTextColor="@android:color/white" />
 
-    <android.support.v7.widget.RecyclerView
-        android:id="@+id/recyclerDisponibilidades"
+    <FrameLayout
+        android:id="@+id/placeholder"
         android:layout_width="match_parent"
         android:layout_height="match_parent" />
 </LinearLayout>

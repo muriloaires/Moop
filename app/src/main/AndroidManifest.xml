@@ -57,10 +57,18 @@
         <activity
             android:name=".features.publicacoes.NewPostActivity"
             android:screenOrientation="portrait" />
-        <activity android:name=".features.comentarios.ComentariosActivity" />
-        <activity android:name=".features.publicacoes.ImageActivity" />
-        <activity android:name=".features.reserva.DisponibilidadesActivity" />
-        <activity android:name=".features.perfil.EditarPerfilActivity" />
+        <activity
+            android:name=".features.comentarios.ComentariosActivity"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".features.publicacoes.ImageActivity"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".features.reserva.DisponibilidadesActivity"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".features.perfil.EditarPerfilActivity"
+            android:screenOrientation="portrait" />
 
         <provider
             android:name=".features.utils.GenericFileProvider"
@@ -71,6 +79,17 @@
                 android:name="android.support.FILE_PROVIDER_PATHS"
                 android:resource="@xml/provider_paths" />
         </provider>
+
+        <activity
+            android:name=".features.moradores.MoradoresActivity"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".features.chamado.ChamadoActivity"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".features.mensagens.MensagemActivity"
+            android:label="@string/title_activity_mensagem"
+            android:theme="@style/AppTheme.NoActionBar"></activity>
     </application>
 
 </manifest>

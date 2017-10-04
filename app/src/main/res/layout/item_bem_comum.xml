@@ -9,20 +9,42 @@
     android:orientation="vertical"
     android:padding="16dp">
 
+    <ImageView
+        android:id="@+id/img_bem_comum"
+        android:layout_width="60dp"
+        android:layout_height="60dp"
+        android:src="@drawable/condominios_blur"
+        android:scaleType="centerCrop"/>
+
     <TextView
         android:id="@+id/bemComumNome"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_marginLeft="8dp"
+        android:layout_toRightOf="@+id/img_bem_comum"
         android:text="Churrasqueira"
         android:textColor="@android:color/black"
-        android:textSize="20sp" />
+        android:textSize="16sp" />
 
 
     <ImageView
+        android:id="@+id/imageView3"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_alignParentRight="true"
         android:layout_centerVertical="true"
         android:src="@drawable/ic_avancar" />
+
+    <TextView
+        android:id="@+id/text_preco"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/bemComumNome"
+        android:layout_marginLeft="8dp"
+        android:layout_toRightOf="@+id/img_bem_comum"
+        android:text="R$ 100,99"
+        android:textColor="@android:color/black"
+        android:textSize="12sp"
+        android:textStyle="bold" />
 
 </RelativeLayout>

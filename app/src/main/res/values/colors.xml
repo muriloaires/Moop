@@ -3,10 +3,13 @@
     <color name="colorPrimary">#f15b5b</color>
     <color name="colorPrimaryDark">#a43939</color>
     <color name="colorAccent">#0b0b0b</color>
+    <color name="text_color_default">#232d39</color>
     <color name="tab_background_selected">#f5f0f0</color>
     <color name="tab_background_unselected">#FFF</color>
-    <color name="colorTabUnselected">#9f9f9f</color>
+    <color name="colorTabUnselected">#e6e6e6</color>
     <color name="cinza">#dedede</color>
     <color name="verde">#04af1b</color>
     <color name="selected_condominio">#d2d2d2</color>
+    <color name="darkgrey">#373740</color>
+
 </resources>

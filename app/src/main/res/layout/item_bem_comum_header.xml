@@ -10,7 +10,7 @@
     <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="@string/bens_comuns_condominio"
-        android:textAllCaps="true"
+        android:text="@string/bens_comuns_disponiveis"
+        android:textColor="@color/text_color_default"
         android:textSize="18sp" />
 </LinearLayout>

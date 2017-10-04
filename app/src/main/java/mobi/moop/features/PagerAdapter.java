@@ -6,12 +6,16 @@ import android.support.v4.app.FragmentStatePagerAdapter;
 import android.view.ViewGroup;
 
 import mobi.moop.features.feed.FeedFragment;
+import mobi.moop.features.mensagens.MensagensFragment;
+import mobi.moop.features.notification.NotificacoesFragment;
 import mobi.moop.features.reserva.ReservasFragment;
 
 public class PagerAdapter extends FragmentStatePagerAdapter {
     int mNumOfTabs;
     private ReservasFragment reservasFragment;
     private FeedFragment feedFragment;
+    private MensagensFragment mensagensFragment;
+    private NotificacoesFragment notificacoesFragment;
 
     public PagerAdapter(FragmentManager fm, int NumOfTabs) {
         super(fm);
@@ -26,9 +30,11 @@ public class PagerAdapter extends FragmentStatePagerAdapter {
                 return new FeedFragment();
             case 1:
                 return new ReservasFragment();
+            case 2:
+                return MensagensFragment.newInstance();
 
             default:
-                return null;
+                return NotificacoesFragment.newInstance();
         }
     }
 
@@ -43,6 +49,11 @@ public class PagerAdapter extends FragmentStatePagerAdapter {
             case 1:
                 reservasFragment = (ReservasFragment) createdFragment;
                 break;
+            case 2:
+                mensagensFragment = (MensagensFragment) createdFragment;
+                break;
+            default:
+                notificacoesFragment = (NotificacoesFragment) createdFragment;
         }
         return createdFragment;
     }
@@ -59,5 +70,13 @@ public class PagerAdapter extends FragmentStatePagerAdapter {
 
     public FeedFragment getFeedFragment() {
         return feedFragment;
+    }
+
+    public MensagensFragment getMensagensFragment() {
+        return mensagensFragment;
+    }
+
+    public NotificacoesFragment getNotificacoesFragment() {
+        return notificacoesFragment;
     }
 }
