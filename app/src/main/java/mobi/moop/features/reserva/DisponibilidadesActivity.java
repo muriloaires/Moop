@@ -39,14 +39,14 @@ public class DisponibilidadesActivity extends AppCompatActivity {
 
     private void showDescricaoFragment() {
         FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
-        DescricaoBemComumFragment fragment = DescricaoBemComumFragment.getInstance(getIntent().getStringExtra("bemComumNome"), getIntent().getStringExtra("bemComumAvatar"), getIntent().getStringExtra("bemComumTermos"));
+        DescricaoBemComumFragment fragment = DescricaoBemComumFragment.getInstance(getIntent().getStringExtra("bemComumNome"), getIntent().getStringExtra("bemComumAvatar"), getIntent().getStringExtra("bemComumTermos"),getIntent().getLongExtra("bemId",-1));
         ft.replace(R.id.placeholder, fragment);
         ft.commit();
     }
 
-    public void showCalendarioFragment() {
+    public void showCalendarioFragment(Long bemId) {
         FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
-        CalendarioBemComumFragment fragment = CalendarioBemComumFragment.getInstance();
+        CalendarioBemComumFragment fragment = CalendarioBemComumFragment.getInstance(getIntent().getLongExtra("bemId",-1));
         ft.replace(R.id.placeholder, fragment);
         ft.addToBackStack("main");
         ft.commit();

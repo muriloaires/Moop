@@ -10,6 +10,7 @@ import mobi.moop.model.entities.Chamado;
 import mobi.moop.model.repository.CondominioRepository;
 import mobi.moop.model.rotas.RetrofitSingleton;
 import mobi.moop.model.rotas.RotaChamados;
+import mobi.moop.model.rotas.reponse.GenericListResponse;
 import mobi.moop.model.singleton.UsuarioSingleton;
 import okhttp3.MediaType;
 import okhttp3.MultipartBody;
@@ -49,19 +50,19 @@ public class RotaChamadoImpl {
     public void loadChamados(final Context context, final RotaChamados.RecebimentoChamadoHandler handler) {
         String apiToken = UsuarioSingleton.I.getUsuarioLogado(context).getApiToken();
         Long condominioSelecionadoId = CondominioRepository.I.getCondominio(context).getId();
-        Call<List<Chamado>> call = RetrofitSingleton.INSTANCE.getRetrofiInstance().create(RotaChamados.class).loadChamados(apiToken, condominioSelecionadoId);
-        call.enqueue(new Callback<List<Chamado>>() {
+        Call<GenericListResponse<Chamado>> call = RetrofitSingleton.INSTANCE.getRetrofiInstance().create(RotaChamados.class).loadChamados(apiToken, condominioSelecionadoId);
+        call.enqueue(new Callback<GenericListResponse<Chamado>>() {
             @Override
-            public void onResponse(Call<List<Chamado>> call, Response<List<Chamado>> response) {
+            public void onResponse(Call<GenericListResponse<Chamado>> call, Response<GenericListResponse<Chamado>> response) {
                 if (response.isSuccessful()) {
-                    handler.onChamadosRecebidos(response.body());
+                    handler.onChamadosRecebidos(response.body().getData());
                 } else {
                     handler.onRecebimentoFail(RetrofitSingleton.INSTANCE.getErrorBody(response));
                 }
             }
 
             @Override
-            public void onFailure(Call<List<Chamado>> call, Throwable t) {
+            public void onFailure(Call<GenericListResponse<Chamado>> call, Throwable t) {
                 handler.onRecebimentoFail(context.getString(R.string.algo_errado_ocorreu));
             }
         });

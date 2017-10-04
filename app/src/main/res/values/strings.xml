@@ -106,4 +106,8 @@
     <string name="abrir_chamado">Abrir Chamado</string>
     <string name="title_activity_mensagem">MensagemActivity</string>
     <string name="texto_da_mensagem">Texto da mensagem</string>
+    <string name="em_andamento">Em andamento</string>
+    <string name="aberto">Aberto</string>
+    <string name="resolvido">Resolvido</string>
+    <string name="cancelado">Cancelado</string>
 </resources>

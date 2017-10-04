@@ -31,12 +31,13 @@ public class DescricaoBemComumFragment extends Fragment {
     TextView termosBemComum;
     private DisponibilidadesActivity activity;
 
-    public static DescricaoBemComumFragment getInstance(String bemComumNome, String bemComumAvatar, String bemComumTermos) {
+    public static DescricaoBemComumFragment getInstance(String bemComumNome, String bemComumAvatar, String bemComumTermos, long bemId) {
         DescricaoBemComumFragment fragment = new DescricaoBemComumFragment();
         Bundle bundle = new Bundle();
         bundle.putString("bemComumAvatar", bemComumAvatar);
         bundle.putString("bemComumNome", bemComumNome);
         bundle.putString("bemComumTermos", bemComumTermos);
+        bundle.putLong("bemId",bemId);
         fragment.setArguments(bundle);
         return fragment;
     }

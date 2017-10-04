@@ -8,6 +8,7 @@ import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Toast;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -56,6 +57,7 @@ public class ChamadosFragment extends Fragment implements RotaChamados.Recebimen
     private void setupRecyclerView() {
         recyclerChamados.setLayoutManager(new LinearLayoutManager(getContext()));
         chamadosAdapter = new ChamadosAdapter(chamados);
+        recyclerChamados.setAdapter(chamadosAdapter);
     }
 
     private void loadChamados() {
@@ -68,11 +70,13 @@ public class ChamadosFragment extends Fragment implements RotaChamados.Recebimen
 
     @Override
     public void onChamadosRecebidos(List<Chamado> chamados) {
-
+        this.chamados.clear();
+        this.chamados.addAll(chamados);
+        chamadosAdapter.notifyDataSetChanged();
     }
 
     @Override
     public void onRecebimentoFail(String errorBody) {
-
+        Toast.makeText(getContext(), errorBody, Toast.LENGTH_SHORT).show();
     }
 }

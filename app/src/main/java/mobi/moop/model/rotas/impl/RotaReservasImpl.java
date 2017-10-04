@@ -4,14 +4,17 @@ import android.content.Context;
 
 import mobi.moop.R;
 import mobi.moop.model.entities.BemComum;
+import mobi.moop.model.entities.Condominio;
 import mobi.moop.model.entities.DisponibilidadeBem;
 import mobi.moop.model.entities.ReservaBemComum;
 import mobi.moop.model.entities.Usuario;
+import mobi.moop.model.repository.CondominioRepository;
 import mobi.moop.model.rotas.RetrofitSingleton;
 import mobi.moop.model.rotas.RotaReservas;
 import mobi.moop.model.rotas.reponse.GenericListResponse;
 import mobi.moop.model.rotas.reponse.GenericResponse;
 import mobi.moop.model.singleton.UsuarioSingleton;
+import okhttp3.ResponseBody;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
@@ -101,5 +104,12 @@ public class RotaReservasImpl {
                 handler.onError(context.getString(R.string.algo_errado_ocorreu));
             }
         });
+    }
+
+    public void loadDiasDisponibilidadesBem(final Context context, Long bemId, Integer mes, Integer ano) {
+        Usuario usuarioLogado = UsuarioSingleton.I.getUsuarioLogado(context);
+        Condominio condominioSelecionado = CondominioRepository.I.getCondominio(context);
+        Call<ResponseBody> call = RetrofitSingleton.INSTANCE.getRetrofiInstance().create(RotaReservas.class).getDiasBemComum(usuarioLogado.getApiToken(), condominioSelecionado.getId(), bemId, mes, ano);
+
     }
 }

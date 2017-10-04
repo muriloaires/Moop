@@ -3,6 +3,7 @@ package mobi.moop.model.rotas;
 import java.util.List;
 
 import mobi.moop.model.entities.Chamado;
+import mobi.moop.model.rotas.reponse.GenericListResponse;
 import okhttp3.MultipartBody;
 import okhttp3.RequestBody;
 import okhttp3.ResponseBody;
@@ -42,7 +43,7 @@ public interface RotaChamados {
 
     @Headers("appToken:" + RetrofitSingleton.APP_TOKEN)
     @GET(RetrofitSingleton.BASE_URL + RetrofitSingleton.API_V1 + "chamado/{condominioId}/me.json")
-    Call<List<Chamado>> loadChamados(@Header("apiToken") String apiToken, @Path("condominioId") Long condominioSelecionadoId);
+    Call<GenericListResponse<Chamado>> loadChamados(@Header("apiToken") String apiToken, @Path("condominioId") Long condominioSelecionadoId);
 
 
 }
