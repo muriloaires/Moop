@@ -3,6 +3,7 @@ package mobi.moop.model.rotas;
 import java.util.List;
 
 import mobi.moop.model.entities.BemComum;
+import mobi.moop.model.entities.DiaBemComum;
 import mobi.moop.model.entities.DisponibilidadeBem;
 import mobi.moop.model.entities.ReservaBemComum;
 import mobi.moop.model.rotas.reponse.GenericListResponse;
@@ -21,6 +22,12 @@ import retrofit2.http.Query;
  */
 
 public interface RotaReservas {
+
+    interface DiasBensHandler {
+        void onDiasRecebidos(List<DiaBemComum> dias);
+
+        void onError(String error);
+    }
 
 
     interface BemComunHandler {
@@ -64,5 +71,5 @@ public interface RotaReservas {
 
     @Headers("appToken:" + RetrofitSingleton.APP_TOKEN)
     @GET(RetrofitSingleton.BASE_URL + RetrofitSingleton.API_V1 + "reserva/{condominioId}/{bemId}/dias.json")
-    Call<ResponseBody> getDiasBemComum(@Header("apiToken") String apiToken, @Path("condominioId") Long condominioId, @Path("bemId") Long bemId, @Query("mes") Integer mes, @Query("ano") Integer ano);
+    Call<GenericListResponse<DiaBemComum>> getDiasBemComum(@Header("apiToken") String apiToken, @Path("condominioId") Long condominioId, @Path("bemId") Long bemId, @Query("mes") Integer mes, @Query("ano") Integer ano);
 }

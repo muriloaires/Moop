@@ -44,7 +44,7 @@ public class DisponibilidadesActivity extends AppCompatActivity {
         ft.commit();
     }
 
-    public void showCalendarioFragment(Long bemId) {
+    public void showCalendarioFragment() {
         FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
         CalendarioBemComumFragment fragment = CalendarioBemComumFragment.getInstance(getIntent().getLongExtra("bemId",-1));
         ft.replace(R.id.placeholder, fragment);

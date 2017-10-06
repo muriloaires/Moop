@@ -5,6 +5,7 @@ import android.content.Context;
 import mobi.moop.R;
 import mobi.moop.model.entities.BemComum;
 import mobi.moop.model.entities.Condominio;
+import mobi.moop.model.entities.DiaBemComum;
 import mobi.moop.model.entities.DisponibilidadeBem;
 import mobi.moop.model.entities.ReservaBemComum;
 import mobi.moop.model.entities.Usuario;
@@ -106,10 +107,25 @@ public class RotaReservasImpl {
         });
     }
 
-    public void loadDiasDisponibilidadesBem(final Context context, Long bemId, Integer mes, Integer ano) {
+    public void loadDiasDisponibilidadesBem(final Context context, Long bemId, Integer mes, Integer ano, final RotaReservas.DiasBensHandler handler) {
         Usuario usuarioLogado = UsuarioSingleton.I.getUsuarioLogado(context);
         Condominio condominioSelecionado = CondominioRepository.I.getCondominio(context);
-        Call<ResponseBody> call = RetrofitSingleton.INSTANCE.getRetrofiInstance().create(RotaReservas.class).getDiasBemComum(usuarioLogado.getApiToken(), condominioSelecionado.getId(), bemId, mes, ano);
+        Call<GenericListResponse<DiaBemComum>> call = RetrofitSingleton.INSTANCE.getRetrofiInstance().create(RotaReservas.class).getDiasBemComum(usuarioLogado.getApiToken(), condominioSelecionado.getId(), bemId, mes, ano);
+        call.enqueue(new Callback<GenericListResponse<DiaBemComum>>() {
+            @Override
+            public void onResponse(Call<GenericListResponse<DiaBemComum>> call, Response<GenericListResponse<DiaBemComum>> response) {
+                if (response.isSuccessful()) {
+                    handler.onDiasRecebidos(response.body().getData());
+                } else {
+                    handler.onError(RetrofitSingleton.INSTANCE.getErrorBody(response));
+                }
+            }
+
+            @Override
+            public void onFailure(Call<GenericListResponse<DiaBemComum>> call, Throwable t) {
+                handler.onError(context.getString(R.string.algo_errado_ocorreu));
+            }
+        });
 
     }
 }
