@@ -3,6 +3,7 @@ package mobi.moop.model.rotas;
 import java.util.List;
 
 import mobi.moop.model.entities.Bloco;
+import mobi.moop.model.entities.CadastroCondominio;
 import mobi.moop.model.entities.Condominio;
 import mobi.moop.model.entities.Unidade;
 import mobi.moop.model.rotas.reponse.GenericListResponse;
@@ -45,6 +46,18 @@ public interface RotaCondominio {
         void onRegistrationFail(String error);
     }
 
+    interface CadastroCondominioHandler {
+        void onCondominioCadastrado(CadastroCondominio body);
+
+        void onCadastroError(String error);
+    }
+
+    interface AddBlocoHandler {
+        void onBlocoAdicionado(ResponseBody body);
+
+        void onBlocoAddError(String error);
+    }
+
     @Headers("appToken:" + RetrofitSingleton.APP_TOKEN)
     @GET(RetrofitSingleton.BASE_URL + RetrofitSingleton.API_V1 + "condominio/condominios.json")
     Call<GenericListResponse<Condominio>> getCondominiosUsuario(@Header("apiToken") String apiToken);
@@ -64,5 +77,13 @@ public interface RotaCondominio {
     @Headers("appToken:" + RetrofitSingleton.APP_TOKEN)
     @POST(RetrofitSingleton.BASE_URL + RetrofitSingleton.API_V1 + "condominio/{bloco}/vincular/unidade.json")
     Call<ResponseBody> registrarEmUnidade(@Header("apiToken") String apiToken, @Path("bloco") Long blocoId, @Query("isProprietario") boolean isProprietario, @Query("isMorador") boolean isMorador, @Query("numero") String unidade);
+
+    @Headers("appToken:" + RetrofitSingleton.APP_TOKEN)
+    @POST(RetrofitSingleton.BASE_URL + RetrofitSingleton.API_V1 + "condominio.json")
+    Call<CadastroCondominio> cadastrarCondominio(@Header("apiToken") String apiToken, @Query("cep") String cep, @Query("nome") String nome, @Query("logradouro") String logradouro, @Query("numero") String numero, @Query("telefone") String telefone, @Query("isHorizontal") boolean horizontal);
+
+    @Headers("appToken:" + RetrofitSingleton.APP_TOKEN)
+    @POST(RetrofitSingleton.BASE_URL + RetrofitSingleton.API_V1 + "condominio/{condominioId}/bloco.json")
+    Call<ResponseBody> cadastrarBloco(@Header("apiToken") String apiToken, @Path("condominioId") Long condominioId, @Query("nome") String nome, @Query("numero") String numero);
 
 }

@@ -19,6 +19,8 @@ import mobi.moop.model.entities.DisponibilidadeBem;
 
 public class DisponibilidadesViewHolder extends RecyclerView.ViewHolder {
 
+    private final DisponibilidadesAdapter adapter;
+
     private Context context;
 
     @BindView(R.id.textInicioDisp)
@@ -35,12 +37,14 @@ public class DisponibilidadesViewHolder extends RecyclerView.ViewHolder {
 
     @OnClick(R.id.textReservar)
     public void reservar(View view) {
+        adapter.reservar(getAdapterPosition());
     }
 
-    public DisponibilidadesViewHolder(View itemView) {
+    public DisponibilidadesViewHolder(View itemView, DisponibilidadesAdapter adapter) {
         super(itemView);
         ButterKnife.bind(this, itemView);
         this.context = itemView.getContext();
+        this.adapter = adapter;
     }
 
     public void bindView(DisponibilidadeBem disponibilidadeBem) {

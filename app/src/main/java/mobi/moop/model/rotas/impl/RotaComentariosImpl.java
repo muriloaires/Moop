@@ -20,10 +20,13 @@ import retrofit2.Response;
  */
 
 public class RotaComentariosImpl {
+    private Call<Comentario> callPostComentario;
+    private Call<GenericListResponse<Comentario>> callLoadComentarios;
+
     public void postComentario(final Context context, Long feedId, String texto, final RotaComentarios.ComentariosHandler handler) {
         Usuario usuario = UsuarioSingleton.I.getUsuarioLogado(context);
-        Call<Comentario> call = RetrofitSingleton.INSTANCE.getRetrofiInstance().create(RotaComentarios.class).postComentario(usuario.getApiToken(), feedId, texto);
-        call.enqueue(new Callback<Comentario>() {
+        callPostComentario = RetrofitSingleton.INSTANCE.getRetrofiInstance().create(RotaComentarios.class).postComentario(usuario.getApiToken(), feedId, texto);
+        callPostComentario.enqueue(new Callback<Comentario>() {
             @Override
             public void onResponse(Call<Comentario> call, Response<Comentario> response) {
                 if (response.isSuccessful()) {
@@ -35,21 +38,30 @@ public class RotaComentariosImpl {
 
             @Override
             public void onFailure(Call<Comentario> call, Throwable t) {
-                handler.onEnvioComentarioError(context.getString(R.string.algo_errado_ocorreu));
+                if (!call.isCanceled()) {
+                    handler.onEnvioComentarioError(context.getString(R.string.algo_errado_ocorreu));
+                }
             }
         });
     }
 
+    public void cancelPostComentarioRequisition() {
+        try {
+            callPostComentario.cancel();
+        } catch (Exception e) {
+        }
+    }
+
     public void loadComentarios(final Context context, long feedId, final RotaComentarios.ComentariosHandler handler) {
         Usuario usuario = UsuarioSingleton.I.getUsuarioLogado(context);
-        Call<GenericListResponse<Comentario>> call = RetrofitSingleton.INSTANCE.getRetrofiInstance().create(RotaComentarios.class).getComentarios(usuario.getApiToken(), feedId);
-        call.enqueue(new Callback<GenericListResponse<Comentario>>() {
+        callLoadComentarios = RetrofitSingleton.INSTANCE.getRetrofiInstance().create(RotaComentarios.class).getComentarios(usuario.getApiToken(), feedId);
+        callLoadComentarios.enqueue(new Callback<GenericListResponse<Comentario>>() {
             @Override
             public void onResponse(Call<GenericListResponse<Comentario>> call, Response<GenericListResponse<Comentario>> response) {
                 if (response.isSuccessful()) {
-                    if(response.code() == 204){
+                    if (response.code() == 204) {
                         handler.onComentariosRecebidos(new ArrayList<Comentario>());
-                    }else{
+                    } else {
                         handler.onComentariosRecebidos(response.body().getData());
                     }
                 } else {
@@ -59,8 +71,17 @@ public class RotaComentariosImpl {
 
             @Override
             public void onFailure(Call<GenericListResponse<Comentario>> call, Throwable t) {
-                handler.onRecebimentoComentariosError(context.getString(R.string.algo_errado_ocorreu));
+                if (!call.isCanceled()) {
+                    handler.onRecebimentoComentariosError(context.getString(R.string.algo_errado_ocorreu));
+                }
             }
         });
+    }
+
+    public void cancelLoadComentariosRequisition() {
+        try {
+            callLoadComentarios.cancel();
+        } catch (Exception e) {
+        }
     }
 }

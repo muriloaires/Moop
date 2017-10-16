@@ -111,4 +111,21 @@
     <string name="resolvido">Resolvido</string>
     <string name="cancelado">Cancelado</string>
     <string name="dia_nao_disponivel">Dia não disponível</string>
+    <string name="numero">Número</string>
+    <string name="cep_invalido">CEP inválido</string>
+    <string name="horizontal">Horizontal</string>
+    <string name="cadastrando_condominio">Cadastrando condomínio</string>
+    <string name="add_bloco_condominio">Adicionar Blocos ao Condomínio</string>
+    <string name="nome_bloco">Nome do bloco</string>
+    <string name="numero_bloco">Número bloco</string>
+    <string name="add_bloco">Adicionar bloco</string>
+    <string name="bloco_add_com_sucesso">Bloco adicionado com sucesso!</string>
+    <string name="cadastrando_bloco">Cadastrando bloco</string>
+    <string name="cancelar_reserva">CANCELAR RESERVA</string>
+    <string name="deseja_cancelar_reserva">Deseja cancelar esta reserva?</string>
+    <string name="reserva_cancelada_com_sucesso">Reserva cancelada com sucesso</string>
+    <string name="reserva_efetuada_com_sucesso">Reserva efetuada com sucesso!</string>
+    <string name="efetuando_reserva">Efetuando reserva</string>
+    <string name="nenhum_chamado">Você ainda não criou nenhum chamado</string>
+    <string name="chamado_criado_com_sucesso">Chamado criado com sucesso</string>
 </resources>

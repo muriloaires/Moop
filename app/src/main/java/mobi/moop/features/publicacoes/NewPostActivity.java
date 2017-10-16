@@ -103,6 +103,12 @@ public class NewPostActivity extends AppCompatActivity implements RotaFeed.FeedP
         condominioId = CondominioPreferences.I.getLastSelectedCondominio(this);
     }
 
+    @Override
+    protected void onStop() {
+        super.onStop();
+        rotaFeed.cancelPostFeedRequisition();
+    }
+
     private void setupProgressDialog() {
         progressDialog = new ProgressDialog(this);
         progressDialog.setIndeterminate(true);
@@ -118,9 +124,19 @@ public class NewPostActivity extends AppCompatActivity implements RotaFeed.FeedP
         menuItem.getActionView().setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                publicar();
+                if (validate()) {
+                    publicar();
+                }
             }
         });
+        return true;
+    }
+
+    private boolean validate() {
+        if (avatar == null && editText.getText().toString().equals("")) {
+            editText.setError(getString(R.string.campo_obrigatorio));
+            return false;
+        }
         return true;
     }
 

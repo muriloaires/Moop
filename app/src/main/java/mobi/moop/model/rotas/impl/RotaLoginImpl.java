@@ -23,9 +23,13 @@ import retrofit2.Response;
 
 public class RotaLoginImpl {
 
+    private Call<Usuario> callLogin;
+    private Call<Usuario> callRegistrar;
+    private Call<Usuario> callUpdate;
+
     public void login(final Context context, String email, String senha, String deviceToken, String deviceType, final String logadoCom, final RotaUsuario.LoginHandler handler) {
-        Call<Usuario> call = RetrofitSingleton.INSTANCE.getRetrofiInstance().create(RotaUsuario.class).login(email, senha, deviceToken, deviceType, logadoCom);
-        call.enqueue(new Callback<Usuario>() {
+        callLogin = RetrofitSingleton.INSTANCE.getRetrofiInstance().create(RotaUsuario.class).login(email, senha, deviceToken, deviceType, logadoCom);
+        callLogin.enqueue(new Callback<Usuario>() {
             @Override
             public void onResponse(Call<Usuario> call, Response<Usuario> response) {
                 if (response.isSuccessful()) {
@@ -40,10 +44,18 @@ public class RotaLoginImpl {
 
             @Override
             public void onFailure(Call<Usuario> call, Throwable t) {
-                handler.onLoginError(context.getString(R.string.algo_errado_ocorreu));
+                if (!call.isCanceled()) {
+                    handler.onLoginError(context.getString(R.string.algo_errado_ocorreu));
+                }
             }
         });
+    }
 
+    public void cancelLoginRequisition() {
+        try {
+            callLogin.cancel();
+        } catch (Exception e) {
+        }
     }
 
     public void registrar(final Context context, String nome, String email, String passsword, String avatarUrl, String loginType, String deviceToken, String deviceType, File imgAvatar, final RotaUsuario.RegistroHandler handler) {
@@ -61,8 +73,8 @@ public class RotaLoginImpl {
         if (imgAvatar != null) {
             body = MultipartBody.Part.createFormData("avatar", imgAvatar.getName(), RequestBody.create(MediaType.parse("image/*"), imgAvatar));
         }
-        Call<Usuario> call = RetrofitSingleton.INSTANCE.getRetrofiInstance().create(RotaUsuario.class).registrar(nomeBody, emailBody, passwordBody, deviceTokenBody, deviceTypeBody, loginTypeBody, avatarUrlBody, body);
-        call.enqueue(new Callback<Usuario>() {
+        callRegistrar = RetrofitSingleton.INSTANCE.getRetrofiInstance().create(RotaUsuario.class).registrar(nomeBody, emailBody, passwordBody, deviceTokenBody, deviceTypeBody, loginTypeBody, avatarUrlBody, body);
+        callRegistrar.enqueue(new Callback<Usuario>() {
             @Override
             public void onResponse(Call<Usuario> call, Response<Usuario> response) {
                 if (response.isSuccessful()) {
@@ -77,9 +89,18 @@ public class RotaLoginImpl {
 
             @Override
             public void onFailure(Call<Usuario> call, Throwable t) {
-                handler.onRegistrationFail(context.getString(R.string.algo_errado_ocorreu));
+                if (!call.isCanceled()) {
+                    handler.onRegistrationFail(context.getString(R.string.algo_errado_ocorreu));
+                }
             }
         });
+    }
+
+    public void cancelRegistrarRequisition() {
+        try {
+            callRegistrar.cancel();
+        } catch (Exception e) {
+        }
     }
 
     public void atualizar(final Context context, String nome, File imgAvatar, final RotaUsuario.UpdateHandler handler) {
@@ -88,8 +109,8 @@ public class RotaLoginImpl {
         if (imgAvatar != null) {
             body = MultipartBody.Part.createFormData("avatar", imgAvatar.getName(), RequestBody.create(MediaType.parse("image/*"), imgAvatar));
         }
-        Call<Usuario> call = RetrofitSingleton.INSTANCE.getRetrofiInstance().create(RotaUsuario.class).update(UsuarioSingleton.I.getUsuarioLogado(context).getApiToken(), nomeBody, body);
-        call.enqueue(new Callback<Usuario>() {
+        callUpdate = RetrofitSingleton.INSTANCE.getRetrofiInstance().create(RotaUsuario.class).update(UsuarioSingleton.I.getUsuarioLogado(context).getApiToken(), nomeBody, body);
+        callUpdate.enqueue(new Callback<Usuario>() {
             @Override
             public void onResponse(Call<Usuario> call, Response<Usuario> response) {
                 if (response.isSuccessful()) {
@@ -107,8 +128,17 @@ public class RotaLoginImpl {
 
             @Override
             public void onFailure(Call<Usuario> call, Throwable t) {
-                handler.onUpdateFail(context.getString(R.string.algo_errado_ocorreu));
+                if (!call.isCanceled()) {
+                    handler.onUpdateFail(context.getString(R.string.algo_errado_ocorreu));
+                }
             }
         });
+    }
+
+    public void cancelUpdateProfileRequisition() {
+        try {
+            callUpdate.cancel();
+        } catch (Exception e) {
+        }
     }
 }

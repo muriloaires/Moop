@@ -3,6 +3,7 @@ package mobi.moop.features.reserva;
 import android.content.Context;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
+import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
@@ -31,11 +32,15 @@ public class BensComunsFragment extends Fragment implements RotaReservas.BemComu
     @BindView(R.id.autorizacaoView)
     View autorizacaoView;
 
+    @BindView(R.id.refresh)
+    SwipeRefreshLayout refreshLayout;
+
     private List<BemComum> bensComuns = new ArrayList<>();
     private Condominio condominioSelecionado;
     private Context context;
     private RotaReservasImpl rotaReservas = new RotaReservasImpl();
     private BensComunsAdapter adapter;
+    private ReservasFragment.PagerAdapter pagerAdapter;
 
     public BensComunsFragment() {
         // Required empty public constructor
@@ -59,14 +64,37 @@ public class BensComunsFragment extends Fragment implements RotaReservas.BemComu
         View view = inflater.inflate(R.layout.fragment_bens_comuns, container, false);
         ButterKnife.bind(this, view);
         setupRecyclerView();
+        refreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
+            @Override
+            public void onRefresh() {
+                loadBens();
+            }
+        });
+        refreshLayout.setColorSchemeResources(R.color.colorPrimary);
         loadCondominioSelecionado();
         loadBens();
         return view;
     }
 
+    @Override
+    public void onPause() {
+        super.onPause();
+        if (refreshLayout != null) {
+            refreshLayout.setRefreshing(false);
+            refreshLayout.destroyDrawingCache();
+            refreshLayout.clearAnimation();
+        }
+    }
+
+    @Override
+    public void onStop() {
+        super.onStop();
+        rotaReservas.cancelGetBensComunsRequisition();
+    }
+
     private void setupRecyclerView() {
         recyclerBensComuns.setLayoutManager(new LinearLayoutManager(context));
-        adapter = new BensComunsAdapter(bensComuns);
+        adapter = new BensComunsAdapter(bensComuns, this);
         recyclerBensComuns.setAdapter(adapter);
     }
 
@@ -77,7 +105,7 @@ public class BensComunsFragment extends Fragment implements RotaReservas.BemComu
     private void loadBens() {
         if (condominioSelecionado.getIsLiberado()) {
             showRecycler();
-            rotaReservas.getBensComund(context, CondominioPreferences.I.getLastSelectedCondominio(context), this);
+            rotaReservas.getBensComuns(context, CondominioPreferences.I.getLastSelectedCondominio(context), this);
         } else {
             showNaoLiberadoView();
         }
@@ -95,6 +123,9 @@ public class BensComunsFragment extends Fragment implements RotaReservas.BemComu
 
     @Override
     public void onBensComunsRecebidos(List<BemComum> bensComuns) {
+        if (refreshLayout.isRefreshing()) {
+            refreshLayout.setRefreshing(false);
+        }
         if (bensComuns.size() > 0) {
             this.bensComuns.clear();
             this.bensComuns.add(null);
@@ -105,6 +136,17 @@ public class BensComunsFragment extends Fragment implements RotaReservas.BemComu
 
     @Override
     public void onRecebimentoBensComunsErro(String erro) {
+        if (refreshLayout.isRefreshing()) {
+            refreshLayout.setRefreshing(false);
+        }
         Toast.makeText(context, erro, Toast.LENGTH_SHORT).show();
+    }
+
+    public void setPagerAdapter(ReservasFragment.PagerAdapter pagerAdapter) {
+        this.pagerAdapter = pagerAdapter;
+    }
+
+    public void openDispobinilidadeActivity(BemComum bemComum) {
+        pagerAdapter.openDispobinilidadeActivity(bemComum);
     }
 }

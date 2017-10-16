@@ -8,27 +8,20 @@ import java.util.Date;
  */
 
 public class FeedItem implements Serializable {
+
     private Long id;
-
     private String titulo;
-
     private String texto;
-
     private String imagem;
-
     private boolean isPrivado;
-
     private Date createdAt;
-
     private Date updatedAt;
-
     private int wImage;
-
     private int hImage;
-
     private Date data;
-
+    private boolean curtidaPeloUsuario;
     private Integer comentarios;
+    private Integer curtidas;
 
     public int getwImage() {
         return wImage;
@@ -84,5 +77,21 @@ public class FeedItem implements Serializable {
 
     public Integer getComentarios() {
         return comentarios;
+    }
+
+    public boolean isCurtidaPeloUsuario() {
+        return curtidaPeloUsuario;
+    }
+
+    public void setCurtidaPeloUsuario(boolean curtidaPeloUsuario) {
+        this.curtidaPeloUsuario = curtidaPeloUsuario;
+    }
+
+    public Integer getCurtidas() {
+        return curtidas;
+    }
+
+    public void setCurtidas(Integer curtidas) {
+        this.curtidas = curtidas;
     }
 }

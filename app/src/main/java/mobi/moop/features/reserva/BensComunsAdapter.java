@@ -17,17 +17,19 @@ import mobi.moop.model.entities.BemComum;
 public class BensComunsAdapter extends RecyclerView.Adapter {
     private static final int BENS_COMUNS_HEADER = 0;
     private static final int BEM_COMUM = 1;
+    private final BensComunsFragment fragment;
     private List<BemComum> bensComuns;
 
-    public BensComunsAdapter(List<BemComum> bensComuns) {
+    public BensComunsAdapter(List<BemComum> bensComuns, BensComunsFragment fragment) {
         this.bensComuns = bensComuns;
+        this.fragment = fragment;
     }
 
     @Override
     public RecyclerView.ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
         if (viewType == BEM_COMUM) {
             View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.item_bem_comum, parent, false);
-            return new BemComumViewHolder(view);
+            return new BemComumViewHolder(view,this);
         } else {
             View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.item_bem_comum_header, parent, false);
             return new BemComumHeaderViewHolder(view);
@@ -53,5 +55,9 @@ public class BensComunsAdapter extends RecyclerView.Adapter {
         } else {
             return BEM_COMUM;
         }
+    }
+
+    public void openDispobinilidadeActivity(BemComum bemComum) {
+        fragment.openDispobinilidadeActivity(bemComum);
     }
 }

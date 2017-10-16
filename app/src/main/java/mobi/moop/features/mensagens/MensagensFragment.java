@@ -3,6 +3,7 @@ package mobi.moop.features.mensagens;
 import android.content.Context;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
+import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
@@ -27,6 +28,8 @@ public class MensagensFragment extends Fragment implements Scrollable, RotaMensa
     @BindView(R.id.recycler_ultimas_mensagens)
     RecyclerView recyclerUltimasMensagens;
 
+    @BindView(R.id.refresh)
+    SwipeRefreshLayout refresh;
 
     private RotaMensagemImpl rotaMensagem = new RotaMensagemImpl();
     private UltimasMensagensAdapter ultimasMensagensAdapter;
@@ -53,8 +56,19 @@ public class MensagensFragment extends Fragment implements Scrollable, RotaMensa
         View view = inflater.inflate(R.layout.fragment_mensagens, container, false);
         ButterKnife.bind(this, view);
         setupRecyclerView();
-        rotaMensagem.getUltimasMensagens(getContext(), UsuarioSingleton.I.getUsuarioLogado(getContext()), this);
+        refresh.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
+            @Override
+            public void onRefresh() {
+                loadUltimasMensagens();
+            }
+        });
+        refresh.setColorSchemeResources(R.color.colorPrimary);
+        loadUltimasMensagens();
         return view;
+    }
+
+    private void loadUltimasMensagens() {
+        rotaMensagem.getUltimasMensagens(getContext(), UsuarioSingleton.I.getUsuarioLogado(getContext()), this);
     }
 
     private void setupRecyclerView() {
@@ -63,6 +77,22 @@ public class MensagensFragment extends Fragment implements Scrollable, RotaMensa
         recyclerUltimasMensagens.setAdapter(ultimasMensagensAdapter);
     }
 
+    @Override
+    public void onPause() {
+        super.onPause();
+        if (refresh != null) {
+            refresh.setRefreshing(false);
+            refresh.destroyDrawingCache();
+            refresh.clearAnimation();
+        }
+    }
+
+
+    @Override
+    public void onStop() {
+        super.onStop();
+        rotaMensagem.cancelGetUltimasMensagensRequisition();
+    }
 
     @Override
     public void onAttach(Context context) {
@@ -81,6 +111,9 @@ public class MensagensFragment extends Fragment implements Scrollable, RotaMensa
 
     @Override
     public void onUltimasMensagensRecebidas(List<Mensagem> ultimasMensagens) {
+        if (refresh.isRefreshing()) {
+            refresh.setRefreshing(false);
+        }
         this.ultimasMensagens.clear();
         this.ultimasMensagens.addAll(ultimasMensagens);
         ultimasMensagensAdapter.notifyDataSetChanged();
@@ -89,6 +122,9 @@ public class MensagensFragment extends Fragment implements Scrollable, RotaMensa
 
     @Override
     public void onUltimasMensagensError(String error) {
+        if (refresh.isRefreshing()) {
+            refresh.setRefreshing(false);
+        }
         Toast.makeText(getContext(), error, Toast.LENGTH_SHORT).show();
     }
 }

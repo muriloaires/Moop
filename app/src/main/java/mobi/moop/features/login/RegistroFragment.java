@@ -153,6 +153,12 @@ public class RegistroFragment extends Fragment implements Validator.ValidationLi
         loginActivity.showToolbar();
     }
 
+    @Override
+    public void onStop() {
+        super.onStop();
+        rotaLogin.cancelRegistrarRequisition();
+    }
+
     private void requestCameraPermission(int from) {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
             if (ContextCompat.checkSelfPermission(getContext(), Manifest.permission.CAMERA) != PackageManager.PERMISSION_GRANTED ||

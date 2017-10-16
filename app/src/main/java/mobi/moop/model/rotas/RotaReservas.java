@@ -53,6 +53,12 @@ public interface RotaReservas {
         void onError(String error);
     }
 
+    interface CancelarReservaHandler {
+        void onReservaCancelada();
+
+        void onCancelamentoError(String error);
+    }
+
     @Headers("appToken:" + RetrofitSingleton.APP_TOKEN)
     @GET(RetrofitSingleton.BASE_URL + RetrofitSingleton.API_V1 + "reserva/condominio/{condominioId}/bens.json")
     Call<GenericListResponse<BemComum>> getBensComuns(@Header("apiToken") String apiToken, @Path("condominioId") Long condominioId);
@@ -62,8 +68,8 @@ public interface RotaReservas {
     Call<GenericListResponse<DisponibilidadeBem>> getDisponibilidadesBens(@Header("apiToken") String apiToken, @Path("bemId") Long bemId, @Query("dataDesejada") String dataDesejada);
 
     @Headers("appToken:" + RetrofitSingleton.APP_TOKEN)
-    @POST(RetrofitSingleton.BASE_URL + RetrofitSingleton.API_V1 + "reserva/{disponibilidade}/reservar.json")
-    Call<GenericResponse<ReservaBemComum>> reservarDisponibilidade(@Header("apiToken") String apiToken, @Path("disponibilidade") Long bemId, @Query("dataDesejada") String dataDesejada);
+    @POST(RetrofitSingleton.BASE_URL + RetrofitSingleton.API_V1 + "reserva/{disponibilidadeId}/reservar.json")
+    Call<GenericResponse<ReservaBemComum>> reservarDisponibilidade(@Header("apiToken") String apiToken, @Path("disponibilidadeId") Long disponibilidadeId);
 
     @Headers("appToken:" + RetrofitSingleton.APP_TOKEN)
     @GET(RetrofitSingleton.BASE_URL + RetrofitSingleton.API_V1 + "reserva/{condominioId}/reservas.json")
@@ -72,4 +78,8 @@ public interface RotaReservas {
     @Headers("appToken:" + RetrofitSingleton.APP_TOKEN)
     @GET(RetrofitSingleton.BASE_URL + RetrofitSingleton.API_V1 + "reserva/{condominioId}/{bemId}/dias.json")
     Call<GenericListResponse<DiaBemComum>> getDiasBemComum(@Header("apiToken") String apiToken, @Path("condominioId") Long condominioId, @Path("bemId") Long bemId, @Query("mes") Integer mes, @Query("ano") Integer ano);
+
+    @Headers("appToken:" + RetrofitSingleton.APP_TOKEN)
+    @POST(RetrofitSingleton.BASE_URL + RetrofitSingleton.API_V1 + "reserva/{reservaId}/cancelar.json")
+    Call<ResponseBody> cancelarReserva(@Header("apiToken") String apiToken, @Path("reservaId") Long reservaId);
 }

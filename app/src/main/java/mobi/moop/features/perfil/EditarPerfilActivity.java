@@ -86,6 +86,12 @@ public class EditarPerfilActivity extends AppCompatActivity implements RotaUsuar
         }
     }
 
+    @Override
+    protected void onStop() {
+        super.onStop();
+        rotaLogin.cancelUpdateProfileRequisition();
+    }
+
     private void createLoginDialog() {
         loginDialog = new ProgressDialog(this);
         loginDialog.setIndeterminate(true);

@@ -21,4 +21,13 @@
         android:layout_height="match_parent"
         android:layout_above="@id/btn_criar_chamado" />
 
+    <TextView
+        android:id="@+id/nenhumChamado"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_centerInParent="true"
+        android:text="@string/nenhum_chamado"
+        android:textColor="@color/text_color_default"
+        android:visibility="gone" />
+
 </RelativeLayout>

@@ -1,6 +1,8 @@
 package mobi.moop.features.reserva;
 
 
+import android.app.Activity;
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.design.widget.TabLayout;
 import android.support.v4.app.Fragment;
@@ -15,7 +17,12 @@ import android.widget.TextView;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import mobi.moop.R;
+import mobi.moop.features.MoopActivity;
+import mobi.moop.features.feed.FeedFragment;
+import mobi.moop.features.mensagens.MensagensFragment;
+import mobi.moop.features.notification.NotificacoesFragment;
 import mobi.moop.features.viewutils.Scrollable;
+import mobi.moop.model.entities.BemComum;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -27,6 +34,7 @@ public class ReservasFragment extends Fragment implements Scrollable {
 
     @BindView(R.id.viewpager)
     ViewPager viewPager;
+    private PagerAdapter adapter;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -37,10 +45,10 @@ public class ReservasFragment extends Fragment implements Scrollable {
     }
 
     public void configureTabLayout() {
-        tabLayout.addTab(tabLayout.newTab().setCustomView(R.layout.tab_minhas_reservas));
         tabLayout.addTab(tabLayout.newTab().setCustomView(R.layout.tab_bens_comuns));
-
-        viewPager.setAdapter(new PagerAdapter(getChildFragmentManager(), tabLayout.getTabCount()));
+        tabLayout.addTab(tabLayout.newTab().setCustomView(R.layout.tab_minhas_reservas));
+        adapter = new PagerAdapter(getChildFragmentManager(), tabLayout.getTabCount(), this);
+        viewPager.setAdapter(adapter);
         viewPager.addOnPageChangeListener(new TabLayout.TabLayoutOnPageChangeListener(tabLayout));
         tabLayout.addOnTabSelectedListener(new TabLayout.OnTabSelectedListener() {
 
@@ -66,11 +74,15 @@ public class ReservasFragment extends Fragment implements Scrollable {
     }
 
     public class PagerAdapter extends FragmentStatePagerAdapter {
+        private final ReservasFragment fragment;
         int mNumOfTabs;
+        private MinhasReservasFragment minhasReservasFragment;
+        private BensComunsFragment bensComunsFragment;
 
-        public PagerAdapter(FragmentManager fm, int NumOfTabs) {
+        public PagerAdapter(FragmentManager fm, int NumOfTabs, ReservasFragment fragment) {
             super(fm);
             this.mNumOfTabs = NumOfTabs;
+            this.fragment = fragment;
         }
 
         @Override
@@ -87,122 +99,68 @@ public class ReservasFragment extends Fragment implements Scrollable {
 
             switch (position) {
                 case 0:
-                    return new MinhasReservasFragment();
+                    BensComunsFragment fragment = new BensComunsFragment();
+                    fragment.setPagerAdapter(this);
+                    return fragment;
                 case 1:
-                    return new BensComunsFragment();
+                    MinhasReservasFragment fragment1 = new MinhasReservasFragment();
+                    fragment1.setPagerAdater(this);
+                    return fragment1;
                 default:
                     return null;
             }
         }
 
         @Override
+        public Object instantiateItem(ViewGroup container, int position) {
+            Fragment createdFragment = (Fragment) super.instantiateItem(container, position);
+            // save the appropriate reference depending on position
+            switch (position) {
+                case 0:
+                    bensComunsFragment = (BensComunsFragment) createdFragment;
+                    break;
+                default:
+                    minhasReservasFragment = (MinhasReservasFragment) createdFragment;
+
+            }
+            return createdFragment;
+        }
+
+        @Override
         public int getCount() {
             return mNumOfTabs;
         }
-    }
 
-    /*@BindView(R.id.recyclerBensComuns)
-    RecyclerView recyclerBensComuns;
+        public MinhasReservasFragment getMinhasReservasFragment() {
+            return minhasReservasFragment;
+        }
 
-    @BindView(R.id.autorizacaoView)
-    View autorizacaoView;
+        public BensComunsFragment getBensComunsFragment() {
+            return bensComunsFragment;
+        }
 
-    private List<BemComum> bensComuns = new ArrayList<>();
-    private List<Object> reservas = new ArrayList<>();
-    private List<Object> listaAdapter = new ArrayList<>();
-    private BensComunsAdapter adapter;
-    private RotaReservasImpl rotaReservas = new RotaReservasImpl();
-    private Condominio condominioSelecionado;
-    private Context context;
-
-    public ReservasFragment() {
-        // Required empty public constructor
-    }
-
-
-    @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container,
-                             Bundle savedInstanceState) {
-        // Inflate the layout for this fragment
-        View view = inflater.inflate(R.layout.fragment_reservas, container, false);
-        ButterKnife.bind(this, view);
-        setupRecyclerView();
-        loadCondominioSelecionado();
-        loadBens();
-        loadReservas();
-        return view;
-    }
-
-    private void loadCondominioSelecionado() {
-        this.condominioSelecionado = CondominioRepository.I.getCondominio(context);
-    }
-
-    @Override
-    public void onAttach(Context context) {
-        super.onAttach(context);
-        this.context = context;
-    }
-
-    private void loadReservas() {
-        rotaReservas.getReservas(context, CondominioPreferences.I.getLastSelectedCondominio(context), this);
-    }
-
-    private void loadBens() {
-        if (condominioSelecionado.getIsLiberado()) {
-            showRecycler();
-            rotaReservas.getBensComund(context, CondominioPreferences.I.getLastSelectedCondominio(context), this);
-        } else {
-            showNaoLiberadoView();
+        public void openDispobinilidadeActivity(BemComum bemComum) {
+            fragment.openDisponilidadeActivity(bemComum);
         }
     }
 
-    private void showNaoLiberadoView() {
-        recyclerBensComuns.setVisibility(View.GONE);
-        autorizacaoView.setVisibility(View.VISIBLE);
-    }
-
-    private void showRecycler() {
-        recyclerBensComuns.setVisibility(View.VISIBLE);
-        autorizacaoView.setVisibility(View.GONE);
-    }
-
-    private void setupRecyclerView() {
-        recyclerBensComuns.setLayoutManager(new LinearLayoutManager(context));
-        adapter = new BensComunsAdapter(listaAdapter);
-        recyclerBensComuns.setAdapter(adapter);
+    private void openDisponilidadeActivity(BemComum bemComum) {
+        Intent intent = new Intent(getContext(), DisponibilidadesActivity.class);
+        intent.putExtra("bemId", bemComum.getId());
+        intent.putExtra("bemComumNome", bemComum.getNome());
+        intent.putExtra("bemComumAvatar", bemComum.getAvatar());
+        intent.putExtra("bemComumTermos", bemComum.getTermosDeUso());
+        startActivityForResult(intent, MoopActivity.REQUEST_RESERVA);
     }
 
     @Override
-    public void onBensComunsRecebidos(List<BemComum> bensComuns) {
-        if (bensComuns.size() > 0) {
-            this.bensComuns.add(null);
-            this.bensComuns.addAll(bensComuns);
-            this.listaAdapter.addAll(this.bensComuns);
-            adapter.notifyDataSetChanged();
+    public void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        if (requestCode == MoopActivity.REQUEST_RESERVA && resultCode == Activity.RESULT_OK) {
+            adapter.getMinhasReservasFragment().loadReservas();
         }
     }
 
-    @Override
-    public void onRecebimentoBensComunsErro(String erro) {
-        Toast.makeText(context, erro, Toast.LENGTH_SHORT).show();
-    }
-
-    @Override
-    public void onReservasRecebidas(List<ReservaBemComum> reservas) {
-        if (reservas.size() > 0) {
-            this.reservas.add("HEADER");
-            this.reservas.addAll(reservas);
-            this.listaAdapter.addAll(0, this.reservas);
-            adapter.notifyDataSetChanged();
-
-        }
-    }
-
-    @Override
-    public void onRecebimentoReservasError(String errorr) {
-        Toast.makeText(context, errorr, Toast.LENGTH_SHORT).show();
-    }
-*/
     @Override
     public void scrollToTop() {
     }

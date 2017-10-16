@@ -12,7 +12,7 @@
         android:text="@string/fazer_reserva"
         android:textAllCaps="true"
         android:textColor="@android:color/black"
-        android:textSize="12sp"
+        android:textSize="14sp"
         android:textStyle="bold" />
 
 </RelativeLayout>

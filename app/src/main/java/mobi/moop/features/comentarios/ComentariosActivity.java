@@ -63,6 +63,13 @@ public class ComentariosActivity extends AppCompatActivity implements RotaComent
 
     }
 
+    @Override
+    protected void onStop() {
+        super.onStop();
+        rotaComentarios.cancelPostComentarioRequisition();
+        rotaComentarios.cancelLoadComentariosRequisition();
+    }
+
     private void loadComentarios() {
         rotaComentarios.loadComentarios((Context) this, getIntent().getLongExtra("feedId", -1), (RotaComentarios.ComentariosHandler) this);
     }

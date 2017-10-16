@@ -19,9 +19,11 @@ import retrofit2.Response;
 
 public class RotaMoradoresImpl {
 
+    private Call<List<Usuario>> callGetMoradores;
+
     public void getMoradores(Usuario usuario, Condominio condominio, final Context context, final RotaMoradores.MoradoresHandler handler, String query) {
-        Call<List<Usuario>> call = RetrofitSingleton.INSTANCE.getRetrofiInstance().create(RotaMoradores.class).getMoradores(usuario.getApiToken(), condominio.getId(),query);
-        call.enqueue(new Callback<List<Usuario>>() {
+        callGetMoradores = RetrofitSingleton.INSTANCE.getRetrofiInstance().create(RotaMoradores.class).getMoradores(usuario.getApiToken(), condominio.getId(), query);
+        callGetMoradores.enqueue(new Callback<List<Usuario>>() {
             @Override
             public void onResponse(Call<List<Usuario>> call, Response<List<Usuario>> response) {
                 if (response.isSuccessful()) {
@@ -33,9 +35,18 @@ public class RotaMoradoresImpl {
 
             @Override
             public void onFailure(Call<List<Usuario>> call, Throwable t) {
-                handler.onRecebimentoMoradoresFail(context.getString(R.string.algo_errado_ocorreu));
+                if (!call.isCanceled()) {
+                    handler.onRecebimentoMoradoresFail(context.getString(R.string.algo_errado_ocorreu));
+                }
             }
         });
+    }
+
+    public void cancelGetMoradoresRequisition() {
+        try {
+            callGetMoradores.cancel();
+        } catch (Exception e) {
+        }
     }
 
 }

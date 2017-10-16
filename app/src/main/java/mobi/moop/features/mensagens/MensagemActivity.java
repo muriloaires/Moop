@@ -65,6 +65,12 @@ public class MensagemActivity extends AppCompatActivity implements RotaMensagem.
 
     }
 
+    @Override
+    protected void onStop() {
+        super.onStop();
+        rotaMensagem.cancelGetMensagensRequisition();
+        rotaMensagem.cancelPostMensagemRequisition();
+    }
 
     private void loadMensagens() {
         rotaMensagem.getMensagens(this, UsuarioSingleton.I.getUsuarioLogado(this), getIntent().getLongExtra("usuarioDestinoId", -1), this);

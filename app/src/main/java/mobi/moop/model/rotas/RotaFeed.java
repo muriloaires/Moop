@@ -6,6 +6,7 @@ import mobi.moop.model.entities.FeedItem;
 import mobi.moop.model.rotas.reponse.GenericListResponse;
 import okhttp3.MultipartBody;
 import okhttp3.RequestBody;
+import okhttp3.ResponseBody;
 import retrofit2.Call;
 import retrofit2.http.GET;
 import retrofit2.http.Header;
@@ -36,6 +37,16 @@ public interface RotaFeed {
         void onFeedPublishFail(String error);
     }
 
+    interface CurtidaHandler {
+        void onFeedCurtido(Long feedId, Integer curtidas);
+
+        void onCurtirFeedFail(Long feedId, String error);
+
+        void onFeedDescurtido(Long feedId);
+
+        void onDescurtirFeedError(Long feedId, String error);
+    }
+
     @Headers("appToken:" + RetrofitSingleton.APP_TOKEN)
     @GET(RetrofitSingleton.BASE_URL + RetrofitSingleton.API_V1 + "feed/{condominioId}/feeds.json")
     Call<GenericListResponse<FeedItem>> getFeed(@Header("apiToken") String apiToken, @Path("condominioId") Long condominioId, @Query("limit") Integer limit, @Query("offset") Integer offset);
@@ -45,4 +56,12 @@ public interface RotaFeed {
     @POST(RetrofitSingleton.BASE_URL + RetrofitSingleton.API_V1 + "feed/{condominioId}/condominio.json")
     @Multipart
     Call<FeedItem> postFeed(@Header("apiToken") String apiToken, @Path("condominioId") Long condominioId, @Part("titulo") RequestBody titulo, @Part("texto") RequestBody texto, @Part MultipartBody.Part imagem);
+
+    @Headers("appToken:" + RetrofitSingleton.APP_TOKEN)
+    @POST(RetrofitSingleton.BASE_URL + RetrofitSingleton.API_V1 + "feed/{feedId}/curtir.json")
+    Call<ResponseBody> curtirFeed(@Header("apiToken") String apiToken, @Path("feedId") Long feedId);
+
+    @Headers("appToken:" + RetrofitSingleton.APP_TOKEN)
+    @POST(RetrofitSingleton.BASE_URL + RetrofitSingleton.API_V1 + "feed/{feedId}/descurtir.json")
+    Call<ResponseBody> descurtirFeed(@Header("apiToken") String apiToken, @Path("feedId") Long feedId);
 }

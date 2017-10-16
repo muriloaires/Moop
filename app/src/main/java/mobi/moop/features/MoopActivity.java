@@ -47,6 +47,7 @@ public class MoopActivity extends AppCompatActivity implements NavigationView.On
 
     private static final int ADD_CONDOMINIO = 0;
     private static final int EDIT_PROFILE_RESULT = 1;
+    public static final int REQUEST_RESERVA = 2;
     @BindView(R.id.toolbar)
     Toolbar toolbar;
 
@@ -78,6 +79,12 @@ public class MoopActivity extends AppCompatActivity implements NavigationView.On
         configureNavigationDrawer();
         configureMenuCondominios();
         loadCondominios();
+    }
+
+    @Override
+    protected void onStop() {
+        super.onStop();
+        rotaCondominio.cancelGetCondominiosUsuarioRequisition();
     }
 
     private void configureTabs() {
@@ -319,7 +326,6 @@ public class MoopActivity extends AppCompatActivity implements NavigationView.On
         intent.putExtra("bemComumNome", bemComum.getNome());
         intent.putExtra("bemComumAvatar", bemComum.getAvatar());
         intent.putExtra("bemComumTermos", bemComum.getTermosDeUso());
-
-        startActivity(intent);
+        startActivityForResult(intent, REQUEST_RESERVA);
     }
 }

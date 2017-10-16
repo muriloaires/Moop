@@ -47,8 +47,27 @@ public class FeedViewHolder extends RecyclerView.ViewHolder {
     @BindView(R.id.textNumeroComments)
     TextView textNumeroComments;
 
+    @BindView(R.id.textNumeroCurtidas)
+    TextView textNumeroCurtidas;
+
     @BindView(R.id.textHoraComentario)
     TextView textHoraComentario;
+
+    @BindView(R.id.imgCurtir)
+    ImageView imgCurtir;
+
+    @BindView(R.id.imgDescurtir)
+    ImageView imgDiscurtir;
+
+    @OnClick(R.id.imgCurtir)
+    public void imgCurtirAction(View view) {
+        curtir();
+    }
+
+    @OnClick(R.id.imgDescurtir)
+    public void imgDIscurtirAction(View view) {
+        descurtir();
+    }
 
     @OnClick(R.id.imgPost)
     public void imgPostAction(View view) {
@@ -79,6 +98,7 @@ public class FeedViewHolder extends RecyclerView.ViewHolder {
         textNome.setText(feedItem.getPerfil().getNome());
         textHoraComentario.setText(DateUtils.getDifference(new Date(), feedItem.getData()));
         textNumeroComments.setText(" " + feedItem.getComentarios().toString());
+        textNumeroCurtidas.setText(" " + feedItem.getCurtidas().toString());
         if (!feedItem.getPerfil().getAvatar().equals("")) {
             Picasso.with(context).load(feedItem.getPerfil().getAvatar()).placeholder(R.drawable.placeholder_avatar).into(imgAvatar, new Callback() {
                 @Override
@@ -118,5 +138,21 @@ public class FeedViewHolder extends RecyclerView.ViewHolder {
                     .placeholder(R.drawable.feedplaceholder)
                     .into(imgPost);
         }
+
+        if (feedItem.isCurtidaPeloUsuario()) {
+            imgDiscurtir.setVisibility(View.VISIBLE);
+            imgCurtir.setVisibility(View.GONE);
+        } else {
+            imgDiscurtir.setVisibility(View.GONE);
+            imgCurtir.setVisibility(View.VISIBLE);
+        }
+    }
+
+    public void curtir() {
+        adapter.curtir(getAdapterPosition());
+    }
+
+    public void descurtir() {
+        adapter.descurtir(getAdapterPosition());
     }
 }

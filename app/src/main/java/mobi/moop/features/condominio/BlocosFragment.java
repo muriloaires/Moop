@@ -49,6 +49,12 @@ public class BlocosFragment extends Fragment implements RotaCondominio.BlocosHan
         ((AddCondominioActivity) getContext()).setTitutlo(getString(R.string.agora_escolha_bloco));
     }
 
+    @Override
+    public void onStop() {
+        super.onStop();
+        rotaCondominio.cancelGetBlocosCondominioRequisition();
+    }
+
     private void loadBlocos() {
         rotaCondominio.getBlocosCondominio(getContext(), getArguments().getLong("condominioId"), this);
     }

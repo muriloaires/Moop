@@ -34,6 +34,9 @@ public class ChamadosFragment extends Fragment implements RotaChamados.Recebimen
     @BindView(R.id.recycler_chamados)
     RecyclerView recyclerChamados;
 
+    @BindView(R.id.nenhumChamado)
+    View nenhumChamado;
+
     private RotaChamadoImpl rotaChamado = new RotaChamadoImpl();
     private List<Chamado> chamados = new ArrayList<>();
     private ChamadosAdapter chamadosAdapter;
@@ -50,8 +53,19 @@ public class ChamadosFragment extends Fragment implements RotaChamados.Recebimen
         View view = inflater.inflate(R.layout.fragment_chamado, container, false);
         ButterKnife.bind(this, view);
         setupRecyclerView();
-        loadChamados();
         return view;
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        loadChamados();
+    }
+
+    @Override
+    public void onStop() {
+        super.onStop();
+        rotaChamado.cancelLoadChamadosRequisition();
     }
 
     private void setupRecyclerView() {
@@ -70,9 +84,24 @@ public class ChamadosFragment extends Fragment implements RotaChamados.Recebimen
 
     @Override
     public void onChamadosRecebidos(List<Chamado> chamados) {
+        if (chamados.size() == 0) {
+            showNenhumChamadoView();
+        } else {
+            showLista();
+        }
         this.chamados.clear();
         this.chamados.addAll(chamados);
         chamadosAdapter.notifyDataSetChanged();
+    }
+
+    private void showLista() {
+        recyclerChamados.setVisibility(View.VISIBLE);
+        nenhumChamado.setVisibility(View.GONE);
+    }
+
+    private void showNenhumChamadoView() {
+        recyclerChamados.setVisibility(View.GONE);
+        nenhumChamado.setVisibility(View.VISIBLE);
     }
 
     @Override

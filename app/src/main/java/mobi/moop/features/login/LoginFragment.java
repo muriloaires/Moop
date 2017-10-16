@@ -128,6 +128,13 @@ public class LoginFragment extends Fragment implements Validator.ValidationListe
     }
 
     @Override
+    public void onStop() {
+        super.onStop();
+        login.cancelLoginRequisition();
+        login.cancelRegistrarRequisition();
+    }
+
+    @Override
     public void onValidationSucceeded() {
         performLogin(editEmail.getText().toString(), editSenha.getText().toString(), LoginActivity.LOGIN_MOOP);
 

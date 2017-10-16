@@ -16,6 +16,7 @@ import com.imanoweb.calendarview.CustomCalendarView;
 import com.imanoweb.calendarview.DayDecorator;
 import com.imanoweb.calendarview.DayView;
 
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
@@ -23,6 +24,7 @@ import java.util.List;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
+import butterknife.OnClick;
 import mobi.moop.R;
 import mobi.moop.model.entities.DiaBemComum;
 import mobi.moop.model.rotas.RotaReservas;
@@ -36,9 +38,17 @@ public class CalendarioBemComumFragment extends Fragment implements RotaReservas
     @BindView(R.id.calendar_view)
     CustomCalendarView calendarView;
 
+    @OnClick(R.id.btn_solicitar_reserva)
+    public void btnSoliciarReservaAction(View view) {
+
+        activity.showDisponibilidadeFragment(selectedDay);
+    }
+
     private RotaReservasImpl rotaReservas = new RotaReservasImpl();
     private DisponibilidadesActivity activity;
     private View lastDaySelected;
+    private Date selectedDay;
+    private Calendar calendar = Calendar.getInstance();
 
     public CalendarioBemComumFragment() {
         // Required empty public constructor
@@ -60,12 +70,17 @@ public class CalendarioBemComumFragment extends Fragment implements RotaReservas
         View view = inflater.inflate(R.layout.fragment_calendario_bem_comum, container, false);
         ButterKnife.bind(this, view);
         configureCalendarView();
-        loadDias();
+        loadDias(calendar);
         return view;
     }
 
-    private void loadDias() {
-        Calendar calendar = Calendar.getInstance();
+    @Override
+    public void onStop() {
+        super.onStop();
+        rotaReservas.cancelLoadDiasDisponibilidadesRequisition();
+    }
+
+    private void loadDias(Calendar calendar) {
         rotaReservas.loadDiasDisponibilidadesBem(getContext(), getArguments().getLong("bemId"), calendar.get(Calendar.MONTH) + 1, calendar.get(Calendar.YEAR), this);
     }
 
@@ -91,6 +106,9 @@ public class CalendarioBemComumFragment extends Fragment implements RotaReservas
             @Override
             public void onMonthChanged(Date date) {
                 Log.d("", "");
+                calendar.setTime(date);
+                Calendar.getInstance();
+                loadDias(calendar);
             }
         });
     }
@@ -102,38 +120,60 @@ public class CalendarioBemComumFragment extends Fragment implements RotaReservas
             DayDecorator dayDecorator = new DayDecorator() {
                 @Override
                 public void decorate(final DayView dayView) {
-                    dayView.setOnClickListener(new View.OnClickListener() {
-                        @Override
-                        public void onClick(View v) {
-                            if (dia.getStatus().equals(DiaBemComum.DIA_NAO_DISPONIVEL)) {
-                                Toast.makeText(activity, getString(R.string.dia_nao_disponivel), Toast.LENGTH_SHORT).show();
-                                return;
-                            }
-                            v.setBackgroundColor(getResources().getColor(R.color.colorPrimary));
-                            if (CalendarioBemComumFragment.this.lastDaySelected != null) {
-                                lastDaySelected.setBackgroundColor(Color.WHITE);
-                            }
-                            lastDaySelected = v;
+
+                    Calendar calendarDay = Calendar.getInstance();
+                    calendarDay.setTime(dayView.getDate());
+
+                    Calendar apiDay = calendar;
+                    apiDay.setTime(dia.getData());
+
+                    int calendarDayOfMonth = calendarDay.get(Calendar.DAY_OF_MONTH);
+                    int calendarMonthOfYear = calendarDay.get(Calendar.MONTH);
+                    int calendarYear = calendarDay.get(Calendar.YEAR);
+
+                    int apiDayOfMonth = apiDay.get(Calendar.DAY_OF_MONTH);
+                    int apiMonthOfYear = apiDay.get(Calendar.MONTH);
+                    int apiYear = apiDay.get(Calendar.YEAR);
+
+                    if (calendarDayOfMonth == apiDayOfMonth && calendarMonthOfYear == apiMonthOfYear && calendarYear == apiYear) {
+                        if (dia.getStatus().equals(DiaBemComum.DIA_NAO_DISPONIVEL)) {
+                            dayView.setTextColor(getContext().getResources().getColor(R.color.lightgrey));
+                        } else if (dia.getStatus().equals(DiaBemComum.DIA_LOTADO)) {
+                            dayView.setTextColor(Color.RED);
+                        } else {
+                            dayView.setTextColor(Color.BLACK);
                         }
-                    });
-                    if (dia.getStatus().equals(DiaBemComum.DIA_NAO_DISPONIVEL)) {
-                        dayView.setTextColor(getContext().getResources().getColor(R.color.lightgrey));
-                    } else if (dia.getStatus().equals(DiaBemComum.DIA_LOTADO)) {
-                        dayView.setTextColor(Color.RED);
-                    } else {
-                        dayView.setTextColor(Color.BLACK);
+
+                        dayView.setOnClickListener(new View.OnClickListener() {
+                            @Override
+                            public void onClick(View v) {
+                                if (dia.getStatus().equals(DiaBemComum.DIA_NAO_DISPONIVEL)) {
+                                    Toast.makeText(activity, getString(R.string.dia_nao_disponivel), Toast.LENGTH_SHORT).show();
+                                    return;
+                                }
+                                v.setBackgroundColor(getResources().getColor(R.color.colorPrimary));
+                                CalendarioBemComumFragment.this.selectedDay = dia.getData();
+                                Toast.makeText(activity, new SimpleDateFormat("dd/MM/yyyy").format(dia.getData()), Toast.LENGTH_SHORT).show();
+                                if (CalendarioBemComumFragment.this.lastDaySelected != null) {
+                                    lastDaySelected.setBackgroundColor(Color.WHITE);
+                                }
+                                lastDaySelected = v;
+                            }
+                        });
                     }
+
+
                 }
             };
             list.add(dayDecorator);
-
+            calendarView.setDecorators(list);
+            calendarView.refreshCalendar(calendar);
         }
-        calendarView.setDecorators(list);
-        calendarView.refreshCalendar(Calendar.getInstance());
+
     }
 
     @Override
     public void onError(String error) {
-
+        Toast.makeText(activity, error, Toast.LENGTH_SHORT).show();
     }
 }

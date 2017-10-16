@@ -19,6 +19,7 @@ import butterknife.BindView;
 import butterknife.ButterKnife;
 import mobi.moop.R;
 import mobi.moop.model.entities.Bloco;
+import mobi.moop.model.entities.CadastroCondominio;
 import mobi.moop.model.entities.Condominio;
 import mobi.moop.model.rotas.RotaCondominio;
 import mobi.moop.model.rotas.impl.RotaCondominioImpl;
@@ -51,6 +52,12 @@ public class AddCondominioActivity extends AppCompatActivity implements RotaCond
         createLoginDialog();
         showCondominiosFragment();
 
+    }
+
+    @Override
+    protected void onStop() {
+        super.onStop();
+        rotaCondominio.cancelRegistrarUnidadeRequisition();
     }
 
     private void showCondominiosFragment() {
@@ -160,6 +167,18 @@ public class AddCondominioActivity extends AppCompatActivity implements RotaCond
 
     public void showRegistroCondominioFragment() {
         RegistroCondominioFragment fragment = new RegistroCondominioFragment();
+        FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
+        ft.replace(R.id.placeholder, fragment);
+        ft.addToBackStack("main");
+        ft.commit();
+    }
+
+    public void showAddBlocoFragment(CadastroCondominio body) {
+        AddBlocoFragment fragment = new AddBlocoFragment();
+        Bundle bundle = new Bundle();
+        bundle.putSerializable("condominio",body);
+        fragment.setArguments(bundle);
+
         FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
         ft.replace(R.id.placeholder, fragment);
         ft.addToBackStack("main");

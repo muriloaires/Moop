@@ -63,6 +63,12 @@ public class MoradoresFragment extends Fragment implements RotaMoradores.Morador
     }
 
     @Override
+    public void onStop() {
+        super.onStop();
+        rotaMoradores.cancelGetMoradoresRequisition();
+    }
+
+    @Override
     public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
         super.onCreateOptionsMenu(menu, inflater);
         inflater.inflate(R.menu.menu_moradores, menu);

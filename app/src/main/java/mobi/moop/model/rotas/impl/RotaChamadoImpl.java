@@ -25,12 +25,15 @@ import retrofit2.Response;
  */
 
 public class RotaChamadoImpl {
+    private Call<ResponseBody> callPostChamado;
+    private Call<GenericListResponse<Chamado>> callLoadChamados;
+
     public void postChamado(final Context context, String titulo, String descricao, File imgChamado, final RotaChamados.ChamadoHandler handler) {
         RequestBody tituloBody = RequestBody.create(MediaType.parse("multipart/form-data"), titulo);
         RequestBody descricaoBody = RequestBody.create(MediaType.parse("multipart/form-data"), descricao);
         MultipartBody.Part body = MultipartBody.Part.createFormData("avatar", imgChamado.getName(), RequestBody.create(MediaType.parse("image/*"), imgChamado));
-        Call<ResponseBody> call = RetrofitSingleton.INSTANCE.getRetrofiInstance().create(RotaChamados.class).postChamado(UsuarioSingleton.I.getUsuarioLogado(context).getApiToken(), CondominioRepository.I.getCondominio(context).getId(), tituloBody, descricaoBody, body);
-        call.enqueue(new Callback<ResponseBody>() {
+        callPostChamado = RetrofitSingleton.INSTANCE.getRetrofiInstance().create(RotaChamados.class).postChamado(UsuarioSingleton.I.getUsuarioLogado(context).getApiToken(), CondominioRepository.I.getCondominio(context).getId(), tituloBody, descricaoBody, body);
+        callPostChamado.enqueue(new Callback<ResponseBody>() {
             @Override
             public void onResponse(Call<ResponseBody> call, Response<ResponseBody> response) {
                 if (response.isSuccessful()) {
@@ -42,16 +45,26 @@ public class RotaChamadoImpl {
 
             @Override
             public void onFailure(Call<ResponseBody> call, Throwable t) {
-                handler.onCriarChamadoFail(context.getString(R.string.algo_errado_ocorreu));
+                if (!call.isCanceled()) {
+                    handler.onCriarChamadoFail(context.getString(R.string.algo_errado_ocorreu));
+                }
             }
         });
+    }
+
+    public void cancelPostChamadoRequisition() {
+        try {
+            callPostChamado.cancel();
+        } catch (Exception e) {
+
+        }
     }
 
     public void loadChamados(final Context context, final RotaChamados.RecebimentoChamadoHandler handler) {
         String apiToken = UsuarioSingleton.I.getUsuarioLogado(context).getApiToken();
         Long condominioSelecionadoId = CondominioRepository.I.getCondominio(context).getId();
-        Call<GenericListResponse<Chamado>> call = RetrofitSingleton.INSTANCE.getRetrofiInstance().create(RotaChamados.class).loadChamados(apiToken, condominioSelecionadoId);
-        call.enqueue(new Callback<GenericListResponse<Chamado>>() {
+        callLoadChamados = RetrofitSingleton.INSTANCE.getRetrofiInstance().create(RotaChamados.class).loadChamados(apiToken, condominioSelecionadoId);
+        callLoadChamados.enqueue(new Callback<GenericListResponse<Chamado>>() {
             @Override
             public void onResponse(Call<GenericListResponse<Chamado>> call, Response<GenericListResponse<Chamado>> response) {
                 if (response.isSuccessful()) {
@@ -63,8 +76,18 @@ public class RotaChamadoImpl {
 
             @Override
             public void onFailure(Call<GenericListResponse<Chamado>> call, Throwable t) {
-                handler.onRecebimentoFail(context.getString(R.string.algo_errado_ocorreu));
+                if (!call.isCanceled()) {
+                    handler.onRecebimentoFail(context.getString(R.string.algo_errado_ocorreu));
+                }
             }
         });
+    }
+
+    public void cancelLoadChamadosRequisition() {
+        try {
+            callLoadChamados.cancel();
+        } catch (Exception e) {
+
+        }
     }
 }

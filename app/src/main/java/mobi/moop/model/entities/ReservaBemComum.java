@@ -11,7 +11,10 @@ public class ReservaBemComum {
     private Long id;
     private Usuario perfil;
     private DisponibilidadeBem disponibilidadeUsoBemComum;
+    private BemComum bemUsoComum;
     private Date dataUso;
+    private Date createdAt;
+    private Date updatedAt;
 
     public Long getId() {
         return id;
@@ -43,5 +46,29 @@ public class ReservaBemComum {
 
     public void setDataUso(Date dataUso) {
         this.dataUso = dataUso;
+    }
+
+    public Date getCreatedAt() {
+        return createdAt;
+    }
+
+    public void setCreatedAt(Date createdAt) {
+        this.createdAt = createdAt;
+    }
+
+    public Date getUpdatedAt() {
+        return updatedAt;
+    }
+
+    public void setUpdatedAt(Date updatedAt) {
+        this.updatedAt = updatedAt;
+    }
+
+    public BemComum getBemUsoComum() {
+        return bemUsoComum;
+    }
+
+    public void setBemUsoComum(BemComum bemUsoComum) {
+        this.bemUsoComum = bemUsoComum;
     }
 }

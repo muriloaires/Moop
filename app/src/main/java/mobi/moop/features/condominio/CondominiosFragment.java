@@ -41,6 +41,9 @@ public class CondominiosFragment extends Fragment implements RotaCondominio.Cond
     @BindView(R.id.btnAvancar)
     Button btnCadastrarCondominio;
 
+    @BindView(R.id.btn_nao_encontrei_condominio)
+    Button btnNaoEncontreiMeuCondominio;
+
 
     @OnClick(R.id.btnAvancar)
     public void btnAvancarAction(View view) {
@@ -54,9 +57,6 @@ public class CondominiosFragment extends Fragment implements RotaCondominio.Cond
 
     @BindView(R.id.recyclerCondiminios)
     RecyclerView recyclerCondominios;
-
-    @BindView(R.id.viewNenhumCondominioEncontrado)
-    View viewNenhumCondominioEncontrado;
 
     private List<Condominio> condominios = new ArrayList<>();
     private CondominiosAdapter adapter;
@@ -129,6 +129,12 @@ public class CondominiosFragment extends Fragment implements RotaCondominio.Cond
         ((AddCondominioActivity) getContext()).setTitutlo(getString(R.string.escolha_o_condominio));
     }
 
+    @Override
+    public void onStop() {
+        super.onStop();
+        rotaCondominio.cancelGetCondominiosCEPRequisition();
+    }
+
     private void setupRecyclerView() {
         recyclerCondominios.setLayoutManager(new LinearLayoutManager(getContext()));
         adapter = new CondominiosAdapter(condominios, this);
@@ -158,11 +164,10 @@ public class CondominiosFragment extends Fragment implements RotaCondominio.Cond
         adapter.notifyDataSetChanged();
         if (condominios.size() == 0) {
             Toast.makeText(getContext(), getString(R.string.nenhum_condominio_encontrado), Toast.LENGTH_SHORT).show();
-            viewNenhumCondominioEncontrado.setVisibility(View.VISIBLE);
             recyclerCondominios.setVisibility(View.GONE);
             btnCadastrarCondominio.setVisibility(View.GONE);
+            btnNaoEncontreiMeuCondominio.setVisibility(View.VISIBLE);
         } else {
-            viewNenhumCondominioEncontrado.setVisibility(View.GONE);
             recyclerCondominios.setVisibility(View.VISIBLE);
         }
     }

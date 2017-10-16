@@ -21,6 +21,8 @@ import mobi.moop.model.rotas.RetrofitSingleton;
  */
 
 public class BemComumViewHolder extends RecyclerView.ViewHolder {
+    private final BensComunsAdapter adapter;
+
     @BindView(R.id.bemComumNome)
     TextView textBemComumNome;
 
@@ -34,15 +36,16 @@ public class BemComumViewHolder extends RecyclerView.ViewHolder {
 
     @OnClick(R.id.rootView)
     public void selectBemComum(View view) {
-        ((MoopActivity) context).openDisponibilidadesActivity(bemComum);
+        adapter.openDispobinilidadeActivity(bemComum);
     }
 
     private Context context;
 
-    public BemComumViewHolder(View itemView) {
+    public BemComumViewHolder(View itemView, BensComunsAdapter adapter) {
         super(itemView);
         ButterKnife.bind(this, itemView);
         this.context = itemView.getContext();
+        this.adapter = adapter;
     }
 
     public void bindView(BemComum bemComum) {

@@ -35,7 +35,7 @@ import mobi.moop.utils.EndlessRecyclerOnScrollListener;
 /**
  * A simple {@link Fragment} subclass.
  */
-public class FeedFragment extends Fragment implements RotaFeed.FeedHandler, Scrollable {
+public class FeedFragment extends Fragment implements RotaFeed.FeedHandler, Scrollable, RotaFeed.CurtidaHandler {
 
     private static final int WRITE_POST = 1;
     @BindView(R.id.recyclerFeed)
@@ -109,6 +109,12 @@ public class FeedFragment extends Fragment implements RotaFeed.FeedHandler, Scro
         }
     }
 
+    @Override
+    public void onStop() {
+        super.onStop();
+        rotaFeed.cancelGetFeedRequisition();
+    }
+
     private void loadFeed(int offset) {
         if (condominioSelecionado.getIsLiberado()) {
             showRecycler();
@@ -134,7 +140,7 @@ public class FeedFragment extends Fragment implements RotaFeed.FeedHandler, Scro
         recyclerView.setLayoutManager(manager);
         items = new ArrayList<>();
         items.add(null);
-        feedAdapter = new FeedAdapter(items);
+        feedAdapter = new FeedAdapter(items, this);
         recyclerView.setAdapter(feedAdapter);
         recyclerView.addOnScrollListener(new RecyclerView.OnScrollListener() {
             @Override
@@ -228,4 +234,68 @@ public class FeedFragment extends Fragment implements RotaFeed.FeedHandler, Scro
         }
     }
 
+    public void curtir(int adapterPosition) {
+        FeedItem feedItem = items.get(adapterPosition);
+        feedItem.setCurtidaPeloUsuario(true);
+        feedAdapter.notifyItemChanged(adapterPosition);
+        rotaFeed.curtirFeed(getContext(), items.get(adapterPosition).getId(), this);
+    }
+
+    public void descurtir(int adapterPosition) {
+        FeedItem feedItem = items.get(adapterPosition);
+        feedItem.setCurtidaPeloUsuario(false);
+        if (feedItem.getCurtidas() > 0) {
+            feedItem.setCurtidas(feedItem.getCurtidas() - 1);
+        }
+        feedAdapter.notifyItemChanged(adapterPosition);
+    }
+
+    @Override
+    public void onFeedCurtido(Long feedId, Integer curtidas) {
+        FeedItem feedItem = getFeedItem(feedId);
+        if (feedItem != null) {
+            feedItem.setCurtidaPeloUsuario(true);
+            feedItem.setCurtidas(curtidas);
+            feedAdapter.notifyDataSetChanged();
+        }
+    }
+
+    @Override
+    public void onCurtirFeedFail(Long feedId, String error) {
+        FeedItem feedItem = getFeedItem(feedId);
+        if (feedItem != null) {
+            feedItem.setCurtidaPeloUsuario(false);
+            feedAdapter.notifyDataSetChanged();
+        }
+        Toast.makeText(context, error, Toast.LENGTH_SHORT).show();
+    }
+
+    @Override
+    public void onFeedDescurtido(Long feedId) {
+        FeedItem feedItem = getFeedItem(feedId);
+        if (feedItem != null) {
+            feedItem.setCurtidaPeloUsuario(false);
+            feedAdapter.notifyDataSetChanged();
+        }
+    }
+
+    @Override
+    public void onDescurtirFeedError(Long feedId, String error) {
+        FeedItem feedItem = getFeedItem(feedId);
+        if (feedItem != null) {
+            feedItem.setCurtidaPeloUsuario(true);
+            feedItem.setCurtidas(feedItem.getCurtidas() + 1);
+            feedAdapter.notifyDataSetChanged();
+        }
+        Toast.makeText(context, error, Toast.LENGTH_SHORT).show();
+    }
+
+    private FeedItem getFeedItem(Long feedId) {
+        for (FeedItem feedItem : items) {
+            if (feedItem.getId().equals(feedId)) {
+                return feedItem;
+            }
+        }
+        return null;
+    }
 }

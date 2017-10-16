@@ -3,6 +3,7 @@ package mobi.moop.features.chamado;
 
 import android.Manifest;
 import android.app.Activity;
+import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
@@ -47,6 +48,7 @@ public class CriarChamadoFragment extends Fragment implements RotaChamados.Chama
     private static final int GALERIA = 2;
     private String mCurrentPhotoPath;
     private File foto;
+    private ProgressDialog chamadoDialog;
 
     @OnClick(R.id.imgAvatar)
     public void imgAvatarAction(View view) {
@@ -85,7 +87,22 @@ public class CriarChamadoFragment extends Fragment implements RotaChamados.Chama
         // Inflate the layout for this fragment
         View view = inflater.inflate(R.layout.fragment_criar_chamado, container, false);
         ButterKnife.bind(this, view);
+        createChamadoDialog();
         return view;
+    }
+
+    private void createChamadoDialog() {
+        chamadoDialog = new ProgressDialog(getContext());
+        chamadoDialog.setIndeterminate(true);
+        chamadoDialog.setCancelable(false);
+        chamadoDialog.setTitle(getString(R.string.aguarde));
+        chamadoDialog.setMessage(getString(R.string.efetuando_reserva));
+    }
+
+    @Override
+    public void onStop() {
+        super.onStop();
+        rotaChamado.cancelPostChamadoRequisition();
     }
 
     private void createDialogAddFoto() {
@@ -239,6 +256,7 @@ public class CriarChamadoFragment extends Fragment implements RotaChamados.Chama
     }
 
     private void criarChamado() {
+        chamadoDialog.show();
         rotaChamado.postChamado(getContext(), editTituloChamado.getText().toString(), editDescricaoChamado.getText().toString(), foto, this);
     }
 
@@ -258,11 +276,14 @@ public class CriarChamadoFragment extends Fragment implements RotaChamados.Chama
 
     @Override
     public void onChamadoCriado(ResponseBody body) {
-
+        chamadoDialog.dismiss();
+        Toast.makeText(getContext(), getString(R.string.chamado_criado_com_sucesso), Toast.LENGTH_SHORT).show();
+        getActivity().onBackPressed();
     }
 
     @Override
     public void onCriarChamadoFail(String errorBody) {
-
+        chamadoDialog.dismiss();
+        Toast.makeText(getContext(), errorBody, Toast.LENGTH_SHORT).show();
     }
 }

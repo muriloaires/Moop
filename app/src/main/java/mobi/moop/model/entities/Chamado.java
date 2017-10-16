@@ -1,5 +1,7 @@
 package mobi.moop.model.entities;
 
+import java.util.Date;
+
 /**
  * Created by murilo aires on 02/10/2017.
  */
@@ -11,6 +13,7 @@ public class Chamado {
     private String titulo;
     private String texto;
     private String status;
+    private Date updatedAt;
 
     public Long getId() {
         return id;
@@ -59,4 +62,9 @@ public class Chamado {
     public void setStatus(String status) {
         this.status = status;
     }
+
+    public Date getUpdatedAt() {
+        return updatedAt;
+    }
+
 }

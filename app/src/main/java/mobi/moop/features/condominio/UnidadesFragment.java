@@ -49,6 +49,12 @@ public class UnidadesFragment extends Fragment implements RotaCondominio.Unidade
         ((AddCondominioActivity) getContext()).setTitutlo(getString(R.string.qual_sua_unidade));
     }
 
+    @Override
+    public void onStop() {
+        super.onStop();
+        rotaCondominio.cancelGetUnidadeBlocoRequisition();
+    }
+
     private void setupRecyclerView() {
         recyclerUnidades.setLayoutManager(new LinearLayoutManager(getContext()));
         unidadesAdapter = new UnidadesAdapter(unidades);

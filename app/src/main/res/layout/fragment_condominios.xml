@@ -29,6 +29,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_alignParentBottom="true"
+        android:visibility="invisible"
         android:drawableRight="@drawable/ic_avancar_white"
         android:text="@string/nao_encontrei_meu_condominio"
         android:theme="@style/BtnConfirmarTheme" />
@@ -51,33 +52,7 @@
         android:layout_above="@id/btnAvancar"
         android:layout_below="@id/progress" />
 
-    <LinearLayout
-        android:id="@+id/viewNenhumCondominioEncontrado"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:layout_above="@id/btnAvancar"
-        android:layout_below="@id/progress"
-        android:gravity="center"
-        android:orientation="vertical"
-        android:visibility="gone">
 
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:gravity="center"
-            android:text="Nenhum condomínio encontrado!\nSolicite o cadastro do seu condomínio em"
-            android:textColor="@android:color/black"
-            android:textStyle="bold" />
-
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="10dp"
-            android:text="adm@moop.mobi"
-            android:textColor="@color/colorPrimary"
-            android:textStyle="bold" />
-
-    </LinearLayout>
 </RelativeLayout>
 
 

@@ -2,6 +2,8 @@ package mobi.moop.model.rotas.impl;
 
 import android.content.Context;
 
+import org.json.JSONObject;
+
 import java.io.File;
 
 import mobi.moop.R;
@@ -14,6 +16,7 @@ import mobi.moop.model.singleton.UsuarioSingleton;
 import okhttp3.MediaType;
 import okhttp3.MultipartBody;
 import okhttp3.RequestBody;
+import okhttp3.ResponseBody;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
@@ -23,11 +26,13 @@ import retrofit2.Response;
  */
 
 public class RotaFeedImpl {
-    private Call<GenericListResponse<FeedItem>> call;
+    private Call<GenericListResponse<FeedItem>> callGetFeed;
+    private Call<FeedItem> callPostFeed;
+    private Call<ResponseBody> callCurtirFeed;
 
     public void getFeed(final Context context, Long condominioId, Integer limit, final Integer offset, final RotaFeed.FeedHandler handler) {
-        call = RetrofitSingleton.INSTANCE.getRetrofiInstance().create(RotaFeed.class).getFeed(UsuarioSingleton.I.getUsuarioLogado(context).getApiToken(), condominioId, limit, offset);
-        call.enqueue(new Callback<GenericListResponse<FeedItem>>() {
+        callGetFeed = RetrofitSingleton.INSTANCE.getRetrofiInstance().create(RotaFeed.class).getFeed(UsuarioSingleton.I.getUsuarioLogado(context).getApiToken(), condominioId, limit, offset);
+        callGetFeed.enqueue(new Callback<GenericListResponse<FeedItem>>() {
             @Override
             public void onResponse(Call<GenericListResponse<FeedItem>> call, Response<GenericListResponse<FeedItem>> response) {
                 if (response.isSuccessful()) {
@@ -41,9 +46,20 @@ public class RotaFeedImpl {
 
             @Override
             public void onFailure(Call<GenericListResponse<FeedItem>> call, Throwable t) {
-                handler.onFeedReceiveFail(context.getString(R.string.algo_errado_ocorreu));
+                if (!call.isCanceled()) {
+                    handler.onFeedReceiveFail(context.getString(R.string.algo_errado_ocorreu));
+                }
             }
         });
+    }
+
+    public void cancelGetFeedRequisition() {
+        try {
+            callGetFeed.cancel();
+        } catch (Exception e) {
+
+        }
+
     }
 
     public void publish(final Context context, Usuario usuario, Long condominioId, String texto, File imgPost, final RotaFeed.FeedPublishHandler handler) {
@@ -57,8 +73,8 @@ public class RotaFeedImpl {
             body = MultipartBody.Part.createFormData("imagem", imgPost.getName(), RequestBody.create(MediaType.parse("image/*"), imgPost));
         }
 
-        Call<FeedItem> call = RetrofitSingleton.INSTANCE.getRetrofiInstance().create(RotaFeed.class).postFeed(usuario.getApiToken(), condominioId, titleBody, textBody, body);
-        call.enqueue(new Callback<FeedItem>() {
+        callPostFeed = RetrofitSingleton.INSTANCE.getRetrofiInstance().create(RotaFeed.class).postFeed(usuario.getApiToken(), condominioId, titleBody, textBody, body);
+        callPostFeed.enqueue(new Callback<FeedItem>() {
             @Override
             public void onResponse(Call<FeedItem> call, Response<FeedItem> response) {
                 if (response.isSuccessful()) {
@@ -70,7 +86,76 @@ public class RotaFeedImpl {
 
             @Override
             public void onFailure(Call<FeedItem> call, Throwable t) {
-                handler.onFeedPublishFail(context.getString(R.string.algo_errado_ocorreu));
+                if (!call.isCanceled()) {
+                    handler.onFeedPublishFail(context.getString(R.string.algo_errado_ocorreu));
+                }
+            }
+        });
+    }
+
+    public void cancelPostFeedRequisition() {
+        try {
+            callPostFeed.cancel();
+        } catch (Exception e) {
+        }
+    }
+
+    public void curtirFeed(final Context context, final Long feedId, final RotaFeed.CurtidaHandler handler) {
+        Usuario usuario = UsuarioSingleton.I.getUsuarioLogado(context);
+        callCurtirFeed = RetrofitSingleton.INSTANCE.getRetrofiInstance().create(RotaFeed.class).curtirFeed(usuario.getApiToken(), feedId);
+        callCurtirFeed.enqueue(new Callback<ResponseBody>() {
+            @Override
+            public void onResponse(Call<ResponseBody> call, Response<ResponseBody> response) {
+                if (response.isSuccessful()) {
+                    try {
+                        String jsonRespostaStr = response.body().string();
+                        JSONObject jsonResposta = new JSONObject(jsonRespostaStr);
+                        Integer curtidas = jsonResposta.getInt("curtidas");
+                        handler.onFeedCurtido(feedId, curtidas);
+                    } catch (Exception e) {
+                        handler.onCurtirFeedFail(feedId, context.getString(R.string.algo_errado_ocorreu));
+                    }
+
+                } else {
+                    handler.onCurtirFeedFail(feedId, RetrofitSingleton.INSTANCE.getErrorBody(response));
+                }
+            }
+
+            @Override
+            public void onFailure(Call<ResponseBody> call, Throwable throwable) {
+                if (!call.isCanceled()) {
+                    handler.onCurtirFeedFail(feedId, context.getString(R.string.algo_errado_ocorreu));
+                }
+            }
+        });
+    }
+
+    public void cancelarCurtidaRequisition() {
+        try {
+            callCurtirFeed.cancel();
+        } catch (Exception e) {
+
+        }
+    }
+
+    public void descurtirFeed(final Context context, final Long feedId, final RotaFeed.CurtidaHandler handler) {
+        Usuario usuario = UsuarioSingleton.I.getUsuarioLogado(context);
+        callCurtirFeed = RetrofitSingleton.INSTANCE.getRetrofiInstance().create(RotaFeed.class).descurtirFeed(usuario.getApiToken(), feedId);
+        callCurtirFeed.enqueue(new Callback<ResponseBody>() {
+            @Override
+            public void onResponse(Call<ResponseBody> call, Response<ResponseBody> response) {
+                if (response.isSuccessful()) {
+                    handler.onFeedDescurtido(feedId);
+                } else {
+                    handler.onDescurtirFeedError(feedId, RetrofitSingleton.INSTANCE.getErrorBody(response));
+                }
+            }
+
+            @Override
+            public void onFailure(Call<ResponseBody> call, Throwable throwable) {
+                if (!call.isCanceled()) {
+                    handler.onCurtirFeedFail(feedId, context.getString(R.string.algo_errado_ocorreu));
+                }
             }
         });
     }

@@ -18,9 +18,11 @@ public class FeedAdapter extends RecyclerView.Adapter {
     private static final int LOAD_VIEW = 1;
     private static final int FEED_VIEW = 0;
     private final List<FeedItem> items;
+    private final FeedFragment feedFragment;
 
-    public FeedAdapter(List<FeedItem> items) {
+    public FeedAdapter(List<FeedItem> items, FeedFragment feedFragment) {
         this.items = items;
+        this.feedFragment = feedFragment;
     }
 
     @Override
@@ -57,5 +59,13 @@ public class FeedAdapter extends RecyclerView.Adapter {
         } else {
             return FEED_VIEW;
         }
+    }
+
+    public void curtir(int adapterPosition) {
+        feedFragment.curtir(adapterPosition);
+    }
+
+    public void descurtir(int adapterPosition) {
+        feedFragment.descurtir(adapterPosition);
     }
 }

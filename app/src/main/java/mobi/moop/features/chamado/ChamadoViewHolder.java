@@ -11,6 +11,8 @@ import android.widget.TextView;
 
 import com.squareup.picasso.Picasso;
 
+import java.text.SimpleDateFormat;
+
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import mobi.moop.R;
@@ -76,6 +78,7 @@ public class ChamadoViewHolder extends RecyclerView.ViewHolder {
         textTituloChamado.setText(chamado.getTitulo());
         textDescricaoChamado.setText(chamado.getTexto());
 //        Picasso.with(context).load(chamado).error()
+        textDataAberturaChamado.setText("Aberto em " + new SimpleDateFormat("dd/MM/yyyy").format(this.chamado.getUpdatedAt()) + " às " + new SimpleDateFormat("HH:mm").format(chamado.getUpdatedAt()));
 
     }
 }

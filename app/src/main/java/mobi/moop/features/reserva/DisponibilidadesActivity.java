@@ -6,6 +6,8 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.View;
 
+import java.util.Date;
+
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import mobi.moop.R;
@@ -47,6 +49,14 @@ public class DisponibilidadesActivity extends AppCompatActivity {
     public void showCalendarioFragment() {
         FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
         CalendarioBemComumFragment fragment = CalendarioBemComumFragment.getInstance(getIntent().getLongExtra("bemId",-1));
+        ft.replace(R.id.placeholder, fragment);
+        ft.addToBackStack("main");
+        ft.commit();
+    }
+
+    public void showDisponibilidadeFragment(Date selectedDay) {
+        FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
+        DisponibilidadesFragment fragment = DisponibilidadesFragment.getInstance(getIntent().getLongExtra("bemId",-1),selectedDay);
         ft.replace(R.id.placeholder, fragment);
         ft.addToBackStack("main");
         ft.commit();
