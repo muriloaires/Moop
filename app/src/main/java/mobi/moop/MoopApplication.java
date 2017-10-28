@@ -13,6 +13,7 @@ import android.view.Display;
 import android.view.WindowManager;
 
 import com.facebook.appevents.AppEventsLogger;
+import com.google.firebase.crash.FirebaseCrash;
 
 import org.greenrobot.greendao.database.Database;
 

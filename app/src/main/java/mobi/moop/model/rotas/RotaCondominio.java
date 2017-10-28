@@ -58,6 +58,12 @@ public interface RotaCondominio {
         void onBlocoAddError(String error);
     }
 
+    interface DetalheCondominioHandler {
+        void onDetalheRecebido(Condominio condominio);
+
+        void onError(String error);
+    }
+
     @Headers("appToken:" + RetrofitSingleton.APP_TOKEN)
     @GET(RetrofitSingleton.BASE_URL + RetrofitSingleton.API_V1 + "condominio/condominios.json")
     Call<GenericListResponse<Condominio>> getCondominiosUsuario(@Header("apiToken") String apiToken);
@@ -86,4 +92,8 @@ public interface RotaCondominio {
     @POST(RetrofitSingleton.BASE_URL + RetrofitSingleton.API_V1 + "condominio/{condominioId}/bloco.json")
     Call<ResponseBody> cadastrarBloco(@Header("apiToken") String apiToken, @Path("condominioId") Long condominioId, @Query("nome") String nome, @Query("numero") String numero);
 
+
+    @Headers("appToken:" + RetrofitSingleton.APP_TOKEN)
+    @GET(RetrofitSingleton.BASE_URL + RetrofitSingleton.API_V1 + "condominio/{condominioId}/detalhe.json")
+    Call<Condominio> getDetalheCondominio(@Header("apiToken") String apiToken, @Path("condominioId") Long condominioId);
 }

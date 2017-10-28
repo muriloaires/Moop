@@ -3,6 +3,7 @@ package mobi.moop.features;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.Color;
+import android.net.Uri;
 import android.os.Bundle;
 import android.support.design.widget.NavigationView;
 import android.support.design.widget.TabLayout;
@@ -32,12 +33,15 @@ import mobi.moop.R;
 import mobi.moop.features.chamado.ChamadoActivity;
 import mobi.moop.features.condominio.AddCondominioActivity;
 import mobi.moop.features.condominio.CondominioPreferences;
+import mobi.moop.features.detalhe_condominio.MeuCondominioActivity;
 import mobi.moop.features.login.LoginActivity;
+import mobi.moop.features.moradores.AprovarMoradoresActivity;
 import mobi.moop.features.moradores.MoradoresActivity;
 import mobi.moop.features.perfil.EditarPerfilActivity;
 import mobi.moop.features.reserva.DisponibilidadesActivity;
 import mobi.moop.model.entities.BemComum;
 import mobi.moop.model.entities.Condominio;
+import mobi.moop.model.repository.CondominioRepository;
 import mobi.moop.model.repository.UsuarioRepository;
 import mobi.moop.model.rotas.RotaCondominio;
 import mobi.moop.model.rotas.impl.RotaCondominioImpl;
@@ -77,8 +81,64 @@ public class MoopActivity extends AppCompatActivity implements NavigationView.On
         ButterKnife.bind(this);
         setSupportActionBar(toolbar);
         configureNavigationDrawer();
-        configureMenuCondominios();
         loadCondominios();
+    }
+
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        getMenuInflater().inflate(R.menu.menu_moop, menu);
+        return super.onCreateOptionsMenu(menu);
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        switch (item.getItemId()) {
+            case R.id.convidar:
+
+                break;
+            case R.id.suporte:
+                showDialogSuporte();
+                break;
+
+            case R.id.logout:
+                logout();
+                break;
+        }
+        return super.onOptionsItemSelected(item);
+    }
+
+    private void showDialogSuporte() {
+        View view = getLayoutInflater().inflate(R.layout.dialog_suporte, null);
+        View constraint1 = view.findViewById(R.id.constraint_1);
+        constraint1.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                openMoopEmail();
+            }
+        });
+        View constraint2 = view.findViewById(R.id.constraint_2);
+        constraint2.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                openMoopSite();
+            }
+        });
+        AlertDialog.Builder builder = new AlertDialog.Builder(this);
+        builder.setView(view);
+        builder.show();
+    }
+
+    private void openMoopEmail() {
+        Intent emailIntent = new Intent(Intent.ACTION_SENDTO, Uri.fromParts(
+                "mailto", getString(R.string.email_moop), null));
+        emailIntent.putExtra(Intent.EXTRA_SUBJECT, getString(R.string.sugestion_subject));
+
+        startActivity(Intent.createChooser(emailIntent, getString(R.string.send_email)));
+    }
+
+    private void openMoopSite() {
+        Intent browserIntent = new Intent(Intent.ACTION_VIEW, Uri.parse(getString(R.string.site_moop)));
+        startActivity(browserIntent);
     }
 
     @Override
@@ -168,6 +228,13 @@ public class MoopActivity extends AppCompatActivity implements NavigationView.On
         TextView textEmail = (TextView) navigationView.getHeaderView(0).findViewById(R.id.textEmail);
         textNome.setText(UsuarioSingleton.I.getUsuarioLogado(this).getNome());
         textEmail.setText(UsuarioSingleton.I.getUsuarioLogado(this).getUser().getEmail());
+        ImageView imgEditarPerfil = (ImageView) navigationView.getHeaderView(0).findViewById(R.id.imgEdit);
+        imgEditarPerfil.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                showEditarPerfilActivity();
+            }
+        });
     }
 
     @Override
@@ -188,19 +255,21 @@ public class MoopActivity extends AppCompatActivity implements NavigationView.On
             case -1:
                 addCondominio();
                 break;
-            case R.id.editar_perfil:
-                showEditarPerfilActivity();
-                break;
-            case R.id.logout:
-                logout();
-                break;
             case R.id.chamados:
                 showChamadosActivity();
                 break;
             case R.id.moradores:
                 showMoradoresActivity();
                 break;
-
+            case R.id.aprovar_moradores:
+                showAprovarMoradoresActivity();
+                break;
+            case R.id.meu_condominio:
+                showMeuCondominioActivity();
+                break;
+            case R.id.gerenciar_condominio:
+                showMeuCondominioActivity();
+                break;
             default:
                 SubMenu subMenu = navigationView.getMenu().getItem(0).getSubMenu();
                 subMenu.getItem(lastSelectedIndex).setChecked(false);
@@ -209,6 +278,14 @@ public class MoopActivity extends AppCompatActivity implements NavigationView.On
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
         drawer.closeDrawer(GravityCompat.START);
         return true;
+    }
+
+    private void showMeuCondominioActivity() {
+        startActivity(new Intent(this, MeuCondominioActivity.class));
+    }
+
+    private void showAprovarMoradoresActivity() {
+        startActivity(new Intent(this, AprovarMoradoresActivity.class));
     }
 
     private void showChamadosActivity() {
@@ -228,6 +305,7 @@ public class MoopActivity extends AppCompatActivity implements NavigationView.On
         Condominio condominio = condominios.get(position);
         CondominioPreferences.I.saveLastSelectedCondominio(this, condominio.getId());
         toolbar.setTitle(condominio.getNome());
+        configureMenuCondominios(position);
         configureTabs();
     }
 
@@ -242,7 +320,7 @@ public class MoopActivity extends AppCompatActivity implements NavigationView.On
         startActivityForResult(new Intent(this, AddCondominioActivity.class), ADD_CONDOMINIO);
     }
 
-    private void configureMenuCondominios() {
+    private void configureMenuCondominios(int position) {
         Menu menu = navigationView.getMenu();
         menu.clear();
         SubMenu topChannelMenu = menu.addSubMenu(0, Menu.NONE, Menu.NONE, R.string.seus_condominios);
@@ -251,28 +329,15 @@ public class MoopActivity extends AppCompatActivity implements NavigationView.On
             menuItem.setIcon(condominios.get(i).getIsHorizontal() ? R.drawable.ic_house : R.drawable.ic_predio);
         }
         topChannelMenu.setGroupCheckable(0, true, true);
+        topChannelMenu.getItem(position).setChecked(true);
+        if (CondominioRepository.I.getCondominio(this).getIsSindico()) {
+            navigationView.inflateMenu(R.menu.activity_moop_drawer_sindico);
+        }
         menu.add(1, -1, Menu.NONE, "Adicionar Condomínio");
         navigationView.inflateMenu(R.menu.activity_moop_drawer);
 
-        if (condominios.size() > 0) {
-            Long lastSelectedCondominio = CondominioPreferences.I.getLastSelectedCondominio(this);
-            if (lastSelectedCondominio == -1) {
-                selectCondominio(0);
-            } else {
-                int posicao = 0;
-                for (int i = 0; i < condominios.size(); i++) {
-                    if (condominios.get(i).getId().equals(lastSelectedCondominio)) {
-                        posicao = i;
-                        break;
-                    }
-                }
-
-                topChannelMenu.getItem(posicao).setChecked(true);
-                selectCondominio(posicao);
-            }
-        }
-
     }
+
 
     @Override
     public void onCondominiosRecebidos(List<Condominio> condominios) {
@@ -290,8 +355,21 @@ public class MoopActivity extends AppCompatActivity implements NavigationView.On
                     });
             builder.show();
         } else {
-            configureMenuCondominios();
-            configureTabs();
+            Long lastSelectedCondominio = CondominioPreferences.I.getLastSelectedCondominio(this);
+            if (lastSelectedCondominio == -1) {
+                selectCondominio(0);
+            } else {
+                int posicao = 0;
+                for (int i = 0; i < condominios.size(); i++) {
+                    if (condominios.get(i).getId().equals(lastSelectedCondominio)) {
+                        posicao = i;
+                        break;
+                    }
+                }
+
+
+                selectCondominio(posicao);
+            }
         }
 
     }

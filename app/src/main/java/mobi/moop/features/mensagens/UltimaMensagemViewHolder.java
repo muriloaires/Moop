@@ -66,7 +66,7 @@ public class UltimaMensagemViewHolder extends RecyclerView.ViewHolder {
         outroUsuario = UsuarioSingleton.I.getUsuarioLogado(context).getId().equals(mensagem.getDePerfil().getId()) ? mensagem.getParaPerfil() : mensagem.getDePerfil();
         textMensagem.setText(prefix + mensagem.getMensagem());
         textNome.setText(outroUsuario.getNome());
-        if (!mensagem.getDePerfil().getAvatar().equals("")) {
+        if (!outroUsuario.getAvatar().equals("")) {
             Picasso.with(context).load(outroUsuario.getAvatar()).placeholder(R.drawable.placeholder_avatar).into(imgAvatar, new Callback() {
                 @Override
                 public void onSuccess() {

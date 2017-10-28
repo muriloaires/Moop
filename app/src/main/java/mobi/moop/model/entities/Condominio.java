@@ -1,5 +1,7 @@
 package mobi.moop.model.entities;
 
+import com.google.gson.annotations.SerializedName;
+
 import org.greenrobot.greendao.annotation.Entity;
 import org.greenrobot.greendao.annotation.Id;
 import org.greenrobot.greendao.annotation.Generated;
@@ -21,24 +23,27 @@ public class Condominio implements Serializable{
 
     private String cep;
 
-    private String Logradouro;
+    private String logradouro;
 
     private boolean isHorizontal;
 
     private boolean isLiberado;
 
+    private boolean isSindico;
+
     @Transient
     private boolean selected;
 
-    @Generated(hash = 1955232117)
-    public Condominio(Long id, String nome, String cep, String Logradouro,
-            boolean isHorizontal, boolean isLiberado) {
+    @Generated(hash = 24430744)
+    public Condominio(Long id, String nome, String cep, String logradouro,
+            boolean isHorizontal, boolean isLiberado, boolean isSindico) {
         this.id = id;
         this.nome = nome;
         this.cep = cep;
-        this.Logradouro = Logradouro;
+        this.logradouro = logradouro;
         this.isHorizontal = isHorizontal;
         this.isLiberado = isLiberado;
+        this.isSindico = isSindico;
     }
 
     @Generated(hash = 736672542)
@@ -70,11 +75,11 @@ public class Condominio implements Serializable{
     }
 
     public String getLogradouro() {
-        return this.Logradouro;
+        return this.logradouro;
     }
 
     public void setLogradouro(String Logradouro) {
-        this.Logradouro = Logradouro;
+        this.logradouro = Logradouro;
     }
 
     public boolean getIsHorizontal() {
@@ -99,5 +104,13 @@ public class Condominio implements Serializable{
 
     public void setIsLiberado(boolean isLiberado) {
         this.isLiberado = isLiberado;
+    }
+
+    public boolean getIsSindico() {
+        return this.isSindico;
+    }
+
+    public void setIsSindico(boolean isSindico) {
+        this.isSindico = isSindico;
     }
 }

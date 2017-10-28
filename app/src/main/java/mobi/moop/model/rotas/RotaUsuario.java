@@ -1,8 +1,10 @@
 package mobi.moop.model.rotas;
 
+import mobi.moop.model.entities.Senha;
 import mobi.moop.model.entities.Usuario;
 import okhttp3.MultipartBody;
 import okhttp3.RequestBody;
+import okhttp3.ResponseBody;
 import retrofit2.Call;
 import retrofit2.http.GET;
 import retrofit2.http.Header;
@@ -38,6 +40,12 @@ public interface RotaUsuario {
         void onUpdateFail(String error);
     }
 
+    interface GerarSenhaHandler {
+        void onSenhaGerada(String senha);
+
+        void onError(String error);
+    }
+
     @Headers("appToken:" + RetrofitSingleton.APP_TOKEN)
     @POST(RetrofitSingleton.BASE_URL + RetrofitSingleton.API_V1 + "users/register.json")
     @Multipart
@@ -52,4 +60,8 @@ public interface RotaUsuario {
     @POST(RetrofitSingleton.BASE_URL + RetrofitSingleton.API_V1 + "users/update.json")
     @Multipart
     Call<Usuario> update(@Header("apiToken") String apiToken, @Part("nome") RequestBody nome, @Part MultipartBody.Part body);
+
+    @Headers("appToken:" + RetrofitSingleton.APP_TOKEN)
+    @POST(RetrofitSingleton.BASE_URL + RetrofitSingleton.API_V1 + "users/gera-senha/nova.json")
+    Call<Senha> gerarNovaSenha(@Header("apiToken") String apiToken);
 }

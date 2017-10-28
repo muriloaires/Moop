@@ -89,7 +89,9 @@
         <activity
             android:name=".features.mensagens.MensagemActivity"
             android:label="@string/title_activity_mensagem"
-            android:theme="@style/AppTheme.NoActionBar"></activity>
+            android:theme="@style/AppTheme.NoActionBar" android:screenOrientation="portrait" />
+        <activity android:name=".features.moradores.AprovarMoradoresActivity" android:screenOrientation="portrait" />
+        <activity android:name=".features.detalhe_condominio.MeuCondominioActivity" android:screenOrientation="portrait"/>
     </application>
 
 </manifest>

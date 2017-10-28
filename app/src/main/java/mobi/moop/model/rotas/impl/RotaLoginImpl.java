@@ -5,6 +5,7 @@ import android.content.Context;
 import java.io.File;
 
 import mobi.moop.R;
+import mobi.moop.model.entities.Senha;
 import mobi.moop.model.entities.Usuario;
 import mobi.moop.model.repository.UsuarioRepository;
 import mobi.moop.model.rotas.RetrofitSingleton;
@@ -39,6 +40,8 @@ public class RotaLoginImpl {
                     handler.onLoginError(context.getString(R.string.dados_invalidos));
                 } else if (response.code() == 404) {
                     handler.onUserNotFound(logadoCom);
+                } else {
+                    handler.onLoginError(context.getString(R.string.algo_errado_ocorreu));
                 }
             }
 
@@ -140,5 +143,24 @@ public class RotaLoginImpl {
             callUpdate.cancel();
         } catch (Exception e) {
         }
+    }
+
+    public void gerarSenha(final Context context, final RotaUsuario.GerarSenhaHandler handler) {
+        Call<Senha> call = RetrofitSingleton.INSTANCE.getRetrofiInstance().create(RotaUsuario.class).gerarNovaSenha(UsuarioSingleton.I.getUsuarioLogado(context).getApiToken());
+        call.enqueue(new Callback<Senha>() {
+            @Override
+            public void onResponse(Call<Senha> call, Response<Senha> response) {
+                if (response.isSuccessful()) {
+                    handler.onSenhaGerada(response.body().getSenha());
+                } else {
+                    handler.onError(RetrofitSingleton.INSTANCE.getErrorBody(response));
+                }
+            }
+
+            @Override
+            public void onFailure(Call<Senha> call, Throwable t) {
+                handler.onError(context.getString(R.string.algo_errado_ocorreu));
+            }
+        });
     }
 }

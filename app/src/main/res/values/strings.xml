@@ -128,4 +128,18 @@
     <string name="efetuando_reserva">Efetuando reserva</string>
     <string name="nenhum_chamado">Você ainda não criou nenhum chamado</string>
     <string name="chamado_criado_com_sucesso">Chamado criado com sucesso</string>
+    <string name="aprovar_moradores">Aprovar Moradores</string>
+    <string name="aceitar">Aceitar</string>
+    <string name="perfil_reprovado_com_sucesso">Perfil reprovado com sucesso!</string>
+    <string name="perfil_aprovado_com_sucesso">Perfil aprovado com sucesso!</string>
+    <string name="efetuando_requisicao">Efetuando requisição</string>
+    <string name="gerenciar_condominio">Gerenciar Condomínio</string>
+    <string name="email_moop">suporte@moop.mobi</string>
+    <string name="site_moop">http://app.moop.mobi</string>
+    <string name="contate_nos">Contate-nos:</string>
+    <string name="ou_acesse">ou acesse:</string>
+    <string name="sugestion_subject">Email para suporte</string>
+    <string name="send_email">Enviar email</string>
+    <string name="informacoes_sobre_condominio">Informações do Condomínio</string>
+    <string name="vertical">Vertical</string>
 </resources>

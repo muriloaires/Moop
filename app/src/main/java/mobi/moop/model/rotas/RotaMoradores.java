@@ -2,11 +2,14 @@ package mobi.moop.model.rotas;
 
 import java.util.List;
 
+import mobi.moop.model.entities.PerfilHabitacional;
 import mobi.moop.model.entities.Usuario;
+import okhttp3.ResponseBody;
 import retrofit2.Call;
 import retrofit2.http.GET;
 import retrofit2.http.Header;
 import retrofit2.http.Headers;
+import retrofit2.http.POST;
 import retrofit2.http.Path;
 import retrofit2.http.Query;
 
@@ -16,13 +19,33 @@ import retrofit2.http.Query;
 
 public interface RotaMoradores {
 
-    public interface MoradoresHandler {
+    interface MoradoresHandler {
         void onMoradoresRecebidos(List<Usuario> body);
 
         void onRecebimentoMoradoresFail(String error);
     }
 
+    interface LiberarMoradoresHandler {
+        void onMoradoresRecebidos(List<PerfilHabitacional> body);
+
+        void onRecebimentoMoradoresFail(String error);
+
+        void onPerfilAprovado(boolean aprovado, int adapterPosition);
+
+        void onAprovacaoError(String error);
+    }
+
     @Headers("appToken:" + RetrofitSingleton.APP_TOKEN)
     @GET(RetrofitSingleton.BASE_URL + RetrofitSingleton.API_V1 + "condominio/{condominioId}/moradores.json")
     Call<List<Usuario>> getMoradores(@Header("apiToken") String apiToken, @Path("condominioId") Long condominioId, @Query("termo") String query);
+
+    @Headers("appToken:" + RetrofitSingleton.APP_TOKEN)
+    @POST(RetrofitSingleton.BASE_URL + RetrofitSingleton.API_V1 + "condominio/{perfilHabitacionalId}/liberar.json")
+    Call<ResponseBody> aprovarMorador(@Header("apiToken") String apiToken, @Path("perfilHabitacionalId") Long condominioId, @Query("isLiberado") boolean liberado);
+
+    @Headers("appToken:" + RetrofitSingleton.APP_TOKEN)
+    @GET(RetrofitSingleton.BASE_URL + RetrofitSingleton.API_V1 + "condominio/{condominioId}/moradores-nao-liberados.json")
+    Call<List<PerfilHabitacional>> getMoradoresNaoLiberados(@Header("apiToken") String apiToken, @Path("condominioId") Long condominioId);
+
+
 }

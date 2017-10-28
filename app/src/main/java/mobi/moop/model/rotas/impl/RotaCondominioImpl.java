@@ -30,6 +30,7 @@ public class RotaCondominioImpl {
     private Call<GenericListResponse<Unidade>> callGetUnidadeBloco;
     private Call<ResponseBody> callRegistrarUnidade;
     private Call<CadastroCondominio> callCadastroCondominio;
+    private Call<Condominio> callDetalhe;
 
     public void getCondominiosUsuarioLogado(final Context context, final RotaCondominio.CondominiosHandler handler) {
         callGetCondominiosUsuario = RetrofitSingleton.INSTANCE.getRetrofiInstance().create(RotaCondominio.class).getCondominiosUsuario(UsuarioSingleton.I.getUsuarioLogado(context).getApiToken());
@@ -39,6 +40,8 @@ public class RotaCondominioImpl {
                 if (response.isSuccessful()) {
                     CondominioRepository.I.saveCondominio(context, response.body().getData());
                     handler.onCondominiosRecebidos(response.body().getData());
+                } else {
+                    handler.onGetCondominiosFail(RetrofitSingleton.INSTANCE.getErrorBody(response));
                 }
             }
 
@@ -215,6 +218,29 @@ public class RotaCondominioImpl {
             public void onFailure(Call<ResponseBody> call, Throwable throwable) {
                 if (!call.isCanceled()) {
                     handler.onBlocoAddError(context.getString(R.string.algo_errado_ocorreu));
+                }
+            }
+        });
+    }
+
+    public void getDetalheCondominio(final Context context, final RotaCondominio.DetalheCondominioHandler handler) {
+        Usuario usuario = UsuarioSingleton.I.getUsuarioLogado(context);
+        Condominio condominioSelecionado = CondominioRepository.I.getCondominio(context);
+        callDetalhe = RetrofitSingleton.INSTANCE.getRetrofiInstance().create(RotaCondominio.class).getDetalheCondominio(usuario.getApiToken(), condominioSelecionado.getId());
+        callDetalhe.enqueue(new Callback<Condominio>() {
+            @Override
+            public void onResponse(Call<Condominio> call, Response<Condominio> response) {
+                if (response.isSuccessful()) {
+                    handler.onDetalheRecebido(response.body());
+                } else {
+                    handler.onError(RetrofitSingleton.INSTANCE.getErrorBody(response));
+                }
+            }
+
+            @Override
+            public void onFailure(Call<Condominio> call, Throwable t) {
+                if (!call.isCanceled()) {
+                    handler.onError(context.getString(R.string.algo_errado_ocorreu));
                 }
             }
         });

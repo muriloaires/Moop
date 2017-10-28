@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+    <item android:title="Você é o Sìndico">
+        <menu>
+            <item
+                android:id="@+id/gerenciar_condominio"
+                android:title="@string/gerenciar_condominio" />
+        </menu>
+
+    </item>
+</menu>
