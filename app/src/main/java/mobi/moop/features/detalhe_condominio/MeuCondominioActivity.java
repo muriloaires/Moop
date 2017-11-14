@@ -111,7 +111,7 @@ public class MeuCondominioActivity extends AppCompatActivity implements RotaCond
     public void onDetalheRecebido(Condominio condominio) {
         textNome.setText(condominio.getNome());
         textCep.setText("CEP: "+condominio.getCep());
-        textLogradouro.setText("Logradouro: "+condominio.getLogradouro());
+        textLogradouro.setText("Endereço: "+condominio.getLogradouro());
         textOrientacao.setText(condominio.getIsHorizontal() ? getString(R.string.horizontal) : getString(R.string.vertical));
         imgOrientacao.setImageResource(condominio.getIsHorizontal() ? R.drawable.ic_house : R.drawable.ic_predio);
 

@@ -267,9 +267,6 @@ public class CriarChamadoFragment extends Fragment implements RotaChamados.Chama
         } else if (editDescricaoChamado.getText().toString().equals("")) {
             editDescricaoChamado.setError(getString(R.string.campo_obrigatorio));
             return false;
-        } else if (foto == null) {
-            Toast.makeText(getContext(), "Imagem obrigatória", Toast.LENGTH_SHORT).show();
-            return false;
         }
         return true;
     }
