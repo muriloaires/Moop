@@ -1,10 +1,8 @@
 package mobi.moop.model.entities;
 
-import com.google.gson.annotations.SerializedName;
-
 import org.greenrobot.greendao.annotation.Entity;
-import org.greenrobot.greendao.annotation.Id;
 import org.greenrobot.greendao.annotation.Generated;
+import org.greenrobot.greendao.annotation.Id;
 import org.greenrobot.greendao.annotation.Transient;
 
 import java.io.Serializable;
@@ -14,7 +12,7 @@ import java.io.Serializable;
  */
 
 @Entity
-public class Condominio implements Serializable{
+public class Condominio implements Serializable {
     private static final long serialVersionUID = 29022898;
     @Id
     private Long id;
@@ -32,11 +30,20 @@ public class Condominio implements Serializable{
     private boolean isSindico;
 
     @Transient
+    private Usuario sindico;
+
+    @Transient
+    private Integer totalMoradores;
+
+    @Transient
+    private String telefone;
+
+    @Transient
     private boolean selected;
 
     @Generated(hash = 24430744)
     public Condominio(Long id, String nome, String cep, String logradouro,
-            boolean isHorizontal, boolean isLiberado, boolean isSindico) {
+                      boolean isHorizontal, boolean isLiberado, boolean isSindico) {
         this.id = id;
         this.nome = nome;
         this.cep = cep;
@@ -112,5 +119,17 @@ public class Condominio implements Serializable{
 
     public void setIsSindico(boolean isSindico) {
         this.isSindico = isSindico;
+    }
+
+    public Usuario getSindico() {
+        return sindico;
+    }
+
+    public Integer getTotalMoradores() {
+        return totalMoradores;
+    }
+
+    public String getTelefone() {
+        return telefone;
     }
 }

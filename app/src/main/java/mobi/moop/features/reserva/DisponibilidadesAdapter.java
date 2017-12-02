@@ -17,6 +17,7 @@ import mobi.moop.model.entities.DisponibilidadeBem;
 public class DisponibilidadesAdapter extends RecyclerView.Adapter<DisponibilidadesViewHolder> {
     private final DisponibilidadesFragment fragment;
     private List<DisponibilidadeBem> disponibilidades;
+    private String diaSemana;
 
     public DisponibilidadesAdapter(List<DisponibilidadeBem> disponibilidades, DisponibilidadesFragment fragment) {
         this.disponibilidades = disponibilidades;
@@ -26,7 +27,7 @@ public class DisponibilidadesAdapter extends RecyclerView.Adapter<Disponibilidad
     @Override
     public DisponibilidadesViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
         View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.disponibilidade_item, parent, false);
-        return new DisponibilidadesViewHolder(view, this);
+        return new DisponibilidadesViewHolder(view, this,diaSemana);
     }
 
     @Override
@@ -41,5 +42,9 @@ public class DisponibilidadesAdapter extends RecyclerView.Adapter<Disponibilidad
 
     public void reservar(int adapterPosition) {
         fragment.reservarDisponibilidade(adapterPosition);
+    }
+
+    public void setDiaSemana(String diaSemana) {
+        this.diaSemana = diaSemana;
     }
 }

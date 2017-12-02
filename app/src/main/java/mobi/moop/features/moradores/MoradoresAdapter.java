@@ -8,6 +8,7 @@ import android.view.ViewGroup;
 import java.util.List;
 
 import mobi.moop.R;
+import mobi.moop.model.entities.PerfilHabitacional;
 import mobi.moop.model.entities.Usuario;
 
 /**
@@ -15,9 +16,9 @@ import mobi.moop.model.entities.Usuario;
  */
 
 public class MoradoresAdapter extends RecyclerView.Adapter<MoradorViewHolder> {
-    private List<Usuario> moradores;
+    private List<PerfilHabitacional> moradores;
 
-    public MoradoresAdapter(List<Usuario> moradores) {
+    public MoradoresAdapter(List<PerfilHabitacional> moradores) {
         this.moradores = moradores;
     }
 

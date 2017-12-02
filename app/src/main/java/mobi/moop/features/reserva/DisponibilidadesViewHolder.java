@@ -20,6 +20,7 @@ import mobi.moop.model.entities.DisponibilidadeBem;
 public class DisponibilidadesViewHolder extends RecyclerView.ViewHolder {
 
     private final DisponibilidadesAdapter adapter;
+    private final String diaSemana;
 
     private Context context;
 
@@ -40,20 +41,19 @@ public class DisponibilidadesViewHolder extends RecyclerView.ViewHolder {
         adapter.reservar(getAdapterPosition());
     }
 
-    public DisponibilidadesViewHolder(View itemView, DisponibilidadesAdapter adapter) {
+    public DisponibilidadesViewHolder(View itemView, DisponibilidadesAdapter adapter, String diaSemana) {
         super(itemView);
         ButterKnife.bind(this, itemView);
         this.context = itemView.getContext();
         this.adapter = adapter;
+        this.diaSemana = diaSemana;
     }
 
     public void bindView(DisponibilidadeBem disponibilidadeBem) {
-        SimpleDateFormat diaFormat = new SimpleDateFormat("dd/MM/yyyy");
         SimpleDateFormat horaFormat = new SimpleDateFormat("HH:mm");
-        SimpleDateFormat diaSemanaFormat = new SimpleDateFormat("EEEE");
-        textDiaSemana.setText(diaSemanaFormat.format(disponibilidadeBem.getHorarioInicial()));
-        textInicioDisponibilidade.setText("De " + diaFormat.format(disponibilidadeBem.getHorarioInicial()) + " às " + horaFormat.format(disponibilidadeBem.getHorarioInicial()));
-        textFimDisponibilidade.setText("Até " + diaFormat.format(disponibilidadeBem.getHorarioFinal()) + " às " + horaFormat.format(disponibilidadeBem.getHorarioFinal()));
+        textDiaSemana.setText(diaSemana);
+        textInicioDisponibilidade.setText("De " + horaFormat.format(disponibilidadeBem.getHorarioInicial()));
+        textFimDisponibilidade.setText("Até " + horaFormat.format(disponibilidadeBem.getHorarioFinal()));
         textNomeBem.setText(disponibilidadeBem.getBemUsoComum().getNome());
     }
 }

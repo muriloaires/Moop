@@ -60,6 +60,7 @@
                     android:layout_marginRight="8dp"
                     android:layout_marginStart="8dp"
                     android:layout_marginTop="8dp"
+                    android:text="xD"
                     android:textColor="@color/text_color_default"
                     android:textSize="22sp"
                     app:layout_constraintLeft_toLeftOf="parent"
@@ -73,6 +74,7 @@
                     android:layout_marginLeft="8dp"
                     android:layout_marginStart="8dp"
                     android:layout_marginTop="2dp"
+                    android:text="xD"
                     android:textColor="@color/text_color_default"
                     app:layout_constraintLeft_toLeftOf="parent"
                     app:layout_constraintTop_toBottomOf="@+id/text_nome" />
@@ -84,9 +86,49 @@
                     android:layout_marginLeft="8dp"
                     android:layout_marginStart="8dp"
                     android:layout_marginTop="2dp"
+                    android:text="xD"
                     android:textColor="@color/text_color_default"
                     app:layout_constraintLeft_toLeftOf="parent"
                     app:layout_constraintTop_toBottomOf="@+id/textCep" />
+
+                <TextView
+                    android:id="@+id/textNomeSindico"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginBottom="8dp"
+                    android:layout_marginLeft="8dp"
+                    android:layout_marginStart="8dp"
+                    android:layout_marginTop="8dp"
+                    android:text="Murilo"
+                    android:textColor="@color/text_color_default"
+                    app:layout_constraintLeft_toLeftOf="parent"
+                    app:layout_constraintTop_toBottomOf="@+id/textLogradouro" />
+
+                <TextView
+                    android:id="@+id/textTelefone"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginBottom="8dp"
+                    android:layout_marginLeft="8dp"
+                    android:layout_marginStart="8dp"
+                    android:layout_marginTop="8dp"
+                    android:text="62"
+                    android:textColor="@color/text_color_default"
+                    app:layout_constraintLeft_toLeftOf="parent"
+                    app:layout_constraintTop_toBottomOf="@+id/textNomeSindico" />
+
+                <TextView
+                    android:id="@+id/textTotalMoradores"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginBottom="8dp"
+                    android:layout_marginLeft="8dp"
+                    android:layout_marginStart="8dp"
+                    android:layout_marginTop="8dp"
+                    android:text="62"
+                    android:textColor="@color/text_color_default"
+                    app:layout_constraintLeft_toLeftOf="parent"
+                    app:layout_constraintTop_toBottomOf="@+id/textTelefone" />
 
                 <ImageView
                     android:id="@+id/imgOrientacao"
@@ -99,11 +141,10 @@
                     android:src="@drawable/ic_predio"
                     app:layout_constraintBottom_toBottomOf="parent"
                     app:layout_constraintLeft_toLeftOf="parent"
-                    app:layout_constraintTop_toBottomOf="@+id/textLogradouro" />
+                    app:layout_constraintTop_toBottomOf="@+id/textTotalMoradores" />
             </android.support.constraint.ConstraintLayout>
 
         </android.support.v7.widget.CardView>
-
 
         <LinearLayout
             android:id="@+id/sindico_layout"

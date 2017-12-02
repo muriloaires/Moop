@@ -7,6 +7,7 @@
 
     <com.imanoweb.calendarview.CustomCalendarView xmlns:app="http://schemas.android.com/apk/res-auto"
         android:id="@+id/calendar_view"
+        android:visibility="invisible"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:background="#ffffff"

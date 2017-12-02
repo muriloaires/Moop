@@ -23,15 +23,15 @@ import retrofit2.Response;
 
 public class RotaMoradoresImpl {
 
-    private Call<List<Usuario>> callGetMoradores;
+    private Call<List<PerfilHabitacional>> callGetMoradores;
     private Call<List<PerfilHabitacional>> callGetMoradoresNaoLiberados;
     private Call<ResponseBody> callAprovarMorador;
 
     public void getMoradores(Usuario usuario, Condominio condominio, final Context context, final RotaMoradores.MoradoresHandler handler, String query) {
         callGetMoradores = RetrofitSingleton.INSTANCE.getRetrofiInstance().create(RotaMoradores.class).getMoradores(usuario.getApiToken(), condominio.getId(), query);
-        callGetMoradores.enqueue(new Callback<List<Usuario>>() {
+        callGetMoradores.enqueue(new Callback<List<PerfilHabitacional>>() {
             @Override
-            public void onResponse(Call<List<Usuario>> call, Response<List<Usuario>> response) {
+            public void onResponse(Call<List<PerfilHabitacional>> call, Response<List<PerfilHabitacional>> response) {
                 if (response.isSuccessful()) {
                     handler.onMoradoresRecebidos(response.body());
                 } else {
@@ -40,7 +40,7 @@ public class RotaMoradoresImpl {
             }
 
             @Override
-            public void onFailure(Call<List<Usuario>> call, Throwable t) {
+            public void onFailure(Call<List<PerfilHabitacional>> call, Throwable t) {
                 if (!call.isCanceled()) {
                     handler.onRecebimentoMoradoresFail(context.getString(R.string.algo_errado_ocorreu));
                 }

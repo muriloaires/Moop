@@ -115,6 +115,7 @@ public class CalendarioBemComumFragment extends Fragment implements RotaReservas
 
     @Override
     public void onDiasRecebidos(List<DiaBemComum> dias) {
+        calendarView.setVisibility(View.VISIBLE);
         List<DayDecorator> list = new ArrayList<>();
         for (final DiaBemComum dia : dias) {
             DayDecorator dayDecorator = new DayDecorator() {
@@ -147,7 +148,12 @@ public class CalendarioBemComumFragment extends Fragment implements RotaReservas
                         dayView.setOnClickListener(new View.OnClickListener() {
                             @Override
                             public void onClick(View v) {
-                                if (dia.getStatus().equals(DiaBemComum.DIA_NAO_DISPONIVEL)) {
+                                Calendar calendarAux = Calendar.getInstance();
+                                calendarAux.setTime(dia.getData());
+                                int diaEscolhido = calendarAux.get(Calendar.DAY_OF_MONTH);
+                                calendarAux.setTime(new Date());
+                                int diaAtual = calendarAux.get(Calendar.DAY_OF_MONTH);
+                                if (dia.getStatus().equals(DiaBemComum.DIA_NAO_DISPONIVEL) || diaEscolhido < diaAtual) {
                                     Toast.makeText(activity, getString(R.string.dia_nao_disponivel), Toast.LENGTH_SHORT).show();
                                     return;
                                 }

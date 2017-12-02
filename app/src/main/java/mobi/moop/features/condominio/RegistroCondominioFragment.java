@@ -19,7 +19,6 @@ import mobi.moop.model.entities.CadastroCondominio;
 import mobi.moop.model.rotas.RotaCondominio;
 import mobi.moop.model.rotas.impl.RotaCondominioImpl;
 import mobi.moop.utils.Mask;
-import okhttp3.ResponseBody;
 
 /**
  * Created by murilo aires on 29/09/2017.
@@ -78,6 +77,7 @@ public class RegistroCondominioFragment extends Fragment implements RotaCondomin
         View view = inflater.inflate(R.layout.fragment_registro_condominio, container, false);
         ButterKnife.bind(this, view);
         editCep.addTextChangedListener(Mask.insert("##.###-###", editCep));
+        editCep.setText(getArguments().getString("cep"));
         createcadastroDialog();
         return view;
     }

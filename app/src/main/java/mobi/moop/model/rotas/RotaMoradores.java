@@ -20,7 +20,7 @@ import retrofit2.http.Query;
 public interface RotaMoradores {
 
     interface MoradoresHandler {
-        void onMoradoresRecebidos(List<Usuario> body);
+        void onMoradoresRecebidos(List<PerfilHabitacional> body);
 
         void onRecebimentoMoradoresFail(String error);
     }
@@ -37,7 +37,7 @@ public interface RotaMoradores {
 
     @Headers("appToken:" + RetrofitSingleton.APP_TOKEN)
     @GET(RetrofitSingleton.BASE_URL + RetrofitSingleton.API_V1 + "condominio/{condominioId}/moradores.json")
-    Call<List<Usuario>> getMoradores(@Header("apiToken") String apiToken, @Path("condominioId") Long condominioId, @Query("termo") String query);
+    Call<List<PerfilHabitacional>> getMoradores(@Header("apiToken") String apiToken, @Path("condominioId") Long condominioId, @Query("termo") String query);
 
     @Headers("appToken:" + RetrofitSingleton.APP_TOKEN)
     @POST(RetrofitSingleton.BASE_URL + RetrofitSingleton.API_V1 + "condominio/{perfilHabitacionalId}/liberar.json")

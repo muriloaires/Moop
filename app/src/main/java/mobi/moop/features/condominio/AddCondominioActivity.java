@@ -165,8 +165,11 @@ public class AddCondominioActivity extends AppCompatActivity implements RotaCond
         Toast.makeText(this, error, Toast.LENGTH_SHORT).show();
     }
 
-    public void showRegistroCondominioFragment() {
+    public void showRegistroCondominioFragment(String cep) {
         RegistroCondominioFragment fragment = new RegistroCondominioFragment();
+        Bundle bundle = new Bundle();
+        bundle.putString("cep", cep);
+        fragment.setArguments(bundle);
         FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
         ft.replace(R.id.placeholder, fragment);
         ft.addToBackStack("main");
@@ -176,7 +179,7 @@ public class AddCondominioActivity extends AppCompatActivity implements RotaCond
     public void showAddBlocoFragment(CadastroCondominio body) {
         AddBlocoFragment fragment = new AddBlocoFragment();
         Bundle bundle = new Bundle();
-        bundle.putSerializable("condominio",body);
+        bundle.putSerializable("condominio", body);
         fragment.setArguments(bundle);
 
         FragmentTransaction ft = getSupportFragmentManager().beginTransaction();

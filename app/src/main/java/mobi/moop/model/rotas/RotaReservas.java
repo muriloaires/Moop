@@ -38,7 +38,7 @@ public interface RotaReservas {
     }
 
     interface DisponibilidadesHandler {
-        void onDisponilidadesRecebidas(List<DisponibilidadeBem> disponibilidades);
+        void onDisponilidadesRecebidas(GenericListResponse<DisponibilidadeBem> disponibilidades);
 
         void onRecebimentoDisponibilidadesErro(String error);
     }

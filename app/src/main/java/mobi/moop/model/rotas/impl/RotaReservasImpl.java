@@ -100,7 +100,7 @@ public class RotaReservasImpl {
             @Override
             public void onResponse(Call<GenericListResponse<DisponibilidadeBem>> call, Response<GenericListResponse<DisponibilidadeBem>> response) {
                 if (response.isSuccessful()) {
-                    handler.onDisponilidadesRecebidas(response.body().getData());
+                    handler.onDisponilidadesRecebidas(response.body());
                 } else {
                     handler.onRecebimentoDisponibilidadesErro(RetrofitSingleton.INSTANCE.getErrorBody(response));
                 }

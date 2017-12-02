@@ -12,4 +12,9 @@ public class GenericListResponse<T> {
     public List<T> getData() {
         return data;
     }
+    private String diaSemana;
+
+    public String getDiaSemana() {
+        return diaSemana;
+    }
 }

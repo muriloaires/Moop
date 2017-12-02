@@ -143,7 +143,7 @@ public class CondominiosFragment extends Fragment implements RotaCondominio.Cond
     }
 
     private void showRegistroCondominio() {
-        ((AddCondominioActivity) getContext()).showRegistroCondominioFragment();
+        ((AddCondominioActivity) getContext()).showRegistroCondominioFragment(editCep.getText().toString());
     }
 
     private void configureCepMask() {
@@ -162,11 +162,12 @@ public class CondominiosFragment extends Fragment implements RotaCondominio.Cond
         this.condominios.clear();
         this.condominios.addAll(condominios);
         adapter.notifyDataSetChanged();
+        btnNaoEncontreiMeuCondominio.setVisibility(View.VISIBLE);
         if (condominios.size() == 0) {
             Toast.makeText(getContext(), getString(R.string.nenhum_condominio_encontrado), Toast.LENGTH_SHORT).show();
             recyclerCondominios.setVisibility(View.GONE);
             btnCadastrarCondominio.setVisibility(View.GONE);
-            btnNaoEncontreiMeuCondominio.setVisibility(View.VISIBLE);
+
         } else {
             recyclerCondominios.setVisibility(View.VISIBLE);
         }

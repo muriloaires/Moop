@@ -7,6 +7,8 @@ import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.support.v7.widget.Toolbar;
+import android.view.View;
 import android.widget.Toast;
 
 import java.util.ArrayList;
@@ -24,6 +26,9 @@ public class AprovarMoradoresActivity extends AppCompatActivity implements RotaM
     @BindView(R.id.recyclerMoradores)
     RecyclerView recyclerMoradores;
 
+    @BindView(R.id.toolbar)
+    Toolbar toolbar;
+
     private RotaMoradoresImpl rotaMoradores = new RotaMoradoresImpl();
     private List<PerfilHabitacional> moradores = new ArrayList<>();
     private AprovarMoradoresAdapter adapter;
@@ -34,6 +39,12 @@ public class AprovarMoradoresActivity extends AppCompatActivity implements RotaM
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_aprovar_moradores);
         ButterKnife.bind(this);
+        toolbar.setNavigationOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                onBackPressed();
+            }
+        });
         setupRecyclerView();
         createLoginDialog();
         loadMoradores();

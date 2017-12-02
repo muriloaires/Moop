@@ -14,7 +14,7 @@ import butterknife.ButterKnife;
 import butterknife.OnClick;
 import mobi.moop.R;
 import mobi.moop.features.mensagens.MensagemActivity;
-import mobi.moop.model.entities.Usuario;
+import mobi.moop.model.entities.PerfilHabitacional;
 
 /**
  * Created by murilo aires on 30/09/2017.
@@ -28,13 +28,16 @@ public class MoradorViewHolder extends RecyclerView.ViewHolder {
     @BindView(R.id.text_nome)
     TextView textNome;
 
-    private Usuario morador;
+    @BindView(R.id.text_unidade_bloco)
+    TextView textUnidadeBloco;
+
+    private PerfilHabitacional morador;
 
     @OnClick(R.id.btn_enviar_mensagem)
     public void btnEnviarMensagemAction(View view) {
         Intent intent = new Intent(context, MensagemActivity.class);
         intent.putExtra("usuarioDestinoId", morador.getId());
-        intent.putExtra("usuarioDestinoNome", morador.getNome());
+        intent.putExtra("usuarioDestinoNome", morador.getPerfil().getNome());
         context.startActivity(intent);
     }
 
@@ -46,11 +49,14 @@ public class MoradorViewHolder extends RecyclerView.ViewHolder {
         this.context = itemView.getContext();
     }
 
-    public void bindView(Usuario morador) {
+    public void bindView(PerfilHabitacional morador) {
         this.morador = morador;
-        if (morador.getAvatar() != null && !morador.getAvatar().equals("")) {
-            Picasso.with(context).load(morador.getAvatar()).placeholder(R.drawable.placeholder_avatar).error(R.drawable.placeholder_avatar).into(imgAvatar);
+        if (morador.getPerfil().getAvatar() != null && !morador.getPerfil().getAvatar().equals("")) {
+            Picasso.with(context).load(morador.getPerfil().getAvatar()).placeholder(R.drawable.placeholder_avatar).error(R.drawable.placeholder_avatar).into(imgAvatar);
+        } else {
+            Picasso.with(context).load(R.drawable.placeholder_avatar).into(imgAvatar);
         }
-        textNome.setText(morador.getNome());
+        textNome.setText(morador.getPerfil().getNome());
+        textUnidadeBloco.setText("Bloco " + morador.getUnidadeHabitacional().getBloco().getNome() + " Unidade " + morador.getUnidadeHabitacional().getNumero());
     }
 }

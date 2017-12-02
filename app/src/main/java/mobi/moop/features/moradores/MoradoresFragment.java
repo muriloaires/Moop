@@ -26,6 +26,7 @@ import butterknife.BindView;
 import butterknife.ButterKnife;
 import mobi.moop.R;
 import mobi.moop.model.entities.Condominio;
+import mobi.moop.model.entities.PerfilHabitacional;
 import mobi.moop.model.entities.Usuario;
 import mobi.moop.model.repository.CondominioRepository;
 import mobi.moop.model.rotas.RotaMoradores;
@@ -39,7 +40,7 @@ public class MoradoresFragment extends Fragment implements RotaMoradores.Morador
     @BindView(R.id.recyclerMoradores)
     RecyclerView recyclerMoradores;
 
-    private List<Usuario> moradores = new ArrayList<>();
+    private List<PerfilHabitacional> moradores = new ArrayList<>();
     private RotaMoradoresImpl rotaMoradores = new RotaMoradoresImpl();
     private MoradoresAdapter adapterMoradores;
     private Condominio condominioSelecionado;
@@ -112,7 +113,7 @@ public class MoradoresFragment extends Fragment implements RotaMoradores.Morador
     }
 
     @Override
-    public void onMoradoresRecebidos(List<Usuario> moradores) {
+    public void onMoradoresRecebidos(List<PerfilHabitacional> moradores) {
         this.moradores.clear();
         this.moradores.addAll(moradores);
         adapterMoradores.notifyDataSetChanged();

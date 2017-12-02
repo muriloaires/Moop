@@ -56,6 +56,6 @@ public class AprovarMoradorViewHolder extends RecyclerView.ViewHolder {
         }
 
         textNome.setText(perfil.getPerfil().getNome());
-        textUnidade.setText("Unidade " + perfil.getUnidadeHabitacional().getNumero().toString());
+        textUnidade.setText("Bloco " + perfil.getUnidadeHabitacional().getBloco().getNome() + " Unidade " + perfil.getUnidadeHabitacional().getNumero().toString());
     }
 }

@@ -33,12 +33,12 @@ public class MeuCondominioActivity extends AppCompatActivity implements RotaCond
     }
 
     @OnClick(R.id.btnGerenciarCondominio)
-    public void btnGerenciarCondominioAction(View view){
+    public void btnGerenciarCondominioAction(View view) {
         openMoopSite();
     }
 
-    @OnClick({R.id.senha_gerada,R.id.toque_para_copiar})
-    public void copiarNovaSenha(){
+    @OnClick({R.id.senha_gerada, R.id.toque_para_copiar})
+    public void copiarNovaSenha() {
         ClipboardManager clipboard = (ClipboardManager) getSystemService(Context.CLIPBOARD_SERVICE);
         ClipData clip = ClipData.newPlainText("Senha", textSenhaGerada.getText().toString());
         clipboard.setPrimaryClip(clip);
@@ -74,6 +74,16 @@ public class MeuCondominioActivity extends AppCompatActivity implements RotaCond
 
     @BindView(R.id.toolbar)
     Toolbar toolbar;
+
+    @BindView(R.id.textNomeSindico)
+    TextView textNomeSindico;
+
+    @BindView(R.id.textTelefone)
+    TextView textTelefone;
+
+    @BindView(R.id.textTotalMoradores)
+    TextView textTotalMoradores;
+
     private RotaCondominioImpl rotaCondominio = new RotaCondominioImpl();
     private RotaLoginImpl rotaLogin = new RotaLoginImpl();
 
@@ -110,11 +120,13 @@ public class MeuCondominioActivity extends AppCompatActivity implements RotaCond
     @Override
     public void onDetalheRecebido(Condominio condominio) {
         textNome.setText(condominio.getNome());
-        textCep.setText("CEP: "+condominio.getCep());
-        textLogradouro.setText("Logradouro: "+condominio.getLogradouro());
+        textCep.setText("CEP: " + condominio.getCep());
+        textLogradouro.setText("Logradouro: " + condominio.getLogradouro());
         textOrientacao.setText(condominio.getIsHorizontal() ? getString(R.string.horizontal) : getString(R.string.vertical));
         imgOrientacao.setImageResource(condominio.getIsHorizontal() ? R.drawable.ic_house : R.drawable.ic_predio);
-
+        textNomeSindico.setText("Síndico: " + condominio.getSindico().getNome());
+        textTelefone.setText("Telefone: " + condominio.getTelefone());
+        textTotalMoradores.setText("Total de moradores: " + condominio.getTotalMoradores());
     }
 
     @Override

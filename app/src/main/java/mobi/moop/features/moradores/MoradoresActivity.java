@@ -19,6 +19,7 @@ import butterknife.BindView;
 import butterknife.ButterKnife;
 import mobi.moop.R;
 import mobi.moop.model.entities.Condominio;
+import mobi.moop.model.entities.PerfilHabitacional;
 import mobi.moop.model.entities.Usuario;
 import mobi.moop.model.repository.CondominioRepository;
 import mobi.moop.model.rotas.RotaMoradores;
@@ -67,7 +68,7 @@ public class MoradoresActivity extends AppCompatActivity implements SearchView.O
     }
 
     @Override
-    public void onMoradoresRecebidos(List<Usuario> usuarios) {
+    public void onMoradoresRecebidos(List<PerfilHabitacional> usuarios) {
         Log.d("", "");
     }
 

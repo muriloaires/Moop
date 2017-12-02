@@ -25,6 +25,7 @@ import mobi.moop.model.entities.DisponibilidadeBem;
 import mobi.moop.model.entities.ReservaBemComum;
 import mobi.moop.model.rotas.RotaReservas;
 import mobi.moop.model.rotas.impl.RotaReservasImpl;
+import mobi.moop.model.rotas.reponse.GenericListResponse;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -93,9 +94,10 @@ public class DisponibilidadesFragment extends Fragment implements RotaReservas.D
     }
 
     @Override
-    public void onDisponilidadesRecebidas(List<DisponibilidadeBem> disponibilidades) {
+    public void onDisponilidadesRecebidas(GenericListResponse<DisponibilidadeBem> disponibilidades) {
         this.disponibilidades.clear();
-        this.disponibilidades.addAll(disponibilidades);
+        this.disponibilidades.addAll(disponibilidades.getData());
+        adapter.setDiaSemana(disponibilidades.getDiaSemana());
         adapter.notifyDataSetChanged();
     }
 
