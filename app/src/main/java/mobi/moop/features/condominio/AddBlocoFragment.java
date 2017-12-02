@@ -42,11 +42,6 @@ public class AddBlocoFragment extends Fragment implements RotaCondominio.AddBloc
     @BindView(R.id.editNomeBloco)
     EditText editNomeBloco;
 
-    @BindView(R.id.textInputNumeroBloco)
-    TextInputLayout textInputNumeroBloco;
-
-    @BindView(R.id.editNumeroBloco)
-    EditText editNumeroBloco;
     private ProgressDialog addBlocoDialog;
 
     @OnClick(R.id.btnAddBloco)
@@ -111,7 +106,7 @@ public class AddBlocoFragment extends Fragment implements RotaCondominio.AddBloc
 
     private void cadastrarBloco() {
         addBlocoDialog.show();
-        rotaCondominio.cadastrarBlocoCondominio(getContext(), condominioCadastrado.getId(), editNomeBloco.getText().toString(), editNumeroBloco.getText().toString(), this);
+        rotaCondominio.cadastrarBlocoCondominio(getContext(), condominioCadastrado.getId(), editNomeBloco.getText().toString(), "", this);
     }
 
     @Override
@@ -119,7 +114,6 @@ public class AddBlocoFragment extends Fragment implements RotaCondominio.AddBloc
         addBlocoDialog.dismiss();
         Toast.makeText(getContext(), getString(R.string.bloco_add_com_sucesso), Toast.LENGTH_SHORT).show();
         editNomeBloco.setText("");
-        editNumeroBloco.setText("");
     }
 
     @Override

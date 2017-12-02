@@ -31,7 +31,10 @@ public class RotaChamadoImpl {
     public void postChamado(final Context context, String titulo, String descricao, File imgChamado, final RotaChamados.ChamadoHandler handler) {
         RequestBody tituloBody = RequestBody.create(MediaType.parse("multipart/form-data"), titulo);
         RequestBody descricaoBody = RequestBody.create(MediaType.parse("multipart/form-data"), descricao);
-        MultipartBody.Part body = MultipartBody.Part.createFormData("avatar", imgChamado.getName(), RequestBody.create(MediaType.parse("image/*"), imgChamado));
+        MultipartBody.Part body;
+        if (imgChamado != null) {
+            body = MultipartBody.Part.createFormData("avatar", imgChamado.getName(), RequestBody.create(MediaType.parse("image/*"), imgChamado));
+        }
         callPostChamado = RetrofitSingleton.INSTANCE.getRetrofiInstance().create(RotaChamados.class).postChamado(UsuarioSingleton.I.getUsuarioLogado(context).getApiToken(), CondominioRepository.I.getCondominio(context).getId(), tituloBody, descricaoBody, body);
         callPostChamado.enqueue(new Callback<ResponseBody>() {
             @Override
