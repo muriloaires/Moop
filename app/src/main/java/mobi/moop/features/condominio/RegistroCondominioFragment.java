@@ -65,7 +65,8 @@ public class RegistroCondominioFragment extends Fragment implements RotaCondomin
     @OnClick(R.id.btn_cadastrar_condominio)
     public void btnCadastrarCondominioAction(View view) {
         if (validate()) {
-            registrarCondominio();
+
+            ((AddCondominioActivity) getContext()).showAddBlocoFragment(editCep.getText().toString(), editNomeCondominio.getText().toString(), editEndereco.getText().toString(), editNumero.getText().toString(), editTelefone.getText().toString(), chkHoriontal.isChecked());
         }
     }
 
@@ -138,7 +139,6 @@ public class RegistroCondominioFragment extends Fragment implements RotaCondomin
     @Override
     public void onCondominioCadastrado(CadastroCondominio body) {
         cadastroDialog.dismiss();
-        ((AddCondominioActivity) getContext()).showAddBlocoFragment(body);
     }
 
     @Override

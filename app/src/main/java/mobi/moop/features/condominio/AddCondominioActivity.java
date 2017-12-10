@@ -35,6 +35,12 @@ public class AddCondominioActivity extends AppCompatActivity implements RotaCond
     private Bloco blocoSeleionado;
     private RotaCondominioImpl rotaCondominio = new RotaCondominioImpl();
     private ProgressDialog progress;
+    private String cep;
+    private String nomeCondominio;
+    private String endereco;
+    private String numero;
+    private String telefone;
+    private boolean isHorizontal;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -173,15 +179,35 @@ public class AddCondominioActivity extends AppCompatActivity implements RotaCond
         ft.commit();
     }
 
-    public void showAddBlocoFragment(CadastroCondominio body) {
-        AddBlocoFragment fragment = new AddBlocoFragment();
-        Bundle bundle = new Bundle();
-        bundle.putSerializable("condominio",body);
-        fragment.setArguments(bundle);
 
+    public void showAddBlocoFragment(String cep, String nomeCondominio, String endereco, String numero, String telefone, boolean isHorizontal) {
+        this.cep = cep;
+        this.nomeCondominio = nomeCondominio;
+        this.endereco = endereco;
+        this.numero = numero;
+        this.telefone = telefone;
+        this.isHorizontal = isHorizontal;
+
+        AddBlocoFragment fragment = new AddBlocoFragment();
         FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
         ft.replace(R.id.placeholder, fragment);
         ft.addToBackStack("main");
         ft.commit();
+    }
+
+    public String getNomeCondominio() {
+        return nomeCondominio;
+    }
+
+    public String getCep() {
+        return cep;
+    }
+
+    public String getLogradouro() {
+        return endereco;
+    }
+
+    public String getNumero() {
+        return numero;
     }
 }

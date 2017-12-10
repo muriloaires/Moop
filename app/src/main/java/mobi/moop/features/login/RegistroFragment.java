@@ -292,7 +292,7 @@ public class RegistroFragment extends Fragment implements Validator.ValidationLi
     @Override
     public void onValidationSucceeded() {
         loginDialog.show();
-        rotaLogin.registrar(getContext(), editNome.getText().toString(), editEmail.getText().toString(), editSenha.getText().toString(), null, LoginActivity.LOGIN_MOOP, FirebaseInstanceId.getInstance().getToken(), "android", avatar, this);
+        rotaLogin.registrar(getContext(), editNome.getText().toString(), editEmail.getText().toString(), editSenha.getText().toString(), null, "", FirebaseInstanceId.getInstance().getToken(), "android", avatar, this);
     }
 
     @Override

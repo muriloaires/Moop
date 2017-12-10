@@ -1,7 +1,9 @@
 package mobi.moop.features.comentarios;
 
 import android.content.Context;
+import android.content.DialogInterface;
 import android.os.Bundle;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -19,8 +21,10 @@ import butterknife.ButterKnife;
 import butterknife.OnClick;
 import mobi.moop.R;
 import mobi.moop.model.entities.Comentario;
+import mobi.moop.model.entities.Usuario;
 import mobi.moop.model.rotas.RotaComentarios;
 import mobi.moop.model.rotas.impl.RotaComentariosImpl;
+import mobi.moop.model.singleton.UsuarioSingleton;
 
 public class ComentariosActivity extends AppCompatActivity implements RotaComentarios.ComentariosHandler {
 
@@ -103,5 +107,41 @@ public class ComentariosActivity extends AppCompatActivity implements RotaComent
     @Override
     public void onRecebimentoComentariosError(String error) {
         Toast.makeText(this, error, Toast.LENGTH_SHORT).show();
+    }
+
+    @Override
+    public void onComentarioApagado(Comentario comentario) {
+        comentarios.remove(comentario);
+        comentariosAdapter.notifyDataSetChanged();
+    }
+
+    @Override
+    public void onErroApagarComentario(String error) {
+        Toast.makeText(this, error, Toast.LENGTH_SHORT).show();
+    }
+
+    public void showOptions(int adapterPosition) {
+        Comentario comentario = comentarios.get(adapterPosition);
+        Long usuarioLogadoId = UsuarioSingleton.I.getUsuarioLogado(this).getId();
+        if (comentario.getPerfil().getId().equals(usuarioLogadoId)) {
+            showDeleteDialog(comentario);
+        }
+    }
+
+    private void showDeleteDialog(final Comentario comentario) {
+        AlertDialog.Builder builder = new AlertDialog.Builder(this).setTitle(R.string.atencao)
+                .setMessage(R.string.deseja_apagar_comentario)
+                .setPositiveButton(R.string.sim, new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        rotaComentarios.apagarComentario((Context) ComentariosActivity.this, comentario, ComentariosActivity.this);
+                    }
+                }).setNegativeButton(R.string.cancelar, new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        dialog.dismiss();
+                    }
+                });
+        builder.show();
     }
 }

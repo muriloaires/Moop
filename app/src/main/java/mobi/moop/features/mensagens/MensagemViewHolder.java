@@ -15,6 +15,7 @@ import java.util.Date;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
+import butterknife.OnLongClick;
 import mobi.moop.R;
 import mobi.moop.features.MoopActivity;
 import mobi.moop.features.utils.DateUtils;
@@ -38,6 +39,11 @@ public class MensagemViewHolder extends RecyclerView.ViewHolder {
     @BindView(R.id.textHoraMensagem)
     TextView textHoraMensagem;
 
+    @OnLongClick(R.id.rootView)
+    public boolean showOptions(View view) {
+        ((MensagemActivity) context).showOptions(getAdapterPosition());
+        return true;
+    }
 
 
     private Context context;

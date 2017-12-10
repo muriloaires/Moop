@@ -28,8 +28,8 @@ public class RotaLoginImpl {
     private Call<Usuario> callRegistrar;
     private Call<Usuario> callUpdate;
 
-    public void login(final Context context, String email, String senha, String deviceToken, String deviceType, final String logadoCom, final RotaUsuario.LoginHandler handler) {
-        callLogin = RetrofitSingleton.INSTANCE.getRetrofiInstance().create(RotaUsuario.class).login(email, senha, deviceToken, deviceType, logadoCom);
+    public void login(final Context context, String phoneNumber, String deviceToken, String deviceType, final RotaUsuario.LoginHandler handler) {
+        callLogin = RetrofitSingleton.INSTANCE.getRetrofiInstance().create(RotaUsuario.class).login(phoneNumber, deviceToken, deviceType);
         callLogin.enqueue(new Callback<Usuario>() {
             @Override
             public void onResponse(Call<Usuario> call, Response<Usuario> response) {
@@ -39,7 +39,7 @@ public class RotaLoginImpl {
                 } else if (response.code() == 403) {
                     handler.onLoginError(context.getString(R.string.dados_invalidos));
                 } else if (response.code() == 404) {
-                    handler.onUserNotFound(logadoCom);
+                    handler.onUserNotFound();
                 } else {
                     handler.onLoginError(context.getString(R.string.algo_errado_ocorreu));
                 }

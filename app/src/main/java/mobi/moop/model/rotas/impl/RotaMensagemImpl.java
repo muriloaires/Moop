@@ -5,12 +5,16 @@ import android.content.Context;
 import java.util.ArrayList;
 
 import mobi.moop.R;
+import mobi.moop.features.mensagens.MensagemActivity;
 import mobi.moop.model.entities.Mensagem;
 import mobi.moop.model.entities.Usuario;
 import mobi.moop.model.repository.CondominioRepository;
 import mobi.moop.model.rotas.RetrofitSingleton;
+import mobi.moop.model.rotas.RotaComentarios;
 import mobi.moop.model.rotas.RotaMensagem;
 import mobi.moop.model.rotas.reponse.GenericListResponse;
+import mobi.moop.model.singleton.UsuarioSingleton;
+import okhttp3.ResponseBody;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
@@ -24,6 +28,7 @@ public class RotaMensagemImpl {
     private Call<GenericListResponse<Mensagem>> callUltimasMensagens;
     private Call<GenericListResponse<Mensagem>> callGetMensagens;
     private Call<Mensagem> callPostMensagem;
+    private Call<ResponseBody> callApagarMensagem;
 
     public void postMensagem(final Context context, Usuario usuarioLogado, Long usuarioDestinoId, String mensagem, final RotaMensagem.MensagemHandler handler) {
         callPostMensagem = RetrofitSingleton.INSTANCE.getRetrofiInstance().create(RotaMensagem.class).postMensagem(usuarioLogado.getApiToken(), usuarioDestinoId, CondominioRepository.I.getCondominio(context).getId(), mensagem);
@@ -107,4 +112,25 @@ public class RotaMensagemImpl {
         }
     }
 
+    public void apagarMensagem(final Context context, final Mensagem mensagem, final RotaMensagem.MensagemHandler handler) {
+        Usuario usuario = UsuarioSingleton.I.getUsuarioLogado(context);
+        callApagarMensagem = RetrofitSingleton.INSTANCE.getRetrofiInstance().create(RotaMensagem.class).apagarMensagem(usuario.getApiToken(), mensagem.getId());
+        callApagarMensagem.enqueue(new Callback<ResponseBody>() {
+            @Override
+            public void onResponse(Call<ResponseBody> call, Response<ResponseBody> response) {
+                if (response.isSuccessful()) {
+                    handler.onMensagemApagada(mensagem);
+                } else {
+                    handler.onApagarMensagemError(RetrofitSingleton.INSTANCE.getErrorBody(response));
+                }
+            }
+
+            @Override
+            public void onFailure(Call<ResponseBody> call, Throwable t) {
+                if (!call.isCanceled()) {
+                    handler.onApagarMensagemError(context.getString(R.string.algo_errado_ocorreu));
+                }
+            }
+        });
+    }
 }

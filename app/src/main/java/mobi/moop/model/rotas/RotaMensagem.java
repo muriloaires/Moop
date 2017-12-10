@@ -6,6 +6,7 @@ import mobi.moop.model.entities.Mensagem;
 import mobi.moop.model.rotas.reponse.GenericListResponse;
 import okhttp3.ResponseBody;
 import retrofit2.Call;
+import retrofit2.http.DELETE;
 import retrofit2.http.GET;
 import retrofit2.http.Header;
 import retrofit2.http.Headers;
@@ -28,6 +29,10 @@ public interface RotaMensagem {
         void onMensagensRecebidas(List<Mensagem> mensagens);
 
         void onRecebimentoMensagensError(String error);
+
+        void onApagarMensagemError(String error);
+
+        void onMensagemApagada(Mensagem mensagem);
     }
 
     interface UltimasMensagensHandler {
@@ -47,6 +52,10 @@ public interface RotaMensagem {
     @Headers("appToken:" + RetrofitSingleton.APP_TOKEN)
     @GET(RetrofitSingleton.BASE_URL + RetrofitSingleton.API_V1 + "mensagem/no-condominio/{condominioId}/ultimas.json")
     Call<GenericListResponse<Mensagem>> getUltimasMensagensUsuario(@Header("apiToken") String apiToken, @Path("condominioId") Long condominioId);
+
+    @Headers("appToken:" + RetrofitSingleton.APP_TOKEN)
+    @DELETE(RetrofitSingleton.BASE_URL + RetrofitSingleton.API_V1 + "mensagem/{mensagemId}/apagar.json")
+    Call<ResponseBody> apagarMensagem(@Header("apiToken") String apiToken, @Path("mensagemId") Long mensagemId);
 
 
 }

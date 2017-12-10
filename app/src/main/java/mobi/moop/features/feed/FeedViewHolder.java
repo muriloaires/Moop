@@ -23,6 +23,7 @@ import mobi.moop.features.publicacoes.ImageActivity;
 import mobi.moop.features.utils.DateUtils;
 import mobi.moop.model.entities.FeedItem;
 import mobi.moop.model.rotas.RetrofitSingleton;
+import mobi.moop.model.singleton.UsuarioSingleton;
 
 /**
  * Created by murilo aires on 27/07/2017.
@@ -58,6 +59,14 @@ public class FeedViewHolder extends RecyclerView.ViewHolder {
 
     @BindView(R.id.imgDescurtir)
     ImageView imgDiscurtir;
+
+    @BindView(R.id.options)
+    ImageView imgOptions;
+
+    @OnClick(R.id.options)
+    public void showOption(View view){
+        adapter.showOptions(getAdapterPosition());
+    }
 
     @OnClick(R.id.imgCurtir)
     public void imgCurtirAction(View view) {
@@ -99,6 +108,7 @@ public class FeedViewHolder extends RecyclerView.ViewHolder {
         textHoraComentario.setText(DateUtils.getDifference(new Date(), feedItem.getData()));
         textNumeroComments.setText(" " + feedItem.getComentarios().toString());
         textNumeroCurtidas.setText(" " + feedItem.getCurtidas().toString());
+        imgOptions.setVisibility(feedItem.getPerfil().getId().equals(UsuarioSingleton.I.getUsuarioLogado(context).getId()) ? View.VISIBLE : View.INVISIBLE);
         if (!feedItem.getPerfil().getAvatar().equals("")) {
             Picasso.with(context).load(feedItem.getPerfil().getAvatar()).placeholder(R.drawable.placeholder_avatar).into(imgAvatar, new Callback() {
                 @Override

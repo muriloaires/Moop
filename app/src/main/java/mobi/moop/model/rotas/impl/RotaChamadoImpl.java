@@ -31,7 +31,7 @@ public class RotaChamadoImpl {
     public void postChamado(final Context context, String titulo, String descricao, File imgChamado, final RotaChamados.ChamadoHandler handler) {
         RequestBody tituloBody = RequestBody.create(MediaType.parse("multipart/form-data"), titulo);
         RequestBody descricaoBody = RequestBody.create(MediaType.parse("multipart/form-data"), descricao);
-        MultipartBody.Part body;
+        MultipartBody.Part body = null;
         if (imgChamado != null) {
             body = MultipartBody.Part.createFormData("avatar", imgChamado.getName(), RequestBody.create(MediaType.parse("image/*"), imgChamado));
         }

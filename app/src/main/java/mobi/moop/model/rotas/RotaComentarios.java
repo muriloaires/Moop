@@ -4,7 +4,9 @@ import java.util.List;
 
 import mobi.moop.model.entities.Comentario;
 import mobi.moop.model.rotas.reponse.GenericListResponse;
+import okhttp3.ResponseBody;
 import retrofit2.Call;
+import retrofit2.http.DELETE;
 import retrofit2.http.GET;
 import retrofit2.http.Header;
 import retrofit2.http.Headers;
@@ -18,6 +20,7 @@ import retrofit2.http.Query;
 
 public interface RotaComentarios {
 
+
     interface ComentariosHandler {
         void onComentarioEnviado(Comentario comentario);
 
@@ -26,6 +29,10 @@ public interface RotaComentarios {
         void onComentariosRecebidos(List<Comentario> comentarios);
 
         void onRecebimentoComentariosError(String error);
+
+        void onComentarioApagado(Comentario comentario);
+
+        void onErroApagarComentario(String error);
     }
 
 
@@ -36,6 +43,11 @@ public interface RotaComentarios {
     @Headers("appToken:" + RetrofitSingleton.APP_TOKEN)
     @GET(RetrofitSingleton.BASE_URL + RetrofitSingleton.API_V1 + "comentario/{feedId}/feed.json")
     Call<GenericListResponse<Comentario>> getComentarios(@Header("apiToken") String apiToken, @Path("feedId") Long feedId);
+
+
+    @Headers("appToken:" + RetrofitSingleton.APP_TOKEN)
+    @DELETE(RetrofitSingleton.BASE_URL + RetrofitSingleton.API_V1 + "comentario/{comentarioId}/apagar.json")
+    Call<ResponseBody> apagarComentario(@Header("apiToken") String apiToken, @Path("comentarioId") Long comentarioId);
 
 
 }

@@ -68,4 +68,8 @@ public class FeedAdapter extends RecyclerView.Adapter {
     public void descurtir(int adapterPosition) {
         feedFragment.descurtir(adapterPosition);
     }
+
+    public void showOptions(int adapterPosition) {
+        feedFragment.showOptions(adapterPosition);
+    }
 }

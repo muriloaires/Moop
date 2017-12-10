@@ -6,6 +6,8 @@ import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.design.widget.TextInputLayout;
 import android.support.v4.app.Fragment;
+import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -36,11 +38,9 @@ public class AddBlocoFragment extends Fragment implements RotaCondominio.AddBloc
     @BindView(R.id.textCepCondominio)
     TextView textCepCondominio;
 
-    @BindView(R.id.textInputNomeBloco)
-    TextInputLayout textInputNomeBloco;
+    @BindView(R.id.recycler_blocos)
+    RecyclerView recyclerBlocos;
 
-    @BindView(R.id.editNomeBloco)
-    EditText editNomeBloco;
 
     private ProgressDialog addBlocoDialog;
 
@@ -53,7 +53,6 @@ public class AddBlocoFragment extends Fragment implements RotaCondominio.AddBloc
 
     private RotaCondominioImpl rotaCondominio = new RotaCondominioImpl();
 
-    private CadastroCondominio condominioCadastrado;
 
     public AddBlocoFragment() {
         // Required empty public constructor
@@ -62,7 +61,6 @@ public class AddBlocoFragment extends Fragment implements RotaCondominio.AddBloc
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        this.condominioCadastrado = (CadastroCondominio) getArguments().getSerializable("condominio");
     }
 
     @Override
@@ -71,9 +69,14 @@ public class AddBlocoFragment extends Fragment implements RotaCondominio.AddBloc
         // Inflate the layout for this fragment
         View view = inflater.inflate(R.layout.fragment_add_bloco, container, false);
         ButterKnife.bind(this, view);
+        setupRecyclerView();
         populateFields();
         createcadastroDialog();
         return view;
+    }
+
+    private void setupRecyclerView() {
+        recyclerBlocos.setLayoutManager(new LinearLayoutManager(getContext()));
     }
 
     @Override
@@ -91,29 +94,25 @@ public class AddBlocoFragment extends Fragment implements RotaCondominio.AddBloc
     }
 
     private void populateFields() {
-        textNomeCondominio.setText(condominioCadastrado.getNome());
-        textCepCondominio.setText(condominioCadastrado.getCep());
-        textEnderecoCondominio.setText(condominioCadastrado.getLogradouro() + " - " + condominioCadastrado.getNumero());
+        textNomeCondominio.setText( ((AddCondominioActivity) getActivity()).getNomeCondominio());
+        textCepCondominio.setText(((AddCondominioActivity) getActivity()).getCep());
+        textEnderecoCondominio.setText(((AddCondominioActivity) getActivity()).getLogradouro() + " - " + ((AddCondominioActivity) getActivity()).getNumero());
     }
 
     private boolean validate() {
-        if (editNomeBloco.getText().toString().equals("")) {
-            textInputNomeBloco.setError(getString(R.string.campo_obrigatorio));
-            return false;
-        }
+
         return true;
     }
 
     private void cadastrarBloco() {
         addBlocoDialog.show();
-        rotaCondominio.cadastrarBlocoCondominio(getContext(), condominioCadastrado.getId(), editNomeBloco.getText().toString(), "", this);
     }
 
     @Override
     public void onBlocoAdicionado(ResponseBody body) {
         addBlocoDialog.dismiss();
         Toast.makeText(getContext(), getString(R.string.bloco_add_com_sucesso), Toast.LENGTH_SHORT).show();
-        editNomeBloco.setText("");
+
     }
 
     @Override
