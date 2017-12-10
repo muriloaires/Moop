@@ -8,6 +8,7 @@ import okhttp3.MultipartBody;
 import okhttp3.RequestBody;
 import okhttp3.ResponseBody;
 import retrofit2.Call;
+import retrofit2.http.DELETE;
 import retrofit2.http.GET;
 import retrofit2.http.Header;
 import retrofit2.http.Headers;
@@ -29,6 +30,10 @@ public interface RotaFeed {
         void onFeedReceiveFail(String error);
 
         void onUsuarioNaoLiberado();
+
+        void onFeedApagado(FeedItem feedItem);
+
+        void onApagarFeedError(String errorBody);
     }
 
     interface FeedPublishHandler {
@@ -64,4 +69,8 @@ public interface RotaFeed {
     @Headers("appToken:" + RetrofitSingleton.APP_TOKEN)
     @POST(RetrofitSingleton.BASE_URL + RetrofitSingleton.API_V1 + "feed/{feedId}/descurtir.json")
     Call<ResponseBody> descurtirFeed(@Header("apiToken") String apiToken, @Path("feedId") Long feedId);
+
+    @Headers("appToken:" + RetrofitSingleton.APP_TOKEN)
+    @DELETE(RetrofitSingleton.BASE_URL + RetrofitSingleton.API_V1 + "feed/{feedId}/apagar.json")
+    Call<ResponseBody> apagarFeed(@Header("apiToken") String apiToken, @Path("feedId") Long feedId);
 }

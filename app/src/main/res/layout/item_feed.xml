@@ -24,11 +24,13 @@
         android:layout_height="wrap_content"
         android:layout_marginBottom="8dp"
         android:layout_marginLeft="8dp"
+        android:layout_marginRight="8dp"
         android:layout_marginStart="8dp"
         android:layout_marginTop="8dp"
         android:orientation="vertical"
         app:layout_constraintBottom_toBottomOf="@+id/imgAvatar"
         app:layout_constraintLeft_toRightOf="@+id/imgAvatar"
+        app:layout_constraintRight_toLeftOf="@+id/imageView6"
         app:layout_constraintTop_toTopOf="@+id/imgAvatar">
 
         <TextView
@@ -140,6 +142,16 @@
             android:visibility="gone" />
 
     </RelativeLayout>
+
+    <ImageView
+        android:id="@+id/options"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginRight="8dp"
+        android:layout_marginTop="8dp"
+        android:src="@drawable/ic_more_vert"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
 
 
 </android.support.constraint.ConstraintLayout>

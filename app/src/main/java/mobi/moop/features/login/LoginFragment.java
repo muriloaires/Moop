@@ -1,44 +1,41 @@
 package mobi.moop.features.login;
 
-import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
+import android.os.CountDownTimer;
 import android.support.annotation.NonNull;
 import android.support.v4.app.Fragment;
+import android.text.Editable;
+import android.text.TextUtils;
+import android.text.TextWatcher;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ProgressBar;
+import android.widget.TextView;
 import android.widget.Toast;
 
-import com.facebook.AccessToken;
-import com.facebook.CallbackManager;
-import com.facebook.FacebookAuthorizationException;
-import com.facebook.FacebookCallback;
-import com.facebook.FacebookException;
-import com.facebook.GraphRequest;
-import com.facebook.GraphResponse;
-import com.facebook.login.LoginManager;
-import com.facebook.login.LoginResult;
-import com.google.android.gms.auth.api.Auth;
-import com.google.android.gms.auth.api.signin.GoogleSignInAccount;
-import com.google.android.gms.auth.api.signin.GoogleSignInOptions;
-import com.google.android.gms.auth.api.signin.GoogleSignInResult;
-import com.google.android.gms.common.ConnectionResult;
-import com.google.android.gms.common.api.GoogleApiClient;
+import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.Task;
+import com.google.firebase.FirebaseException;
+import com.google.firebase.FirebaseTooManyRequestsException;
+import com.google.firebase.auth.AuthResult;
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseAuthInvalidCredentialsException;
+import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.auth.PhoneAuthCredential;
+import com.google.firebase.auth.PhoneAuthProvider;
 import com.google.firebase.iid.FirebaseInstanceId;
+import com.hbb20.CountryCodePicker;
 import com.mobsandgeeks.saripaar.ValidationError;
 import com.mobsandgeeks.saripaar.Validator;
-import com.mobsandgeeks.saripaar.annotation.Email;
-import com.mobsandgeeks.saripaar.annotation.Password;
 
-import org.json.JSONException;
-import org.json.JSONObject;
-
-import java.util.Arrays;
 import java.util.List;
+import java.util.concurrent.TimeUnit;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -48,64 +45,265 @@ import mobi.moop.features.MoopActivity;
 import mobi.moop.model.rotas.RotaUsuario;
 import mobi.moop.model.rotas.impl.RotaLoginImpl;
 
-public class LoginFragment extends Fragment implements Validator.ValidationListener, RotaUsuario.LoginHandler, GoogleApiClient.OnConnectionFailedListener, RotaUsuario.RegistroHandler {
-    private static final int RC_SIGN_IN = 0;
+public class LoginFragment extends Fragment implements RotaUsuario.LoginHandler, RotaUsuario.RegistroHandler {
+    private static final String TAG = "PhoneAuthActivity";
+    private static final String KEY_VERIFY_IN_PROGRESS = "key_verify_in_progress";
+
+    private static final int STATE_INITIALIZED = 1;
+    private static final int STATE_CODE_SENT = 2;
+    private static final int STATE_VERIFY_FAILED = 3;
+    private static final int STATE_VERIFY_SUCCESS = 4;
+    private static final int STATE_SIGNIN_FAILED = 5;
+    private static final int STATE_SIGNIN_SUCCESS = 6;
+    private static final int STATE_CODE_TIMEOUT = 7;
+    private static final int STATE_SENDING_CODE = 8;
+
+    private int actualState;
+
     private LoginActivity loginActivity;
-    private Validator validator;
-    private JSONObject facebookJson;
-    private GoogleSignInAccount acct;
-    private ProgressDialog loginDialog;
 
-    @OnClick(R.id.textCriarConta)
-    public void textCriarContaAction(View view) {
-        loginActivity.showRegistroFragment();
+    @BindView(R.id.progress)
+    ProgressBar mProgressBar;
+
+    @BindView(R.id.country_picker)
+    CountryCodePicker cpp;
+
+    @BindView(R.id.editNumeroTelefone)
+    EditText editNumeroTelefone;
+
+    @BindView(R.id.btn_enviar_codigo)
+    Button btnEnviarCodigo;
+
+    @BindView(R.id.editCodigoVerificacao)
+    EditText editCodigoVerificacao;
+
+    @BindView(R.id.textCountdown)
+    TextView textCountdown;
+
+    @BindView(R.id.btnReenviarCodigo)
+    TextView btnReenviarCodigo;
+
+
+    @BindView(R.id.textStatus)
+    TextView textStatus;
+    private CountDownTimer countDownTimer;
+
+    @OnClick(R.id.btnlogout)
+    public void logout(View view) {
+        updateUI();
+        mAuth.signOut();
     }
 
-    @OnClick(R.id.btnLogarGoogle)
-    public void btnLogarGoogleAction(View view) {
-        loginGoogle();
+    @OnClick(R.id.btnReenviarCodigo)
+    public void reenviarCodigo(View view) {
+        if (validateNumber()) {
+            actualState = STATE_SENDING_CODE;
+            updateUI();
+            resendVerificationCode(editNumeroTelefone.getText().toString(), mResendToken);
+        }
     }
 
-    @OnClick(R.id.btnLogarFacebook)
-    public void btnLogarFacebookAction(View view) {
-        loginFacebook();
+    @OnClick(R.id.btn_enviar_codigo)
+    public void btnEnviarCodigoAction(View view) {
+        if (validateNumber()) {
+            actualState = STATE_SENDING_CODE;
+            updateUI();
+            startPhoneNumberVerification(editNumeroTelefone.getText().toString());
+        }
     }
 
-    @Email(messageResId = R.string.email_invalido)
-    @BindView(R.id.editEmail)
-    EditText editEmail;
+    private FirebaseAuth mAuth;
+    private PhoneAuthProvider.OnVerificationStateChangedCallbacks mCallbacks;
 
-    @Password(messageResId = R.string.campo_obrigatorio)
-    @BindView(R.id.editSenha)
-    EditText editSenha;
-
-    @OnClick(R.id.btnEntrar)
-    public void btnEntrarAction(View view) {
-        validator.validate();
-    }
 
     private RotaLoginImpl login = new RotaLoginImpl();
-    private GoogleApiClient mGoogleApiClient;
-    private CallbackManager callbackManager;
+    private boolean mVerificationInProgress = false;
+    private String mVerificationId;
+    private PhoneAuthProvider.ForceResendingToken mResendToken;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_login, container, false);
         ButterKnife.bind(this, view);
-        configureGoogleApiClient();
-        configureFacebookCallBack();
-        createLoginDialog();
-        validator = new Validator(this);
-        validator.setValidationListener(this);
+        if (savedInstanceState != null) {
+            mVerificationInProgress = savedInstanceState.getBoolean(KEY_VERIFY_IN_PROGRESS);
+        }
+
+        configureCallBack();
+        cpp.registerCarrierNumberEditText(editNumeroTelefone);
+        editCodigoVerificacao.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence charSequence, int i, int i1, int i2) {
+
+            }
+
+            @Override
+            public void onTextChanged(CharSequence charSequence, int i, int i1, int i2) {
+                if (charSequence.length() == 6) {
+                    actualState = STATE_VERIFY_SUCCESS;
+                    updateUI();
+                    countDownTimer.cancel();
+                    verifyPhoneNumberWithCode(mVerificationId, charSequence.toString());
+                }
+            }
+
+            @Override
+            public void afterTextChanged(Editable editable) {
+
+            }
+        });
         return view;
     }
 
-    private void createLoginDialog() {
-        loginDialog = new ProgressDialog(loginActivity);
-        loginDialog.setIndeterminate(true);
-        loginDialog.setCancelable(false);
-        loginDialog.setTitle(getString(R.string.aguarde));
-        loginDialog.setMessage(getString(R.string.efetuando_login));
+
+    @Override
+    public void onStart() {
+        super.onStart();
+
+        updateUI();
+        FirebaseUser user = mAuth.getCurrentUser();
+        if (user != null) {
+            actualState = STATE_SIGNIN_SUCCESS;
+            updateUI();
+            performLogin(user);
+        } else {
+            if (mVerificationInProgress && validateNumber()) {
+                actualState = STATE_SENDING_CODE;
+                updateUI();
+                startPhoneNumberVerification(editNumeroTelefone.getText().toString());
+            } else {
+                actualState = STATE_INITIALIZED;
+                updateUI();
+            }
+        }
+
+    }
+
+    @Override
+    public void onSaveInstanceState(@NonNull Bundle outState) {
+        super.onSaveInstanceState(outState);
+        outState.putBoolean(KEY_VERIFY_IN_PROGRESS, mVerificationInProgress);
+    }
+
+
+    private void configureCallBack() {
+        mAuth = FirebaseAuth.getInstance();
+        mCallbacks = new PhoneAuthProvider.OnVerificationStateChangedCallbacks() {
+
+            @Override
+            public void onVerificationCompleted(PhoneAuthCredential credential) {
+                // This callback will be invoked in two situations:
+                // 1 - Instant verification. In some cases the phone number can be instantly
+                //     verified without needing to send or enter a verification code.
+                // 2 - Auto-retrieval. On some devices Google Play services can automatically
+                //     detect the incoming verification SMS and perform verificaiton without
+                //     user action.
+                Log.d(TAG, "onVerificationCompleted:" + credential);
+                actualState = STATE_VERIFY_SUCCESS;
+                countDownTimer.cancel();
+                // [START_EXCLUDE silent]
+                mVerificationInProgress = false;
+                // [END_EXCLUDE]
+
+                // [START_EXCLUDE silent]
+                // Update the UI and attempt sign in with the phone credential
+                updateUI();
+                // [END_EXCLUDE]
+                signInWithPhoneAuthCredential(credential);
+            }
+
+            @Override
+            public void onVerificationFailed(FirebaseException e) {
+                // This callback is invoked in an invalid request for verification is made,
+                // for instance if the the phone number format is not valid.
+                Log.w(TAG, "onVerificationFailed", e);
+                actualState = STATE_VERIFY_FAILED;
+                // [START_EXCLUDE silent]
+                mVerificationInProgress = false;
+                // [END_EXCLUDE]
+
+                if (e instanceof FirebaseTooManyRequestsException) {
+                    // The SMS quota for the project has been exceeded
+                    // [START_EXCLUDE]
+
+                    // [END_EXCLUDE]
+                }
+
+                // Show a message and update the UI
+                updateUI();
+            }
+
+            @Override
+            public void onCodeSent(String verificationId,
+                                   PhoneAuthProvider.ForceResendingToken token) {
+                // The SMS verification code has been sent to the provided phone number, we
+                // now need to ask the user to enter the code and then construct a credential
+                // by combining the code with a verification ID.
+                Log.d(TAG, "onCodeSent:" + verificationId);
+                actualState = STATE_CODE_SENT;
+                // Save verification ID and resending token so we can use them later
+                mVerificationId = verificationId;
+                mResendToken = token;
+
+                // [START_EXCLUDE]
+                updateUI();
+                // [END_EXCLUDE]
+            }
+        };
+    }
+
+    private void startCountdown() {
+        countDownTimer = new CountDownTimer(60000, 1000) {
+
+            public void onTick(long millisUntilFinished) {
+                textCountdown.setText("Validade do código " + (millisUntilFinished / 1000) + " segundo(s)");
+            }
+
+            public void onFinish() {
+                actualState = STATE_CODE_TIMEOUT;
+                updateUI();
+            }
+        };
+        countDownTimer.start();
+    }
+
+    private void verifyPhoneNumberWithCode(String verificationId, String code) {
+        // [START verify_with_code]
+        PhoneAuthCredential credential = PhoneAuthProvider.getCredential(verificationId, code);
+        // [END verify_with_code]
+        signInWithPhoneAuthCredential(credential);
+    }
+
+    private void signInWithPhoneAuthCredential(PhoneAuthCredential credential) {
+        mAuth.signInWithCredential(credential)
+                .addOnCompleteListener(getActivity(), new OnCompleteListener<AuthResult>() {
+                    @Override
+                    public void onComplete(@NonNull Task<AuthResult> task) {
+                        if (task.isSuccessful()) {
+                            // Sign in success, update UI with the signed-in user's information
+                            Log.d(TAG, "signInWithCredential:success");
+                            actualState = STATE_SIGNIN_SUCCESS;
+                            updateUI();
+                            FirebaseUser user = task.getResult().getUser();
+                            performLogin(user);
+                        } else {
+                            // Sign in failed, display a message and update the UI
+                            Log.w(TAG, "signInWithCredential:failure", task.getException());
+                            actualState = STATE_SIGNIN_FAILED;
+                            if (task.getException() instanceof FirebaseAuthInvalidCredentialsException) {
+                                // The verification code entered was invalid
+                                // [START_EXCLUDE silent]
+
+                                // [END_EXCLUDE]
+                            }
+                            // [START_EXCLUDE silent]
+                            // Update UI
+                            actualState = STATE_SIGNIN_FAILED;
+                            updateUI();
+                            // [END_EXCLUDE]
+                        }
+                    }
+                });
     }
 
     @Override
@@ -117,8 +315,6 @@ public class LoginFragment extends Fragment implements Validator.ValidationListe
     @Override
     public void onPause() {
         super.onPause();
-        mGoogleApiClient.stopAutoManage(getActivity());
-        mGoogleApiClient.disconnect();
     }
 
     @Override
@@ -134,166 +330,126 @@ public class LoginFragment extends Fragment implements Validator.ValidationListe
         login.cancelRegistrarRequisition();
     }
 
-    @Override
-    public void onValidationSucceeded() {
-        performLogin(editEmail.getText().toString(), editSenha.getText().toString(), LoginActivity.LOGIN_MOOP);
+    private void startPhoneNumberVerification(String phoneNumber) {
+        phoneNumber = "+" + cpp.getSelectedCountryCode() + phoneNumber;
+        // [START start_phone_auth]
+        PhoneAuthProvider.getInstance().verifyPhoneNumber(
+                phoneNumber,        // Phone number to verify
+                60,                 // Timeout duration
+                TimeUnit.SECONDS,   // Unit of timeout
+                loginActivity,               // Activity (for callback binding)
+                mCallbacks);        // OnVerificationStateChangedCallbacks
+        // [END start_phone_auth]
 
+        mVerificationInProgress = true;
     }
 
-    private void performLogin(String email, String password, String loginType) {
-        loginDialog.show();
-        login.login(loginActivity, email, password, FirebaseInstanceId.getInstance().getToken(), "android", loginType, this);
+    private void resendVerificationCode(String phoneNumber,
+                                        PhoneAuthProvider.ForceResendingToken token) {
+        PhoneAuthProvider.getInstance().verifyPhoneNumber(
+                phoneNumber,        // Phone number to verify
+                60,                 // Timeout duration
+                TimeUnit.SECONDS,   // Unit of timeout
+                loginActivity,               // Activity (for callback binding)
+                mCallbacks,         // OnVerificationStateChangedCallbacks
+                token);             // ForceResendingToken from callbacks
     }
 
-    @Override
-    public void onValidationFailed(List<ValidationError> errors) {
-        for (ValidationError error : errors) {
-            View view = error.getView();
-            String message = error.getCollatedErrorMessage(getContext());
+    private void performLogin(FirebaseUser user) {
+        login.login(loginActivity, user.getPhoneNumber(), FirebaseInstanceId.getInstance().getToken(), "android", this);
+    }
 
-            // Display error messages ;)
-            if (view instanceof EditText) {
-                ((EditText) view).setError(message);
-            } else {
-                Toast.makeText(getContext(), message, Toast.LENGTH_LONG).show();
-            }
+    public void showViews(View... views) {
+        for (View view : views) {
+            view.setVisibility(View.VISIBLE);
         }
     }
 
-    private void configureFacebookCallBack() {
-        callbackManager = CallbackManager.Factory.create();
-        LoginManager.getInstance().registerCallback(callbackManager,
-                new FacebookCallback<LoginResult>() {
-                    @Override
-                    public void onSuccess(final LoginResult loginResult) {
-                        GraphRequest request = GraphRequest.newMeRequest(
-                                loginResult.getAccessToken(),
-                                new GraphRequest.GraphJSONObjectCallback() {
-                                    @Override
-                                    public void onCompleted(JSONObject object, GraphResponse response) {
-
-                                        facebookJson = object;
-                                        try {
-                                            String email = object.getString("email");
-                                            performLogin(email, null, LoginActivity.LOGIN_FACEBOOK);
-                                        } catch (JSONException e) {
-                                            Toast.makeText(loginActivity, getString(R.string.email_nao_encontrado), Toast.LENGTH_SHORT).show();
-                                        }
-
-
-                                    }
-                                });
-
-                        Bundle parameters = new Bundle();
-                        parameters.putString("fields", "name,email,picture.type(large)");
-                        request.setParameters(parameters);
-                        request.executeAsync();
-                    }
-
-                    @Override
-                    public void onCancel() {
-                        if (AccessToken.getCurrentAccessToken() != null) {
-                            LoginManager.getInstance().logOut();
-                        }
-                    }
-
-                    @Override
-                    public void onError(FacebookException exception) {
-                        if (exception instanceof FacebookAuthorizationException) {
-                            if (AccessToken.getCurrentAccessToken() != null) {
-                                LoginManager.getInstance().logOut();
-                            }
-                        }
-                    }
-                });
-
+    public void hideViews(View... views) {
+        for (View view : views) {
+            view.setVisibility(View.GONE);
+        }
     }
 
-    private void configureGoogleApiClient() {
-        GoogleSignInOptions gso = new GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
-                .requestEmail()
-                .build();
-
-        mGoogleApiClient = new GoogleApiClient.Builder(getContext())
-                .enableAutoManage(getActivity(), this)
-                .addApi(Auth.GOOGLE_SIGN_IN_API, gso)
-                .build();
+    private boolean validateNumber() {
+        return !TextUtils.isEmpty(editNumeroTelefone.getText().toString());
     }
 
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
-        callbackManager.onActivityResult(requestCode, resultCode, data);
-        // Result returned from launching the Intent from GoogleSignInApi.getSignInIntent(...);
-        if (requestCode == RC_SIGN_IN) {
-            GoogleSignInResult result = Auth.GoogleSignInApi.getSignInResultFromIntent(data);
-            handleSignInResult(result);
-        }
     }
 
-    private void handleSignInResult(GoogleSignInResult result) {
-        if (result.isSuccess()) {
-            acct = result.getSignInAccount();
-            performLogin(acct.getEmail(), null, LoginActivity.LOGIN_GOOGLE);
-        } else {
-        }
-    }
 
     @Override
     public void onLogin() {
-        loginDialog.dismiss();
         startActivity(new Intent(loginActivity, MoopActivity.class));
         getActivity().finish();
     }
 
     @Override
     public void onLoginError(String error) {
-        loginDialog.dismiss();
         Toast.makeText(loginActivity, error, Toast.LENGTH_SHORT).show();
     }
 
     @Override
-    public void onUserNotFound(String logadoCom) {
-        switch (logadoCom) {
-            case LoginActivity.LOGIN_FACEBOOK:
-                try {
-                    login.registrar(loginActivity, facebookJson.getString("name"), facebookJson.getString("email"), "", new JSONObject(facebookJson.getString("picture")).getJSONObject("data").getString("url"), logadoCom, FirebaseInstanceId.getInstance().getToken(), "android", null, this);
-                } catch (JSONException e) {
-                    Log.e("JSONError", e.getMessage());
-                }
-                break;
-            case LoginActivity.LOGIN_GOOGLE:
-                login.registrar(loginActivity, acct.getDisplayName(), acct.getEmail(), "", acct.getPhotoUrl() == null ? null : acct.getPhotoUrl().toString(), logadoCom, FirebaseInstanceId.getInstance().getToken(), "android", null, this);
-                break;
-            default:
-                loginDialog.dismiss();
-                Toast.makeText(loginActivity, getString(R.string.dados_invalidos), Toast.LENGTH_SHORT).show();
-        }
+    public void onUserNotFound() {
     }
 
-    @Override
-    public void onConnectionFailed(@NonNull ConnectionResult connectionResult) {
-
-    }
-
-    public void loginGoogle() {
-        Intent signInIntent = Auth.GoogleSignInApi.getSignInIntent(mGoogleApiClient);
-        startActivityForResult(signInIntent, RC_SIGN_IN);
-    }
-
-    public void loginFacebook() {
-        LoginManager.getInstance().logInWithReadPermissions(this, Arrays.asList("public_profile", "email"));
-    }
 
     @Override
     public void onUserRegistred() {
-        loginDialog.dismiss();
         startActivity(new Intent(loginActivity, MoopActivity.class));
         getActivity().finish();
     }
 
     @Override
     public void onRegistrationFail(String error) {
-        loginDialog.dismiss();
+    }
+
+    public void updateUI() {
+        switch (actualState) {
+            case STATE_INITIALIZED:
+                textStatus.setText(getString(R.string.insira_seu_telefone));
+                showViews(editNumeroTelefone, cpp, btnEnviarCodigo, textStatus);
+                hideViews(editCodigoVerificacao, btnReenviarCodigo, mProgressBar, textCountdown);
+                break;
+            case STATE_CODE_SENT:
+                textStatus.setText(getString(R.string.insira_o_codigo_verificacao));
+                showViews(editCodigoVerificacao, textCountdown, textStatus);
+                hideViews(editNumeroTelefone, cpp, btnEnviarCodigo, mProgressBar, btnReenviarCodigo);
+                startCountdown();
+                break;
+            case STATE_VERIFY_SUCCESS:
+                textStatus.setText(getString(R.string.validando_codigo));
+                showViews(mProgressBar, textStatus);
+                hideViews(editNumeroTelefone, editCodigoVerificacao, cpp, btnEnviarCodigo, btnReenviarCodigo, textCountdown);
+                break;
+            case STATE_VERIFY_FAILED:
+                textStatus.setText(getString(R.string.status_verification_failed));
+                showViews(editNumeroTelefone, cpp, btnEnviarCodigo, textStatus);
+                hideViews(editCodigoVerificacao, btnReenviarCodigo, mProgressBar, textCountdown);
+                break;
+            case STATE_SIGNIN_SUCCESS:
+                textStatus.setText(getString(R.string.entrando_no_moop));
+                showViews(mProgressBar, textStatus);
+                hideViews(editNumeroTelefone, editCodigoVerificacao, cpp, btnEnviarCodigo, btnReenviarCodigo, textCountdown);
+                break;
+            case STATE_SIGNIN_FAILED:
+                textStatus.setText(getString(R.string.status_verification_failed_code));
+                showViews(editCodigoVerificacao, textCountdown, textStatus);
+                hideViews(editNumeroTelefone, cpp, btnEnviarCodigo, mProgressBar, btnReenviarCodigo);
+                break;
+            case STATE_CODE_TIMEOUT:
+
+                showViews(btnReenviarCodigo);
+                break;
+            case STATE_SENDING_CODE:
+                textStatus.setText(getString(R.string.recebendo_codigo));
+                showViews(mProgressBar, textStatus);
+                hideViews(editNumeroTelefone, cpp, btnEnviarCodigo, editCodigoVerificacao, textCountdown, btnReenviarCodigo);
+                break;
+            default:
+        }
     }
 }

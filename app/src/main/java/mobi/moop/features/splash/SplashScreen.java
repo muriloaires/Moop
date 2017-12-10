@@ -8,6 +8,7 @@ import android.support.v7.app.AppCompatActivity;
 import mobi.moop.R;
 import mobi.moop.features.MoopActivity;
 import mobi.moop.features.login.LoginActivity;
+import mobi.moop.features.login.PhoneAuthActivity;
 import mobi.moop.model.singleton.UsuarioSingleton;
 
 public class SplashScreen extends AppCompatActivity {

@@ -25,7 +25,7 @@ public interface RotaUsuario {
 
         void onLoginError(String error);
 
-        void onUserNotFound(String logadoCom);
+        void onUserNotFound();
     }
 
     interface RegistroHandler {
@@ -52,8 +52,8 @@ public interface RotaUsuario {
     Call<Usuario> registrar(@Part("nome") RequestBody nome, @Part("email") RequestBody email, @Part("plainPassword") RequestBody password, @Part("deviceToken") RequestBody deviceToken, @Part("deviceType") RequestBody deviceType, @Part("loginType") RequestBody loginType, @Part("avatarUrl") RequestBody avatarUrl, @Part MultipartBody.Part body);
 
     @Headers("appToken:" + RetrofitSingleton.APP_TOKEN)
-    @GET(RetrofitSingleton.BASE_URL + RetrofitSingleton.API_V1 + "users/retrieve.json")
-    Call<Usuario> login(@Query("email") String email, @Query("password") String password, @Query("deviceToken") String deviceToken, @Query("deviceType") String deviceType, @Query("loginType") String loginType);
+    @GET(RetrofitSingleton.BASE_URL + RetrofitSingleton.API_V1 + "users/retrieve_phone.json")
+    Call<Usuario> login(@Query("telefone") String numero, @Query("deviceToken") String deviceToken, @Query("deviceType") String deviceType);
 
 
     @Headers("appToken:" + RetrofitSingleton.APP_TOKEN)

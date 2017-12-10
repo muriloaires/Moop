@@ -7,6 +7,7 @@ import org.json.JSONObject;
 import java.io.File;
 
 import mobi.moop.R;
+import mobi.moop.features.feed.FeedFragment;
 import mobi.moop.model.entities.FeedItem;
 import mobi.moop.model.entities.Usuario;
 import mobi.moop.model.rotas.RetrofitSingleton;
@@ -29,6 +30,7 @@ public class RotaFeedImpl {
     private Call<GenericListResponse<FeedItem>> callGetFeed;
     private Call<FeedItem> callPostFeed;
     private Call<ResponseBody> callCurtirFeed;
+    private Call<ResponseBody> callApagarFeed;
 
     public void getFeed(final Context context, Long condominioId, Integer limit, final Integer offset, final RotaFeed.FeedHandler handler) {
         callGetFeed = RetrofitSingleton.INSTANCE.getRetrofiInstance().create(RotaFeed.class).getFeed(UsuarioSingleton.I.getUsuarioLogado(context).getApiToken(), condominioId, limit, offset);
@@ -155,6 +157,28 @@ public class RotaFeedImpl {
             public void onFailure(Call<ResponseBody> call, Throwable throwable) {
                 if (!call.isCanceled()) {
                     handler.onCurtirFeedFail(feedId, context.getString(R.string.algo_errado_ocorreu));
+                }
+            }
+        });
+    }
+
+    public void apagarFeed(final Context context, final FeedItem feedItem, final RotaFeed.FeedHandler handler) {
+        Usuario usuario = UsuarioSingleton.I.getUsuarioLogado(context);
+        callApagarFeed = RetrofitSingleton.INSTANCE.getRetrofiInstance().create(RotaFeed.class).apagarFeed(usuario.getApiToken(), feedItem.getId());
+        callApagarFeed.enqueue(new Callback<ResponseBody>() {
+            @Override
+            public void onResponse(Call<ResponseBody> call, Response<ResponseBody> response) {
+                if (response.isSuccessful()) {
+                    handler.onFeedApagado(feedItem);
+                } else {
+                    handler.onApagarFeedError(RetrofitSingleton.INSTANCE.getErrorBody(response));
+                }
+            }
+
+            @Override
+            public void onFailure(Call<ResponseBody> call, Throwable throwable) {
+                if (!call.isCanceled()) {
+                    handler.onApagarFeedError(context.getString(R.string.algo_errado_ocorreu));
                 }
             }
         });

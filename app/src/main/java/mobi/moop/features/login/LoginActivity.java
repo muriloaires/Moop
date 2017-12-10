@@ -13,9 +13,6 @@ import mobi.moop.R;
 
 public class LoginActivity extends AppCompatActivity {
 
-    public static final String LOGIN_GOOGLE = "G";
-    public static final String LOGIN_FACEBOOK = "F";
-    public static final String LOGIN_MOOP = "M";
 
     @BindView(R.id.toolbarLogin)
     Toolbar toolbar;

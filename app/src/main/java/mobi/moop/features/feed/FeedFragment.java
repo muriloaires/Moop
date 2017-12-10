@@ -3,12 +3,14 @@ package mobi.moop.features.feed;
 
 import android.app.Activity;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.Fragment;
 import android.support.v4.widget.SwipeRefreshLayout;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
@@ -23,6 +25,7 @@ import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
 import mobi.moop.R;
+import mobi.moop.features.mensagens.MensagemActivity;
 import mobi.moop.features.publicacoes.NewPostActivity;
 import mobi.moop.features.viewutils.Scrollable;
 import mobi.moop.model.entities.Condominio;
@@ -210,6 +213,17 @@ public class FeedFragment extends Fragment implements RotaFeed.FeedHandler, Scro
 
     }
 
+    @Override
+    public void onFeedApagado(FeedItem feedItem) {
+        items.remove(feedItem);
+        feedAdapter.notifyDataSetChanged();
+    }
+
+    @Override
+    public void onApagarFeedError(String errorBody) {
+
+    }
+
     private void writeNewPost() {
         startActivityForResult(new Intent(context, NewPostActivity.class), WRITE_POST);
     }
@@ -297,5 +311,23 @@ public class FeedFragment extends Fragment implements RotaFeed.FeedHandler, Scro
             }
         }
         return null;
+    }
+
+    public void showOptions(int adapterPosition) {
+        final FeedItem feedItem = items.get(adapterPosition);
+        AlertDialog.Builder builder = new AlertDialog.Builder(getContext()).setTitle(R.string.atencao)
+                .setMessage(R.string.deseja_apagar_postagem)
+                .setPositiveButton(R.string.sim, new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        rotaFeed.apagarFeed(getContext(), feedItem, FeedFragment.this);
+                    }
+                }).setNegativeButton(R.string.cancelar, new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        dialog.dismiss();
+                    }
+                });
+        builder.show();
     }
 }

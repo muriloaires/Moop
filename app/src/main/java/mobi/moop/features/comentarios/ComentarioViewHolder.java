@@ -13,6 +13,7 @@ import java.util.Date;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
+import butterknife.OnLongClick;
 import mobi.moop.R;
 import mobi.moop.features.utils.DateUtils;
 import mobi.moop.model.entities.Comentario;
@@ -35,6 +36,12 @@ public class ComentarioViewHolder extends RecyclerView.ViewHolder {
 
     @BindView(R.id.textHoraComentario)
     TextView textHoraComentario;
+
+    @OnLongClick(R.id.rootView)
+    public boolean showOptions(View view) {
+        ((ComentariosActivity) context).showOptions(getAdapterPosition());
+        return true;
+    }
 
     private Context context;
 
@@ -62,6 +69,6 @@ public class ComentarioViewHolder extends RecyclerView.ViewHolder {
         } else {
             Picasso.with(context).load(R.drawable.placeholder_avatar).into(imgAvatar);
         }
-        textHoraComentario.setText(DateUtils.getDifference(new Date(),comentario.getCreatedAt()));
+        textHoraComentario.setText(DateUtils.getDifference(new Date(), comentario.getCreatedAt()));
     }
 }
