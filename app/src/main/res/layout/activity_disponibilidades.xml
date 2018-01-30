@@ -5,7 +5,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
-    tools:context="mobi.moop.features.reserva.DisponibilidadesActivity">
+    tools:context="brmobi.moop.features.reserva.DisponibilidadesActivity">
 
     <android.support.v7.widget.Toolbar
         android:id="@+id/toolbar"

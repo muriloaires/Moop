@@ -3,7 +3,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context="mobi.moop.features.login.RegistroFragment">
+    tools:context="brmobi.moop.features.login.RegistroFragment">
 
     <!-- TODO: Update blank fragment layout -->
     <TextView
@@ -67,39 +67,6 @@
         app:layout_constraintRight_toRightOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/editNome" />
 
-    <EditText
-        android:id="@+id/editSenha"
-        android:layout_width="0dp"
-        android:layout_height="wrap_content"
-        android:layout_marginLeft="8dp"
-        android:layout_marginRight="8dp"
-        android:layout_marginTop="0dp"
-        android:drawableLeft="@drawable/ic_lock"
-        android:drawablePadding="16dp"
-        android:ems="10"
-        android:hint="@string/hint_senha"
-        android:inputType="textPassword"
-        app:layout_constraintHorizontal_bias="0.0"
-        app:layout_constraintLeft_toLeftOf="parent"
-        app:layout_constraintRight_toRightOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/editEmal" />
-
-    <EditText
-        android:id="@+id/editConfirmarSenha"
-        android:layout_width="0dp"
-        android:layout_height="wrap_content"
-        android:layout_marginLeft="8dp"
-        android:layout_marginRight="8dp"
-        android:layout_marginTop="0dp"
-        android:drawableLeft="@drawable/ic_lock"
-        android:drawablePadding="16dp"
-        android:ems="10"
-        android:hint="@string/hint_confirmar_senha"
-        android:inputType="textPassword"
-        app:layout_constraintHorizontal_bias="0.0"
-        app:layout_constraintLeft_toLeftOf="parent"
-        app:layout_constraintRight_toRightOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/editSenha" />
 
     <Button
         android:id="@+id/btnCadastrar"
@@ -112,6 +79,6 @@
         android:theme="@style/BtnLogarTheme"
         app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintRight_toRightOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/editConfirmarSenha" />
+        app:layout_constraintTop_toBottomOf="@+id/editEmal" />
 
 </android.support.constraint.ConstraintLayout>

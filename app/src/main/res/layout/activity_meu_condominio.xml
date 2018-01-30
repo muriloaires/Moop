@@ -8,7 +8,7 @@
         xmlns:tools="http://schemas.android.com/tools"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        tools:context="mobi.moop.features.detalhe_condominio.MeuCondominioActivity">
+        tools:context="brmobi.moop.features.detalhe_condominio.MeuCondominioActivity">
 
         <android.support.v7.widget.Toolbar
             android:id="@+id/toolbar"

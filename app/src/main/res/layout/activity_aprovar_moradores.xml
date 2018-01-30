@@ -4,7 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context="mobi.moop.features.moradores.AprovarMoradoresActivity">
+    tools:context="brmobi.moop.features.moradores.AprovarMoradoresActivity">
 
     <android.support.v7.widget.Toolbar
         android:id="@+id/toolbar"

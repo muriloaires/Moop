@@ -28,28 +28,27 @@
         android:id="@+id/btn_nao_encontrei_condominio"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_alignParentBottom="true"
-        android:visibility="invisible"
+        android:layout_below="@+id/btnAvancar"
         android:drawableRight="@drawable/ic_avancar_white"
         android:text="@string/nao_encontrei_meu_condominio"
-        android:theme="@style/BtnConfirmarTheme" />
+        android:theme="@style/BtnConfirmarTheme"
+        android:visibility="invisible" />
 
     <Button
         android:id="@+id/btnAvancar"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_above="@id/btn_nao_encontrei_condominio"
+        android:layout_below="@+id/recyclerCondiminios"
         android:drawableRight="@drawable/ic_avancar_white"
         android:text="@string/avancar"
         android:theme="@style/BtnLogarTheme"
-        android:visibility="gone" />
+        android:visibility="invisible" />
 
 
     <android.support.v7.widget.RecyclerView
         android:id="@+id/recyclerCondiminios"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:layout_above="@id/btnAvancar"
+        android:layout_height="wrap_content"
         android:layout_below="@id/progress" />
 
 

@@ -3,7 +3,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
-    tools:context="mobi.moop.features.reserva.CalendarioBemComumFragment">
+    tools:context="brmobi.moop.features.reserva.CalendarioBemComumFragment">
 
     <com.imanoweb.calendarview.CustomCalendarView xmlns:app="http://schemas.android.com/apk/res-auto"
         android:id="@+id/calendar_view"

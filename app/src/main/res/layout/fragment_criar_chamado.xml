@@ -5,7 +5,7 @@
     android:layout_height="match_parent"
     android:gravity="center_horizontal"
     android:orientation="vertical"
-    tools:context="mobi.moop.features.chamado.CriarChamadoFragment">
+    tools:context="brmobi.moop.features.chamado.CriarChamadoFragment">
 
     <FrameLayout
         android:layout_width="100dp"

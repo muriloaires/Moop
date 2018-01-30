@@ -173,4 +173,6 @@
     <string name="validando_codigo">Validando código...</string>
     <string name="status_verification_failed_code">Verificação falha (verifique o código)</string>
     <string name="entrando_no_moop">Entrando no MOOP</string>
+    <string name="finalizar">Finalizar Cadastro</string>
+    <string name="nenhum_bloco">Nenhum bloco inserido</string>
 </resources>

@@ -8,9 +8,9 @@
   "client": [
     {
       "client_info": {
-        "mobilesdk_app_id": "1:278025566218:android:20cf1fd73f0596fc",
+        "mobilesdk_app_id": "1:278025566218:android:69ef323760246359",
         "android_client_info": {
-          "package_name": "mobi.moop"
+          "package_name": "brmobi.moop"
         }
       },
       "oauth_client": [
@@ -21,7 +21,7 @@
       ],
       "api_key": [
         {
-          "current_key": "AIzaSyDQxp83FiQtjP0_qIYw8YVCJt7Q4y4oirE"
+          "current_key": "AIzaSyCkfgq6kQWHuUkAJIWV0JHAUjv7B5QQAPg"
         }
       ],
       "services": {

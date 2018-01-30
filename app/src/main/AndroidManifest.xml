@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
-    package="mobi.moop">
+    package="brmobi.moop">
 
     <uses-permission android:name="android.permission.INTERNET" />
     <uses-permission android:name="android.permission.CAMERA" />
@@ -24,8 +24,6 @@
             android:name="com.facebook.FacebookActivity"
             android:configChanges="keyboard|keyboardHidden|screenLayout|screenSize|orientation"
             android:label="@string/app_name" />
-
-        <activity android:name=".features.login.PhoneAuthActivity" android:screenOrientation="portrait"/>
         <activity
             android:name=".features.splash.SplashScreen"
             android:screenOrientation="portrait">
@@ -53,6 +51,7 @@
                 <action android:name="com.google.firebase.MESSAGING_EVENT" />
             </intent-filter>
         </service>
+
         <activity
             android:name=".features.MoopActivity"
             android:label="@string/title_activity_moop"
@@ -96,9 +95,34 @@
         <activity
             android:name=".features.mensagens.MensagemActivity"
             android:label="@string/title_activity_mensagem"
-            android:theme="@style/AppTheme.NoActionBar" android:screenOrientation="portrait" />
-        <activity android:name=".features.moradores.AprovarMoradoresActivity" android:screenOrientation="portrait" />
-        <activity android:name=".features.detalhe_condominio.MeuCondominioActivity" android:screenOrientation="portrait"/>
+            android:screenOrientation="portrait"
+            android:theme="@style/AppTheme.NoActionBar" />
+        <activity
+            android:name=".features.moradores.AprovarMoradoresActivity"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".features.detalhe_condominio.MeuCondominioActivity"
+            android:screenOrientation="portrait" />
+
+        <service
+            android:name=".features.service.MyIntentService"
+            android:exported="false" />
+
+        <receiver
+            android:name=".features.service.AllarmService"
+            android:enabled="true"
+            android:exported="true" />
+        <receiver
+            android:name=".features.service.BootBroadcastReceiver"
+            android:enabled="true">
+            <intent-filter>
+                <action android:name="android.intent.action.BOOT_COMPLETED" />
+            </intent-filter>
+        </receiver>
+
+        <service
+            android:name=".features.service.AprovarService"
+            android:exported="false"></service>
     </application>
 
 </manifest>

@@ -3,7 +3,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context="mobi.moop.features.chamado.ChamadoActivity">
+    tools:context="brmobi.moop.features.chamado.ChamadoActivity">
 
     <Button
         android:id="@+id/btn_criar_chamado"

@@ -3,19 +3,30 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
-    <LinearLayout xmlns:tools="http://schemas.android.com/tools"
+    <RelativeLayout xmlns:tools="http://schemas.android.com/tools"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:gravity="center"
         android:orientation="vertical"
-        tools:context="mobi.moop.features.mensagens.MensagensFragment">
+        tools:context="brmobi.moop.features.mensagens.MensagensFragment">
 
         <android.support.v7.widget.RecyclerView
             android:id="@+id/recycler_ultimas_mensagens"
             android:layout_width="match_parent"
             android:layout_height="match_parent" />
 
-    </LinearLayout>
+        <android.support.design.widget.FloatingActionButton xmlns:app="http://schemas.android.com/apk/res-auto"
+            android:id="@+id/fab"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentBottom="true"
+            android:layout_alignParentRight="true"
+            android:layout_marginBottom="16dp"
+            android:layout_marginRight="16dp"
+            android:src="@drawable/ic_mensagem_white"
+            app:backgroundTint="@color/colorPrimary" />
+
+    </RelativeLayout>
 
 </android.support.v4.widget.SwipeRefreshLayout>
 
