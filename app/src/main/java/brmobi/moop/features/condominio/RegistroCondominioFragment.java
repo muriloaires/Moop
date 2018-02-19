@@ -61,7 +61,6 @@ public class RegistroCondominioFragment extends Fragment {
     @OnClick(R.id.btn_cadastrar_condominio)
     public void btnCadastrarCondominioAction(View view) {
         if (validate()) {
-
             ((AddCondominioActivity) getContext()).showAddBlocoFragment(editCep.getText().toString(), editNomeCondominio.getText().toString(), editEndereco.getText().toString(), editNumero.getText().toString(), editTelefone.getText().toString(), chkHoriontal.isChecked());
         }
     }

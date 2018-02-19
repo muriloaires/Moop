@@ -23,6 +23,11 @@
                 android:icon="@drawable/ic_predio"
                 android:title="@string/meu_condominio" />
 
+            <item
+                android:id="@+id/desvincular"
+                android:icon="@drawable/ic_logout"
+                android:title="@string/deixar_condominio" />
+
         </menu>
     </item>
 

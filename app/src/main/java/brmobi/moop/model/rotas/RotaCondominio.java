@@ -97,4 +97,8 @@ public interface RotaCondominio {
     @Headers("appToken:" + RetrofitSingleton.APP_TOKEN)
     @GET(RetrofitSingleton.BASE_URL + RetrofitSingleton.API_V1 + "condominio/{condominioId}/detalhe.json")
     Call<Condominio> getDetalheCondominio(@Header("apiToken") String apiToken, @Path("condominioId") Long condominioId);
+
+    @Headers("appToken:" + RetrofitSingleton.APP_TOKEN)
+    @POST(RetrofitSingleton.BASE_URL + RetrofitSingleton.API_V1 + "condominio/{condominioId}/desvincular.json")
+    Call<ResponseBody> desvincularCondominio(@Header("apiToken") String apiToken, @Path("condominioId") Long condominioId);
 }

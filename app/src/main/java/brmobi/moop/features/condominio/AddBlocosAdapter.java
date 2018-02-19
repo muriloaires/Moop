@@ -33,6 +33,7 @@ public class AddBlocosAdapter extends RecyclerView.Adapter<AddBlocoViewHolder> {
     public void onBindViewHolder(AddBlocoViewHolder holder, int position) {
         if (position == blocos.size() - 1) {
             holder.showBtnAdd();
+            holder.requestFocus();
         } else {
             holder.hideBtnAdd();
         }

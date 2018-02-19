@@ -42,6 +42,7 @@ public class AddCondominioActivity extends AppCompatActivity implements RotaCond
     private String numero;
     private String telefone;
     private boolean isHorizontal = false;
+    private Long condominioSelecionadoId;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -83,9 +84,8 @@ public class AddCondominioActivity extends AppCompatActivity implements RotaCond
 
     public void showBlocosFragment(Long condominioId, String condominioNome) {
         this.condominioSelecionado = condominioNome;
-
+        this.condominioSelecionadoId  = condominioId;
         FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
-
         BlocosFragment fragment = new BlocosFragment();
         Bundle bundle = new Bundle();
         bundle.putLong("condominioId", condominioId);
@@ -158,7 +158,7 @@ public class AddCondominioActivity extends AppCompatActivity implements RotaCond
 
     private void registrarEmCondominio(boolean isMorador, String unidade) {
         progress.show();
-        rotaCondominio.registrarUnidade(this, blocoSeleionado.getId(), !isMorador, isMorador, unidade, this);
+        rotaCondominio.registrarUnidade(this, blocoSeleionado.getId(), !isMorador, isMorador, unidade,condominioSelecionadoId, this);
     }
 
     @Override

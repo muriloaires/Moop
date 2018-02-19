@@ -16,11 +16,13 @@ import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import java.util.ArrayList;
 import java.util.List;
 
+import brmobi.moop.R;
 import brmobi.moop.features.publicacoes.NewPostActivity;
 import brmobi.moop.features.viewutils.Scrollable;
 import brmobi.moop.model.entities.Condominio;
@@ -32,7 +34,6 @@ import brmobi.moop.utils.EndlessRecyclerOnScrollListener;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
-import brmobi.moop.R;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -51,6 +52,9 @@ public class FeedFragment extends Fragment implements RotaFeed.FeedHandler, Scro
 
     @BindView(R.id.autorizacaoView)
     View autorizacaoView;
+
+    @BindView(R.id.nenhumaPublicacao)
+    TextView textNenhumaPublicacao;
 
     private Context context;
 
@@ -183,6 +187,7 @@ public class FeedFragment extends Fragment implements RotaFeed.FeedHandler, Scro
         }
         scrollListener.resetPreviousTotal();
         if (offset == 0) {
+            textNenhumaPublicacao.setVisibility(items.size() == 0 ? View.VISIBLE : View.GONE);
             this.items.clear();
             this.items.add(null);
         }

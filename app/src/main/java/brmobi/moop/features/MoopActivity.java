@@ -43,11 +43,16 @@ import brmobi.moop.model.entities.BemComum;
 import brmobi.moop.model.entities.Condominio;
 import brmobi.moop.model.repository.CondominioRepository;
 import brmobi.moop.model.repository.UsuarioRepository;
+import brmobi.moop.model.rotas.RetrofitSingleton;
 import brmobi.moop.model.rotas.RotaCondominio;
 import brmobi.moop.model.rotas.impl.RotaCondominioImpl;
 import brmobi.moop.model.singleton.UsuarioSingleton;
 import butterknife.BindView;
 import butterknife.ButterKnife;
+import okhttp3.ResponseBody;
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
 
 public class MoopActivity extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener, RotaCondominio.CondominiosHandler {
 
@@ -350,6 +355,9 @@ public class MoopActivity extends AppCompatActivity implements NavigationView.On
             case R.id.gerenciar_condominio:
                 showMeuCondominioActivity();
                 break;
+            case R.id.desvincular:
+                desvincularCondominio();
+                break;
             default:
                 SubMenu subMenu = navigationView.getMenu().getItem(0).getSubMenu();
                 subMenu.getItem(lastSelectedIndex).setChecked(false);
@@ -358,6 +366,37 @@ public class MoopActivity extends AppCompatActivity implements NavigationView.On
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
         drawer.closeDrawer(GravityCompat.START);
         return true;
+    }
+
+    private void desvincularCondominio() {
+
+        Call<ResponseBody> call = RetrofitSingleton.INSTANCE.getRetrofiInstance().create(RotaCondominio.class)
+                .desvincularCondominio(UsuarioSingleton.I.getUsuarioLogado(this).getApiToken(),
+                        CondominioPreferences.I.getLastSelectedCondominio(this));
+
+        call.enqueue(new Callback<ResponseBody>() {
+            @Override
+            public void onResponse(Call<ResponseBody> call, Response<ResponseBody> response) {
+                if (response.isSuccessful()) {
+
+                    for (Condominio condominio : condominios) {
+                        if (condominio.getId().equals(CondominioPreferences.I.getLastSelectedCondominio(MoopActivity.this))) {
+                            condominios.remove(condominio);
+                            break;
+                        }
+                    }
+                    CondominioPreferences.I.saveLastSelectedCondominio(MoopActivity.this, -1L);
+                    configureCondominios();
+                } else {
+                    Toast.makeText(MoopActivity.this, RetrofitSingleton.INSTANCE.getErrorBody(response), Toast.LENGTH_SHORT).show();
+                }
+            }
+
+            @Override
+            public void onFailure(Call<ResponseBody> call, Throwable t) {
+                Toast.makeText(MoopActivity.this, getString(R.string.algo_errado_ocorreu), Toast.LENGTH_SHORT).show();
+            }
+        });
     }
 
     private void showMeuCondominioActivity() {
@@ -424,6 +463,10 @@ public class MoopActivity extends AppCompatActivity implements NavigationView.On
     public void onCondominiosRecebidos(List<Condominio> condominios) {
         this.condominios.clear();
         this.condominios.addAll(condominios);
+        configureCondominios();
+    }
+
+    private void configureCondominios() {
         if (condominios.size() == 0) {
             AlertDialog.Builder builder = new AlertDialog.Builder(this)
                     .setTitle(getString(R.string.atencao))
@@ -456,7 +499,6 @@ public class MoopActivity extends AppCompatActivity implements NavigationView.On
                 hasAction = false;
             }
         }
-
     }
 
     @Override

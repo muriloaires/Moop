@@ -3,6 +3,7 @@ package brmobi.moop.model.rotas.impl;
 import android.content.Context;
 
 import brmobi.moop.R;
+import brmobi.moop.features.condominio.CondominioPreferences;
 import brmobi.moop.model.entities.Bloco;
 import brmobi.moop.model.entities.CadastroCondominio;
 import brmobi.moop.model.entities.Condominio;
@@ -144,13 +145,14 @@ public class RotaCondominioImpl {
         }
     }
 
-    public void registrarUnidade(final Context context, Long blocoId, boolean isProprietario, boolean isMorador, String unidade, final RotaCondominio.RegistroUnidadeHandler handler) {
+    public void registrarUnidade(final Context context, Long blocoId, boolean isProprietario, boolean isMorador, String unidade, final Long condominioId, final RotaCondominio.RegistroUnidadeHandler handler) {
         callRegistrarUnidade = RetrofitSingleton.INSTANCE.getRetrofiInstance().create(RotaCondominio.class).registrarEmUnidade(UsuarioSingleton.I.getUsuarioLogado(context).getApiToken(), blocoId, isProprietario, isMorador, unidade);
         callRegistrarUnidade.enqueue(new Callback<ResponseBody>() {
             @Override
             public void onResponse(Call<ResponseBody> call, Response<ResponseBody> response) {
                 if (response.isSuccessful()) {
                     handler.onPerfilRegistrado();
+                    CondominioPreferences.I.saveLastSelectedCondominio(context, condominioId);
                 } else {
                     handler.onRegistrationFail(RetrofitSingleton.INSTANCE.getErrorBody(response));
                 }

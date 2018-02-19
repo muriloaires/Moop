@@ -80,4 +80,8 @@ public class AddBlocoViewHolder extends RecyclerView.ViewHolder {
         editNomeBloco.removeTextChangedListener(watcher);
         editNomeBloco.addTextChangedListener(watcher);
     }
+
+    public void requestFocus() {
+        editNomeBloco.requestFocus();
+    }
 }
