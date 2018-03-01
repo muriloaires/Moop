@@ -21,11 +21,7 @@
             android:value="@string/facebook_app_id" />
 
         <activity
-            android:name="com.facebook.FacebookActivity"
-            android:configChanges="keyboard|keyboardHidden|screenLayout|screenSize|orientation"
-            android:label="@string/app_name" />
-        <activity
-            android:name=".features.splash.SplashScreen"
+            android:name=".ui.splash.SplashScreen"
             android:screenOrientation="portrait">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
@@ -34,50 +30,50 @@
             </intent-filter>
         </activity>
         <activity
-            android:name=".features.login.LoginActivity"
+            android:name=".ui.login.LoginActivity"
             android:screenOrientation="portrait" />
         <activity
             android:name="com.yalantis.ucrop.UCropActivity"
             android:screenOrientation="portrait"
             android:theme="@style/Theme.AppCompat.Light.NoActionBar" />
 
-        <service android:name=".features.notification.MyFirebaseInstanceIDService">
+        <service android:name=".notification.MyFirebaseInstanceIDService">
             <intent-filter>
                 <action android:name="com.google.firebase.INSTANCE_ID_EVENT" />
             </intent-filter>
         </service>
-        <service android:name=".features.notification.MyFirebaseMessagingService">
+        <service android:name=".notification.MyFirebaseMessagingService">
             <intent-filter>
                 <action android:name="com.google.firebase.MESSAGING_EVENT" />
             </intent-filter>
         </service>
 
         <activity
-            android:name=".features.MoopActivity"
+            android:name=".ui.main.MoopActivity"
             android:label="@string/title_activity_moop"
             android:screenOrientation="portrait"
             android:theme="@style/AppTheme.NoActionBar" />
         <activity
-            android:name=".features.condominio.AddCondominioActivity"
+            android:name=".ui.condominium.add.AddCondominioActivity"
             android:screenOrientation="portrait" />
         <activity
-            android:name=".features.publicacoes.NewPostActivity"
+            android:name=".ui.publication.NewPostActivity"
             android:screenOrientation="portrait" />
         <activity
-            android:name=".features.comentarios.ComentariosActivity"
+            android:name=".ui.comments.CommentsActivity"
             android:screenOrientation="portrait" />
         <activity
-            android:name=".features.publicacoes.ImageActivity"
+            android:name=".ui.publication.ImageActivity"
             android:screenOrientation="portrait" />
         <activity
-            android:name=".features.reserva.DisponibilidadesActivity"
+            android:name=".ui.reservation.DisponibilityActivity"
             android:screenOrientation="portrait" />
         <activity
-            android:name=".features.perfil.EditarPerfilActivity"
+            android:name=".ui.profile.EditProfileActivity"
             android:screenOrientation="portrait" />
 
         <provider
-            android:name=".features.utils.GenericFileProvider"
+            android:name=".utils.GenericFileProvider"
             android:authorities="${applicationId}.my.package.name.provider"
             android:exported="false"
             android:grantUriPermissions="true">
@@ -87,42 +83,27 @@
         </provider>
 
         <activity
-            android:name=".features.moradores.MoradoresActivity"
+            android:name=".ui.dwellers.DwellersActivity"
             android:screenOrientation="portrait" />
         <activity
-            android:name=".features.chamado.ChamadoActivity"
+            android:name=".ui.tickets.TicketActivity"
             android:screenOrientation="portrait" />
         <activity
-            android:name=".features.mensagens.MensagemActivity"
+            android:name=".ui.messages.MessagesActivity"
             android:label="@string/title_activity_mensagem"
             android:screenOrientation="portrait"
             android:theme="@style/AppTheme.NoActionBar" />
         <activity
-            android:name=".features.moradores.AprovarMoradoresActivity"
+            android:name=".ui.dwellers.ApproveDwellersActivity"
             android:screenOrientation="portrait" />
         <activity
-            android:name=".features.detalhe_condominio.MeuCondominioActivity"
+            android:name=".ui.condominium.MyCondominiumActivity"
             android:screenOrientation="portrait" />
 
+
         <service
-            android:name=".features.service.MyIntentService"
+            android:name=".service.AprovarService"
             android:exported="false" />
-
-        <receiver
-            android:name=".features.service.AllarmService"
-            android:enabled="true"
-            android:exported="true" />
-        <receiver
-            android:name=".features.service.BootBroadcastReceiver"
-            android:enabled="true">
-            <intent-filter>
-                <action android:name="android.intent.action.BOOT_COMPLETED" />
-            </intent-filter>
-        </receiver>
-
-        <service
-            android:name=".features.service.AprovarService"
-            android:exported="false"></service>
     </application>
 
 </manifest>

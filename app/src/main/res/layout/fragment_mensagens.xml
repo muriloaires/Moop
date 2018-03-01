@@ -8,7 +8,7 @@
         android:layout_height="match_parent"
         android:gravity="center"
         android:orientation="vertical"
-        tools:context="brmobi.moop.features.mensagens.MensagensFragment">
+        tools:context="brmobi.moop.ui.messages.MensagensFragment">
 
         <android.support.v7.widget.RecyclerView
             android:id="@+id/recycler_ultimas_mensagens"
