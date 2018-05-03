@@ -3,12 +3,12 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context="brmobi.moop.features.condominio.AddBlocoFragment">
+    tools:context="brmobi.moop.ui.condominium.add.AddBlocFragment">
 
     <android.support.constraint.ConstraintLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        tools:context="brmobi.moop.features.condominio.AddBlocoFragment">
+        tools:context="brmobi.moop.ui.condominium.add.AddBlocFragment">
 
 
         <TextView

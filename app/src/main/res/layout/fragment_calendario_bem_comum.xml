@@ -3,15 +3,16 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
-    tools:context="brmobi.moop.features.reserva.CalendarioBemComumFragment">
+    tools:context="brmobi.moop.ui.reservation.SharedResourceCalendarFragment">
 
     <com.imanoweb.calendarview.CustomCalendarView xmlns:app="http://schemas.android.com/apk/res-auto"
         android:id="@+id/calendar_view"
-        android:visibility="invisible"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:background="#ffffff"
+        android:visibility="invisible"
         app:selectedDayBackgroundColor="@color/colorPrimary" />
+
 
     <Button
         android:id="@+id/btn_solicitar_reserva"

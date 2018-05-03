@@ -33,7 +33,8 @@
             android:id="@+id/inputUnidade"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:hint="@string/qual_sua_unidade" />
+            android:hint="@string/qual_sua_unidade"
+            android:inputType="number" />
     </android.support.design.widget.TextInputLayout>
 
     <LinearLayout

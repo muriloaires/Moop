@@ -5,7 +5,7 @@
     android:layout_height="match_parent"
     android:gravity="center_horizontal"
     android:orientation="vertical"
-    tools:context="brmobi.moop.features.chamado.CriarChamadoFragment">
+    tools:context="brmobi.moop.ui.tickets.NewTicketFragment">
 
     <FrameLayout
         android:layout_width="100dp"
