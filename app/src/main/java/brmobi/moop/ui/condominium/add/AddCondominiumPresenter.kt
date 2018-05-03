@@ -63,7 +63,7 @@ class AddCondominiumPresenter<V : AddCondominiumMvpView> @Inject constructor(dat
                     getMvpView()?.finishWithOkResult()
                 }, {
                     getMvpView()?.hideLoading()
-                    handleApiError(it as HttpException)
+                    handleApiError(it)
                 }))
     }
 }

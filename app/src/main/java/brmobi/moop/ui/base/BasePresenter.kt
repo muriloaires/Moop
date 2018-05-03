@@ -23,18 +23,26 @@ open class BasePresenter<V : MvpView> @Inject constructor(val dataManager: DataM
         mMvpView = null
     }
 
-    override fun handleApiError(error: HttpException) {
-        when (error.code()) {
-            401 -> {
-                setUserAsLoggedOut()
-                getMvpView()?.openActivityOnTokenExpire()
-            }
-            500 -> getMvpView()?.onError(R.string.algo_errado_ocorreu)
-            else -> {
-                val json = error.response().errorBody()?.string()
-                getMvpView()?.onError(JSONObject(json).getString("message"))
-            }
+    override fun handleApiError(error: Throwable) {
+        if (error is HttpException) {
+            when (error.code()) {
+                401 -> {
+                    setUserAsLoggedOut()
+                    getMvpView()?.openActivityOnTokenExpire()
+                }
+                500 -> getMvpView()?.onError(R.string.algo_errado_ocorreu)
+                else -> {
+                    try {
+                        val json = error.response().errorBody()?.string()
+                        getMvpView()?.onError(JSONObject(json).getString("message"))
+                    } catch (e: Exception) {
+                        getMvpView()?.onError(R.string.algo_errado_ocorreu)
+                    }
+                }
 
+            }
+        } else {
+            getMvpView()?.onError(R.string.algo_errado_ocorreu)
         }
     }
 

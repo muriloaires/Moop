@@ -97,7 +97,7 @@ class NewPostPresenter<V : NewPostMvpView> @Inject constructor(dataManager: Data
                         getMvpView()?.finishWithOkResult()
                     }, {
                         getMvpView()?.hideLoading()
-                        handleApiError(it as HttpException)
+                        handleApiError(it )
                     }))
         }
     }

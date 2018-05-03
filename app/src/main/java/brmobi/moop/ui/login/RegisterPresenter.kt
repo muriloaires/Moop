@@ -33,7 +33,7 @@ class RegisterPresenter<V : RegisterMvpView> @Inject constructor(dataManager: Da
                             getMvpView()?.openMoopActivity()
                         }, { error ->
                             getMvpView()?.hideLoading()
-                            handleApiError(error as HttpException)
+                            handleApiError(error )
                         }))
             }
         }

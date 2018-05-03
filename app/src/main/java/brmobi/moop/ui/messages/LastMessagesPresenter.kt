@@ -35,7 +35,7 @@ class LastMessagesPresenter<V : LastMessagesMvpView> @Inject constructor(dataMan
                     getMvpView()?.notifyDataSetChanged()
 
                 }, { error ->
-                    handleApiError(error as HttpException)
+                    handleApiError(error)
                 }))
     }
 

@@ -6,7 +6,6 @@ import brmobi.moop.data.db.model.Condominio
 import brmobi.moop.data.network.model.CondominiumRegister
 import brmobi.moop.ui.base.BasePresenter
 import brmobi.moop.utils.AppConstants
-import com.jakewharton.retrofit2.adapter.rxjava2.HttpException
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.disposables.CompositeDisposable
 import io.reactivex.schedulers.Schedulers
@@ -33,6 +32,7 @@ class CondominiumPresenter<V : CondominiumMvpView> @Inject constructor(dataManag
                     getMvpView()?.setTextWatcherZipCode()
                     getMvpView()?.notifyDataSetChanged()
                     getMvpView()?.showBtnCondominiumNotFound()
+                    getMvpView()?.hideKeyboard()
                     lastCondominiumSelected = -1
                     if (mCondominiuns.isEmpty()) {
                         getMvpView()?.showMessage(R.string.nenhum_condominio_encontrado)
@@ -42,9 +42,10 @@ class CondominiumPresenter<V : CondominiumMvpView> @Inject constructor(dataManag
                         getMvpView()?.showRecyclerView()
                     }
                 }, {
+                    getMvpView()?.hideKeyboard()
                     getMvpView()?.hideProgress()
                     getMvpView()?.setTextWatcherZipCode()
-                    handleApiError(it as HttpException)
+                    handleApiError(it)
                 }))
     }
 

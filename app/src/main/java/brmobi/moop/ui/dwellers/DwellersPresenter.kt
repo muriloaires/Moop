@@ -34,7 +34,7 @@ class DwellersPresenter<V : DwellersMvpView> @Inject constructor(dataManager: Da
                     this.dwellers.addAll(list)
                     getMvpView()?.notifyDataSetChanged()
                 }, { error ->
-                    handleApiError(error as HttpException)
+                    handleApiError(error )
                 }))
     }
 

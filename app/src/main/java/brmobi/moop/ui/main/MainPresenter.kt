@@ -44,7 +44,7 @@ class MainPresenter<V : MainMvpView> @Inject constructor(dataManager: DataManage
                                 configureCondominiuns()
                             })
                 }, { err ->
-                    handleApiError(err as HttpException)
+                    handleApiError(err )
                 }))
     }
 
@@ -54,6 +54,7 @@ class MainPresenter<V : MainMvpView> @Inject constructor(dataManager: DataManage
 
     private fun configureCondominiuns() {
         if (condominiuns.isEmpty()) {
+            getMvpView()?.addNewCondominiumMenu(R.string.add_condominio)
             getMvpView()?.showNoneCondominiunsRegistered()
         } else {
             val lastSelectedCondominium = dataManager.getLastSelectedCondominium()
@@ -205,7 +206,7 @@ class MainPresenter<V : MainMvpView> @Inject constructor(dataManager: DataManage
                     dataManager.saveLastSelectedCondominium(AppConstants.NULL_INDEX)
                     configureCondominiuns()
                 }, { err ->
-                    handleApiError(err as HttpException)
+                    handleApiError(err )
                 })
         )
     }

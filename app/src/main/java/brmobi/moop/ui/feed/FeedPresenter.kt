@@ -103,7 +103,7 @@ class FeedPresenter<V : FeedMvpView> @Inject constructor(dataManager: DataManage
                 }, { error ->
                     items[adapterPosition]!!.isCurtidaPeloUsuario = false
                     getMvpView()?.notifyDataSetChanged()
-                    handleApiError(error as HttpException)
+                    handleApiError(error )
                 }))
     }
 
@@ -119,7 +119,7 @@ class FeedPresenter<V : FeedMvpView> @Inject constructor(dataManager: DataManage
                 }, { error ->
                     items[adapterPosition]!!.isCurtidaPeloUsuario = false
                     getMvpView()?.notifyDataSetChanged()
-                    handleApiError(error as HttpException)
+                    handleApiError(error )
                 }))
     }
 
@@ -137,7 +137,7 @@ class FeedPresenter<V : FeedMvpView> @Inject constructor(dataManager: DataManage
                     items.removeAt(indexToDelete!!)
                     getMvpView()?.notifyDataSetChanged()
                 }, { error ->
-                    handleApiError(error as HttpException)
+                    handleApiError(error )
                 }))
     }
 

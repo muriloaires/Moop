@@ -41,7 +41,7 @@ class CommentsPresenter<V : CommentsMvpView> @Inject constructor(dataManager: Da
                     getMvpView()?.notifyDataSetChanged()
                 }, {
                     getMvpView()?.hideLoading()
-                    handleApiError(it as HttpException)
+                    handleApiError(it )
                 }))
     }
 
@@ -55,7 +55,7 @@ class CommentsPresenter<V : CommentsMvpView> @Inject constructor(dataManager: Da
                         getMvpView()?.clearEditTextComment()
                         getMvpView()?.notifyDataSetChanged()
                     }, {
-                        handleApiError(it as HttpException)
+                        handleApiError(it)
                     }))
         }
     }

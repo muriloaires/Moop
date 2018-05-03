@@ -58,7 +58,7 @@ class MyCondominiumPresenter<V : MyCondominiumMvpView> @Inject constructor(dataM
                     getMvpView()?.setNewPasswordTex(it.senha)
                 }, {
                     getMvpView()?.hideLoading()
-                    handleApiError(it as HttpException)
+                    handleApiError(it )
                 }))
     }
 

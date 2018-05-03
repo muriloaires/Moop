@@ -11,7 +11,7 @@ interface MvpPresenter<V : MvpView> {
 
     fun onDetach()
 
-    fun handleApiError(error: HttpException)
+    fun handleApiError(error: Throwable)
 
     fun setUserAsLoggedOut()
 }

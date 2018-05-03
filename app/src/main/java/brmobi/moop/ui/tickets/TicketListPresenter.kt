@@ -4,7 +4,6 @@ import brmobi.moop.R
 import brmobi.moop.data.DataManager
 import brmobi.moop.data.network.model.Chamado
 import brmobi.moop.ui.base.BasePresenter
-import com.jakewharton.retrofit2.adapter.rxjava2.HttpException
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.disposables.CompositeDisposable
 import io.reactivex.schedulers.Schedulers
@@ -41,7 +40,7 @@ class TicketListPresenter<V : TicketListMvpView> @Inject constructor(dataManager
                     getMvpView()?.notifyDataSetChanged()
                 }, { error ->
                     getMvpView()?.hideLoading()
-                    handleApiError(error as HttpException)
+                    handleApiError(error)
                 }))
     }
 }

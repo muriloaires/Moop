@@ -33,7 +33,7 @@ class BlocPresenter<V : BlocMvpView> @Inject constructor(dataManager: DataManage
                     mBlocs.addAll(it.data)
                     getMvpView()?.notifyDataSetChanged()
                 }, {
-                    handleApiError(it as HttpException)
+                    handleApiError(it)
                 }))
     }
 

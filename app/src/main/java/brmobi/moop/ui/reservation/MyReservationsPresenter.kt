@@ -34,7 +34,7 @@ class MyReservationsPresenter<V : MyReservationsMvpView> @Inject constructor(dat
                     mReservations.addAll(genericList.data)
                     getMvpView()?.notifyDataSetChanged()
                 }, { error ->
-                    handleApiError(error as HttpException)
+                    handleApiError(error)
                 }))
     }
 
@@ -60,7 +60,7 @@ class MyReservationsPresenter<V : MyReservationsMvpView> @Inject constructor(dat
                     mReservations.removeAt(position)
                     getMvpView()?.notifyDataSetChanged()
                 }, { error ->
-                    handleApiError(error as HttpException)
+                    handleApiError(error )
                 }))
     }
 }

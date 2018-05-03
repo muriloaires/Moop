@@ -54,7 +54,7 @@ class SharedResourcesPresenter<V : SharedResourcesMvpView> @Inject constructor(d
                     getMvpView()?.notifyDataSetChanged()
                 }, { error ->
                     getMvpView()?.stopRefreshing()
-                    handleApiError(error as HttpException)
+                    handleApiError(error )
                 }))
     }
 

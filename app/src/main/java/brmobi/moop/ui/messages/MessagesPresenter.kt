@@ -41,7 +41,7 @@ class MessagesPresenter<V : MessagesMvpView> @Inject constructor(dataManager: Da
                         getMvpView()?.clearEditText()
                         getMvpView()?.notifyDataSetChanged()
                     }, {
-                        handleApiError(it as HttpException)
+                        handleApiError(it )
                     }))
         }
     }
@@ -55,7 +55,7 @@ class MessagesPresenter<V : MessagesMvpView> @Inject constructor(dataManager: Da
                     mMessages.addAll(it.data)
                     getMvpView()?.notifyDataSetChanged()
                 }, {
-                    handleApiError(it as HttpException)
+                    handleApiError(it)
                 }))
     }
 
@@ -72,7 +72,7 @@ class MessagesPresenter<V : MessagesMvpView> @Inject constructor(dataManager: Da
                     mMessages.removeAt(position)
                     getMvpView()?.notifyDataSetChanged()
                 }, {
-                    handleApiError(it as HttpException)
+                    handleApiError(it )
                 }))
     }
 }

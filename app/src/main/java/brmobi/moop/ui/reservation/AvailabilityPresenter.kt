@@ -44,7 +44,7 @@ class AvailabilityPresenter<V : AvailabilityMvpView> @Inject constructor(dataMan
 
                 }, {
                     getMvpView()?.hideLoading()
-                    handleApiError(it as HttpException)
+                    handleApiError(it )
                 }))
     }
 
@@ -59,7 +59,7 @@ class AvailabilityPresenter<V : AvailabilityMvpView> @Inject constructor(dataMan
                     getMvpView()?.finishWithOkResult()
                 }, {
                     getMvpView()?.hideLoading()
-                    handleApiError(it as HttpException)
+                    handleApiError(it )
                 }))
     }
 

@@ -84,11 +84,6 @@ class LoginFragment : BaseFragment(), LoginMvpView {
             }
         }
 
-        btnlogout.setOnClickListener {
-            updateUI()
-            mAuth!!.signOut()
-        }
-
         configureCallBack()
         country_picker.registerCarrierNumberEditText(editNumeroTelefone)
         editCodigoVerificacao.addTextChangedListener(object : TextWatcher {

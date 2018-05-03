@@ -33,7 +33,7 @@ class NotificationPresenter<V : NotificationMvpView> @Inject constructor(dataMan
                     mNotifications.addAll(genericList.data)
                     getMvpView()?.notifyDataSetChanged()
                 }, { error ->
-                    handleApiError(error as HttpException)
+                    handleApiError(error )
                 }))
     }
 

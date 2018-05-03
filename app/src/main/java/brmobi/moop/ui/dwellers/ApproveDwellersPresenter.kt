@@ -31,7 +31,7 @@ class ApproveDwellersPresenter<V : ApproveDwellersMvpView> @Inject constructor(d
                     mDwellers.addAll(dwellers)
                     getMvpView()?.notifyDataSetChanged()
                 }, { error ->
-                    handleApiError(error as HttpException)
+                    handleApiError(error )
                 }))
     }
 
@@ -53,7 +53,7 @@ class ApproveDwellersPresenter<V : ApproveDwellersMvpView> @Inject constructor(d
                     mDwellers.removeAt(position)
                     getMvpView()?.notifyDataSetChanged()
                 }, { error ->
-                    handleApiError(error as HttpException)
+                    handleApiError(error )
                 }))
     }
 
@@ -67,7 +67,7 @@ class ApproveDwellersPresenter<V : ApproveDwellersMvpView> @Inject constructor(d
                     mDwellers.removeAt(position)
                     getMvpView()?.notifyDataSetChanged()
                 }, { error ->
-                    handleApiError(error as HttpException)
+                    handleApiError(error )
                 }))
     }
 }

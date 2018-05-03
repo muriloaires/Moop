@@ -37,7 +37,7 @@ class NewTicketPresenter<V : NewTicketMvpView> @Inject constructor(dataManager: 
                             getMvpView()?.onTicketCreated()
                         }, {
                             getMvpView()?.hideLoading()
-                            handleApiError(it as HttpException)
+                            handleApiError(it )
                         }))
             }
         }

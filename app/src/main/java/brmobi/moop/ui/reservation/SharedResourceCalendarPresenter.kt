@@ -67,7 +67,7 @@ class SharedResourceCalendarPresenter<V : SharedResourceCalendarMvpView> @Inject
                 .subscribe({
                     getMvpView()?.configureDayDecorators(it.data, calendar)
                 }, {
-                    handleApiError(it as HttpException)
+                    handleApiError(it )
                 }))
 
     }
